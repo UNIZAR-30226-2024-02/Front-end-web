@@ -1,0 +1,72 @@
+.login-register-container {
+    max-width: 300px; /* Más pequeño */
+    margin: 40px auto;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Hacemos el fondo transparente */
+}
+
+
+
+.tabs {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    border-radius: 10px 10px 0 0;
+}
+
+.tab {
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 16px; /* Más pequeño */
+    transition: 0.3s;
+    font-size: 15px; /* Más pequeño */
+    background-color: #e7e7e7; /* Color de fondo inicial */
+    color: black; /* Color del texto */
+}
+
+.tab:hover, .tab.active {
+    background-color: #ddd; /* Color de fondo al pasar el mouse y activo */
+}
+
+.tab-content {
+    padding: 15px;
+    border-radius: 0 0 10px 10px;
+    border-top: none;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 5px;
+    display: block;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
