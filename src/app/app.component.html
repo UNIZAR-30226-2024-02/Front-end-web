@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<router-outlet></router-outlet>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -13,15 +14,13 @@
         }
 
         .login-register-container {
-            background-color: rgba(255, 255, 255, 0.8); /* Agrega un fondo semi-transparente para que el contenido sea legible */
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 10px;
-            width: 400px; /* Ajusta el ancho del contenedor según sea necesario */
+            width: 400px; 
             margin: auto;
-            margin-top: 50px; /* Ajusta el margen superior según sea necesario */
+            margin-top: 50px;
         }
-
-        /* Agrega cualquier otra regla de estilo necesaria aquí */
     </style>
 </head>
 <body>
@@ -48,7 +47,6 @@
                 </div>
             </form>
         </div>
-
         <div id="register" class="tab-content" style="display:none;">
             <h2>Registrarse</h2>
             <form id="registerForm">
@@ -67,6 +65,7 @@
                 <div class="form-group">
                     <button type="submit">Registrarse</button>
                 </div>
+            
             </form>
         </div>
     </div>

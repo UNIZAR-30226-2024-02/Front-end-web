@@ -1,10 +1,10 @@
 .login-register-container {
-    max-width: 300px; /* Más pequeño */
+    max-width: 300px;
     margin: 40px auto;
     padding: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8); /* Hacemos el fondo transparente */
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 
@@ -20,15 +20,15 @@
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 10px 16px; /* Más pequeño */
+    padding: 10px 16px;
     transition: 0.3s;
-    font-size: 15px; /* Más pequeño */
-    background-color: #e7e7e7; /* Color de fondo inicial */
-    color: black; /* Color del texto */
+    font-size: 15px;
+    background-color: #e7e7e7;
+    color: black;
 }
 
 .tab:hover, .tab.active {
-    background-color: #ddd; /* Color de fondo al pasar el mouse y activo */
+    background-color: #ddd;
 }
 
 .tab-content {
