@@ -1,45 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login y Registro</title>
+    <style>
+        body {
+            background-image: url('./assets/guerra.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+        }
 
-<div class="login-register-container" style="background-image: url('./assets/guerra.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-    <div class="tabs">
-        <button class="tab" onclick="changeTab(event, 'login')">Iniciar Sesión</button>
-        <button class="tab" onclick="changeTab(event, 'register')">Registrarse</button>
-    </div>
+        .login-register-container {
+            background-color: rgba(255, 255, 255, 0.8); /* Agrega un fondo semi-transparente para que el contenido sea legible */
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px; /* Ajusta el ancho del contenedor según sea necesario */
+            margin: auto;
+            margin-top: 50px; /* Ajusta el margen superior según sea necesario */
+        }
 
-    <div id="login" class="tab-content">
-        <h2>Iniciar Sesión</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="loginUsername">Usuario:</label>
-                <input type="text" id="loginUsername" name="loginUsername" required>
-            </div>
-            <div class="form-group">
-                <label for="loginPassword">Contraseña:</label>
-                <input type="password" id="loginPassword" name="loginPassword" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Iniciar Sesión</button>
-            </div>
-        </form>
-    </div>
+        /* Agrega cualquier otra regla de estilo necesaria aquí */
+    </style>
+</head>
+<body>
+ 
+    <div class="login-register-container">
+        <div class="tabs">
+            <button class="tab" onclick="changeTab(event, 'login')">Iniciar Sesión</button>
+            <button class="tab" onclick="changeTab(event, 'register')">Registrarse</button>
+        </div>
 
-    <div id="register" class="tab-content" style="display:none;">
-        <h2>Registrarse</h2>
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="registerUsername">Usuario:</label>
-                <input type="text" id="registerUsername" name="registerUsername" required>
-            </div>
-            <div class="form-group">
-                <label for="registerPassword">Contraseña:</label>
-                <input type="password" id="registerPassword" name="registerPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirmar Contraseña:</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Registrarse</button>
-            </div>
-        </form>
+        <div id="login" class="tab-content">
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Usuario:</label>
+                    <input type="text" id="loginUsername" name="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña:</label>
+                    <input type="password" id="loginPassword" name="loginPassword" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Iniciar Sesión</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="register" class="tab-content" style="display:none;">
+            <h2>Registrarse</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Usuario:</label>
+                    <input type="text" id="registerUsername" name="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Contraseña:</label>
+                    <input type="password" id="registerPassword" name="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Contraseña:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Registrarse</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</body>
