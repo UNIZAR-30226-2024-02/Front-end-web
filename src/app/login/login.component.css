@@ -1,3 +1,11 @@
+.background-image {
+    background-image: url('/assets/guerra.jpg'); /* Asegúrate de que la ruta de la imagen es correcta */
+    height: 100vh; /* Ajusta la altura al 100% de la pantalla */
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative; /* Esto asegura que .buttons-container se posicione correctamente */
+  }
+
 .login-register-container {
     max-width: 300px;
     margin: 40px auto;
