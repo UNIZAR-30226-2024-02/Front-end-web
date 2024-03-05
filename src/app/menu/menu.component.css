@@ -1,4 +1,4 @@
-.background-image {
+  .background-image {
     background-image: url('/assets/menu.jpg'); /* Asegúrate de que la ruta de la imagen es correcta */
     height: 100vh; /* Ajusta la altura al 100% de la pantalla */
     background-position: center;

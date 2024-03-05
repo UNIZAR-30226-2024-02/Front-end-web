@@ -1,18 +1,11 @@
 <!DOCTYPE html>
-
-<nav>
-    <a routerLink="/tienda">tienda</a>
-</nav>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda en Línea</title>
+    <title>Tienda</title>
     <style>
         body {
-            background-image: url('./assets/guerra.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
             font-family: Arial, sans-serif;
         }
 
@@ -57,28 +50,32 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tienda</h1>
-        
-        <div class="product">
-            <img src="producto1.jpg" alt="Producto 1">
-            <div>
-                <h3>Nombre</h3>
-                <p>Precio: --</p>
-                <button>Comprar</button>
+    <div class="background-image">
+        <div class="container">
+            <h1>
+                <font color="#ffffff">Tienda</font>
+            </h1>
+            
+            <div class="product">
+                <img src="producto1.jpg" alt="Producto 1">
+                <div>
+                    <h3>Nombre</h3>
+                    <p>Precio: --</p>
+                    <button>Comprar</button>
+                </div>
             </div>
-        </div>
 
-        <div class="product">
-            <img src="producto2.jpg" alt="Producto 2">
-            <div>
-                <h3>Nombre</h3>
-                <p>Precio: --</p>
-                <button>Comprar</button>
+            <div class="product">
+                <img src="producto2.jpg" alt="Producto 2">
+                <div>
+                    <h3>Nombre</h3>
+                    <p>Precio: --</p>
+                    <button>Comprar</button>
+                </div>
             </div>
-        </div>
 
-        <button class="back-button" onclick="window.history.back()">Volver</button>
+            <button class="back-button" onclick="menu">Volver</button>
+        </div>
     </div>
 </body>
 </html>
