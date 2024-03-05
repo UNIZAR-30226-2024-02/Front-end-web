@@ -1,0 +1,29 @@
+.background-image {
+    background-image: url('/assets/menu.jpg'); /* Asegúrate de que la ruta de la imagen es correcta */
+    height: 100vh; /* Ajusta la altura al 100% de la pantalla */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative; /* Esto asegura que .buttons-container se posicione correctamente */
+  }
+  
+  .buttons-container {
+    position: absolute;
+    bottom: 30px; /* Aumenta este valor para subir los botones */
+    left: 50%; /* Centra los botones horizontalmente */
+    transform: translateX(-50%); /* Ajuste fino para centrar exactamente los botones */
+    text-align: center; /* Alinea los botones al centro */
+  }
+  
+  .button {
+    display: inline-block; /* Muestra los botones en línea */
+    margin: 0 20px; /* Añade un espacio entre los botones */
+    padding: 20px 40px; /* Aumenta el padding para hacer los botones más grandes */
+    font-size: 1.2em; /* Aumenta el tamaño de la fuente */
+    /* Añade aquí más estilos para tus botones si lo deseas */
+    text-align: center; /* Asegura que el texto esté centrado dentro del botón */
+    background-color: #f2f2f2; /* Color de fondo del botón */
+    border: none; /* Elimina el borde del botón */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón sobre los botones */
+    border-radius: 5px; /* Opcional: añade bordes redondeados a los botones */
+  }
