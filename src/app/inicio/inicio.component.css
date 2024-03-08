@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0; /* Color de fondo de reserva */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-image: url('/assets/call-duty-wwii.jpg'); /* Actualiza con la ruta correcta */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.container h1 {
+    margin-bottom: 30px;
+    color: #fff; /* Cambia el color a blanco */
+    font-size: 2.5rem;
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 250px; /* Aumenta el espacio entre los botones */
+}
+
+
+.btn {
+    margin: 0 50px; /* Ajusta el espacio entre los botones */
+    background-color: #007bff; /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 30px; /* Some padding */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline from links */
+    display: inline-block; /* Used to be able to set a width */
+    font-size: 18px; /* Set a font-size */
+    cursor: pointer; /* Mouse pointer on hover */
+    border-radius: 25px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Adds a subtle shadow */
+    transition: all 0.2s; /* Smooth transition for hover effects */
+}
+
+
+.btn:hover {
+    transform: translateY(-2px);
+    background-color: #0056b3; /* Darker shade of blue */
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
+}

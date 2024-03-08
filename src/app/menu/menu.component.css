@@ -1,29 +1,43 @@
-  .background-image {
-    background-image: url('/assets/menu.jpg'); /* Asegúrate de que la ruta de la imagen es correcta */
-    height: 100vh; /* Ajusta la altura al 100% de la pantalla */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative; /* Esto asegura que .buttons-container se posicione correctamente */
-  }
-  
-  .buttons-container {
-    position: absolute;
-    bottom: 30px; /* Aumenta este valor para subir los botones */
-    left: 50%; /* Centra los botones horizontalmente */
-    transform: translateX(-50%); /* Ajuste fino para centrar exactamente los botones */
-    text-align: center; /* Alinea los botones al centro */
-  }
-  
-  .button {
-    display: inline-block; /* Muestra los botones en línea */
-    margin: 0 20px; /* Añade un espacio entre los botones */
-    padding: 20px 40px; /* Aumenta el padding para hacer los botones más grandes */
-    font-size: 1.2em; /* Aumenta el tamaño de la fuente */
-    /* Añade aquí más estilos para tus botones si lo deseas */
-    text-align: center; /* Asegura que el texto esté centrado dentro del botón */
-    background-color: #f2f2f2; /* Color de fondo del botón */
-    border: none; /* Elimina el borde del botón */
-    cursor: pointer; /* Cambia el cursor al pasar el ratón sobre los botones */
-    border-radius: 5px; /* Opcional: añade bordes redondeados a los botones */
-  }
+.background-image {
+  background-image: url('/assets/menu.jpg'); /* Asegúrate de que la ruta de la imagen es correcta */
+  height: 100vh; /* Ajusta la altura al 100% de la pantalla */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative; /* Esto asegura que .buttons-container se posicione correctamente */
+}
+
+.buttons-container {
+  position: absolute;
+  bottom: 30px; /* Aumenta este valor para subir los botones */
+  left: 50%; /* Centra los botones horizontalmente */
+  transform: translateX(-50%); /* Ajuste fino para centrar exactamente los botones */
+  text-align: center; /* Alinea los botones al centro */
+}
+
+.buttons-wrapper {
+  display: flex; /* Establece el contenedor como un flexbox */
+  justify-content: center; /* Centra los elementos hijos horizontalmente */
+}
+
+.button {
+  margin: 0 50px; /* Ajusta el espacio entre los botones */
+  background-color: #007bff; /* Blue background */
+  border: none; /* Remove borders */
+  color: white; /* White text */
+  padding: 12px 30px; /* Some padding */
+  text-align: center; /* Center the text */
+  text-decoration: none; /* Remove underline from links */
+  display: inline-block; /* Used to be able to set a width */
+  font-size: 18px; /* Set a font-size */
+  cursor: pointer; /* Mouse pointer on hover */
+  border-radius: 25px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Adds a subtle shadow */
+  transition: all 0.2s; /* Smooth transition for hover effects */
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  background-color: #0056b3; /* Darker shade of blue */
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
+}
