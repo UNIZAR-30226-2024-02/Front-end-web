@@ -13,6 +13,8 @@ import { RankingComponent } from './ranking/ranking.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { TuperfilComponent } from './tuperfil/tuperfil.component';
 import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
+import { FormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    FormsModule,
+    HttpClientModule
   ],
   providers: [
     provideClientHydration()
