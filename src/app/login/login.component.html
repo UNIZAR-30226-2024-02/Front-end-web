@@ -1,5 +1,5 @@
-<!-- login.component.html -->
 <div class="login-container">
+  <form [formGroup]="loginForm">  <!-- Agrega el formulario al elemento form y enlázalo con el FormGroup -->
     <div class="form-group">
       <label for="email">Email:</label>
       <input type="email" id="email" formControlName="email" class="form-control">
@@ -11,5 +11,6 @@
       <!-- Agregar mensajes de error aquí -->
     </div>
     <!-- Botón de iniciar sesión con routerLink -->
-    <button class="btn btn-primary" routerLink="/menu">Iniciar sesión</button>
+    <button class="btn btn-primary" (click)="onLogin()">Iniciar sesión</button>
+  </form>
 </div>

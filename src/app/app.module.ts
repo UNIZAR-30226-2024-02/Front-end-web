@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';  // Agrega esta línea
 import appRoutes from './routerConfig';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +14,7 @@ import { RankingComponent } from './ranking/ranking.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { TuperfilComponent } from './tuperfil/tuperfil.component';
 import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
+import { ReactiveFormsModule } from '@angular/forms';  // Importa ReactiveFormsModule
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,  // Agrega esta línea
     AppRoutingModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
