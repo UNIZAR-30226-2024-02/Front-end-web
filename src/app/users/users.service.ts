@@ -10,10 +10,10 @@ export class UsersService {
   constructor(private http: HttpClient, private cookies: CookieService) {}
 
   login(user: any): Observable<any> {
-    return this.http.post("https://localhost:4000/login", user);
+    return this.http.post("http://localhost:4000/login", user);
   }
   register(user: any): Observable<any> {
-    return this.http.post("https://localhost:4000/register", user);
+    return this.http.post("http://localhost:4000/register", user);
   }
   setToken(token: string) {
     this.cookies.set("token", token);
