@@ -9,6 +9,7 @@ import { RankingComponent } from './ranking/ranking.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { TuperfilComponent } from './tuperfil/tuperfil.component';
 import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
+import { SocketTestComponent } from './socket-test/socket-test.component';
 
 
 const appRoutes: Routes = [
@@ -41,6 +42,10 @@ const appRoutes: Routes = [
   {
     path: 'skinsperfil',
     component: SkinsperfilComponent
+  },
+  {
+    path: 'socket-test',
+    component: SocketTestComponent
   },
   {
     path: '',

@@ -17,6 +17,12 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SocketTestComponent } from './socket-test/socket-test.component';
+
+const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,14 +34,16 @@ import { CookieService } from "ngx-cookie-service";
     RankingComponent,
     PerfilComponent,
     TuperfilComponent,
-    SkinsperfilComponent
+    SkinsperfilComponent,
+    SocketTestComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [
     provideClientHydration(),
