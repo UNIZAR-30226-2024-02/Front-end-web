@@ -12,9 +12,9 @@ export class SocketTestComponent implements OnInit {
   constructor(private socket: Socket) { }
 
   ngOnInit(): void {
-    this.socket.on('friendRequest', (notification: string) => {
+    this.socket.on('friendRequest', (notification: string, user : string) => {
       this.notifications.push(notification);
-      console.log('Nueva solicitud de amistad:', notification);
+      console.log('Nueva solicitud de amistad:', notification, user);
     });
 
     this.socket.on('gameNotification', (notification: string) => {
@@ -26,6 +26,16 @@ export class SocketTestComponent implements OnInit {
   joinGame(gameId: string) {
     this.socket.emit('joinGame', gameId);
     console.log("me intento unir al juego")
+  }
+
+  login(userId: string) {
+    this.socket.emit('login', userId);
+    console.log("User logged in:", userId);
+  }
+
+  logout(userId: string) {
+    this.socket.emit('logout', userId);
+    console.log("User logged out:", userId);
   }
 
   sendFriendRequest(userId: string, notification: string) {
