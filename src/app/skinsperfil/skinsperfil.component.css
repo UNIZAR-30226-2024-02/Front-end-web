@@ -1,3 +1,11 @@
+body {
+    background-image: url('/assets/img-2d3IDaHACsstyAx6hCGZP.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
 .container {
     max-width: 800px;
     margin: 20px auto;
@@ -68,4 +76,22 @@ h1 {
 button[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.column {
+    flex: 1 0 0; /* This will make each column take up an equal amount of space */
+    margin-bottom: 20px; /* Add some bottom margin for when the columns stack */
+}
+
+/* Add a media query for screens smaller than 600px */
+@media (max-width: 600px) {
+    .column {
+        flex: 1 0 100%; /* Make the columns stack on top of each other */
+    }
 }

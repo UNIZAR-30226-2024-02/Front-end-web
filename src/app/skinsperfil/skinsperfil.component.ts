@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SkinsperfilService } from '../skinsperfil.service'; // Asegúrate de importar el servicio SkinService
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 interface Skin {
   _id: string;
@@ -12,7 +14,7 @@ interface Skin {
 interface EquippedSkins {
     avatar: Skin | null;
     terreno: Skin | null;
-    setfichas: Skin | null;
+    setFichas: Skin | null;
 }
 
 @Component({
@@ -24,11 +26,16 @@ interface EquippedSkins {
 export class SkinsperfilComponent implements OnInit {
   currentTab: string = 'owned';
   ownedSkins: Skin[] = [];
-  equippedSkins: EquippedSkins = { avatar: null, terreno: null, setfichas: null };
+  equippedSkins: EquippedSkins = { avatar: null, terreno: null, setFichas: null };
 
-  constructor(private skinsperfilService: SkinsperfilService) {}
+  constructor(private router: Router, private location: Location, private skinsperfilService: SkinsperfilService) {}
 
   ngOnInit(): void {
+    this.loadOwnedSkins(); // obtengo las skins mías
+    this.loadEquippedSkins(); // obtengo las skins equipadas
+  }
+
+  fetchData(): void {
     this.loadOwnedSkins(); // obtengo las skins mías
     this.loadEquippedSkins(); // obtengo las skins equipadas
   }
@@ -59,13 +66,28 @@ export class SkinsperfilComponent implements OnInit {
     this.currentTab = tab;
   }
 
-  equipSkin(skin: Skin): void {
-    //TODO
+  equipSkin(idSkin: string): void {
+    this.skinsperfilService.equipSkin(idSkin).subscribe(
+      (response) => {
+        if (response.status === 201) {
+          console.log('Skin equipped successfully!');
+          this.fetchData();
+        } else {
+          console.error('Error equipping skin:', response.status);
+        }
+      },
+      (error) => {
+        console.error('Error equipping skin:', error);
+      }
+    );
   }
 
-  isEquipped(skin: Skin): boolean {
-    //TODO
-    return false; // por ahora devolvemos falso como ejemplo
+  isEquipped(skin: Skin): boolean | null {
+    return (
+      (this.equippedSkins.avatar && this.equippedSkins.avatar.idSkin === skin.idSkin) ||
+      (this.equippedSkins.terreno && this.equippedSkins.terreno.idSkin === skin.idSkin) ||
+      (this.equippedSkins.setFichas && this.equippedSkins.setFichas.idSkin === skin.idSkin)
+    );
   }
 
   getBackgroundColor(tipo: string): string {

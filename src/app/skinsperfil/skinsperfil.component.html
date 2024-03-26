@@ -9,21 +9,60 @@
     <div class="container">
         <h1>Skins</h1>
         <div class="tabs">
-            <button (click)="switchTab('owned')" [class.active]="currentTab === 'owned'">Owned Skins</button>
-            <button (click)="switchTab('equipped')" [class.active]="currentTab === 'equipped'">Equipped Skins</button>
+            <button (click)="switchTab('owned')" [class.active]="currentTab === 'owned'">En propiedad</button>
+            <button (click)="switchTab('equipped')" [class.active]="currentTab === 'equipped'">Equipadas</button>
         </div>
-        <div *ngIf="currentTab === 'owned'">
-            <ul class="product-list">
-                <li *ngFor="let skin of ownedSkins" [ngStyle]="{'background-color': getBackgroundColor(skin.tipo)}">
-                    <img [src]="skin.path" [alt]="skin.idSkin">
-                    <div>
-                        <h3>{{ skin.idSkin }}</h3>
-                        <h4>{{ skin.tipo }}</h4>
-                        <button (click)="equipSkin(skin)" *ngIf="!isEquipped(skin)">Equip</button>
-                    </div>
-                </li>
-            </ul>
+        <div *ngIf="currentTab === 'owned'" class="columns">
+            <div class="column">
+                <h2>Avatars</h2>
+                <ul class="product-list">
+                    <ng-container *ngFor="let skin of ownedSkins">
+                        <li [ngStyle]="{'background-color': getBackgroundColor(skin.tipo)}"
+                            *ngIf="currentTab === 'owned' && skin.tipo === 'Avatar'">
+                            <img [src]="skin.path" [alt]="skin.idSkin">
+                            <div>
+                                <h3>{{ skin.idSkin }}</h3>
+                                <h4>{{ skin.tipo }}</h4>
+                                <button (click)="equipSkin(skin.idSkin)" *ngIf="!isEquipped(skin)">Equipar</button>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+            <div class="column">
+                <h2>Set de Fichas</h2>
+                <ul class="product-list">
+                    <ng-container *ngFor="let skin of ownedSkins">
+                        <li [ngStyle]="{'background-color': getBackgroundColor(skin.tipo)}"
+                            *ngIf="currentTab === 'owned' && skin.tipo === 'SetFichas'">
+                            <img [src]="skin.path" [alt]="skin.idSkin">
+                            <div>
+                                <h3>{{ skin.idSkin }}</h3>
+                                <h4>{{ skin.tipo }}</h4>
+                                <button (click)="equipSkin(skin.idSkin)" *ngIf="!isEquipped(skin)">Equipar</button>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+            <div class="column">
+                <h2>Terrenos</h2>
+                <ul class="product-list">
+                    <ng-container *ngFor="let skin of ownedSkins">
+                        <li [ngStyle]="{'background-color': getBackgroundColor(skin.tipo)}"
+                            *ngIf="currentTab === 'owned' && skin.tipo === 'Terreno'">
+                            <img [src]="skin.path" [alt]="skin.idSkin">
+                            <div>
+                                <h3>{{ skin.idSkin }}</h3>
+                                <h4>{{ skin.tipo }}</h4>
+                                <button (click)="equipSkin(skin.idSkin)" *ngIf="!isEquipped(skin)">Equipar</button>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
         </div>
+        
         <div *ngIf="currentTab === 'equipped'">
             <div class="product-list" style="display: flex; flex-direction: column;">
                 <div>
@@ -53,10 +92,10 @@
                 <div>
                     <h2>Set Fichas</h2>
                     <ul>
-                        <li *ngIf="equippedSkins.setfichas">
-                            <img [src]="equippedSkins.setfichas.path" [alt]="equippedSkins.setfichas.path">
+                        <li *ngIf="equippedSkins.setFichas">
+                            <img [src]="equippedSkins.setFichas.path" [alt]="equippedSkins.setFichas.path">
                             <div>
-                                <h3>{{ equippedSkins.setfichas.idSkin }}</h3>
+                                <h3>{{ equippedSkins.setFichas.idSkin }}</h3>
                                 <button disabled>Equipped</button>
                             </div>
                         </li>

@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { UsersService } from "./users/users.service";
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: "root",
@@ -11,7 +12,7 @@ import { of } from 'rxjs';
 
 export class SkinsperfilService {
   constructor(private http: HttpClient, private usersService: UsersService, private route: Router) {}
-
+  private baseURL = 'http://localhost:4000/misSkins';
   private getHeaders(): HttpHeaders | null {
     const token = this.usersService.getToken();
     if (!token) {
@@ -36,7 +37,7 @@ export class SkinsperfilService {
     }
 
 
-    return this.http.get<any[]>('http://localhost:4000/misSkins/enPropiedad', { headers });
+    return this.http.get<any[]>(this.baseURL + '/enPropiedad', { headers });
   }
 
   getEquippedSkins(): Observable<any> {
@@ -45,17 +46,18 @@ export class SkinsperfilService {
       return of([]);
     }
 
-    return this.http.get<any>('http://localhost:4000/misSkins/equipadas', { headers });
+    return this.http.get<any>(this.baseURL + '/equipadas', { headers });
   }
 
 
-  // TODO -> implement the method to equip a skin
-  equipSkin(skinId: string): Observable<any> {
+
+  equipSkin(idSkin: string): Observable<HttpResponse<any>> {
     const headers = this.getHeaders();
     if (!headers) {
-      return of([]);
+      const emptyResponse = new HttpResponse({ body: [] });
+      return of(emptyResponse);
     }
 
-    return this.http.post<any>('/equipSkin', { skinId }, { headers });
+    return this.http.post<any>(this.baseURL + '/equipar', { skinAEquipar: idSkin }, { headers, observe: 'response' });
   }
 }
