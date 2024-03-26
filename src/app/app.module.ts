@@ -19,6 +19,7 @@ import { CookieService } from "ngx-cookie-service";
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SocketTestComponent } from './socket-test/socket-test.component';
+import { FilterByTypePipe } from './pipes/filter-by-type.pipe';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 
@@ -35,7 +36,8 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
     PerfilComponent,
     TuperfilComponent,
     SkinsperfilComponent,
-    SocketTestComponent
+    SocketTestComponent,
+    FilterByTypePipe
   ],
   imports: [
     BrowserModule,

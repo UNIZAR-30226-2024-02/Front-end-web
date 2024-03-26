@@ -4,80 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skins</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #333333;
-            text-align: center;
-        }
-
-        .product-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .product-list li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .product-list li:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .product-list img {
-            width: 100px;
-            margin-right: 20px;
-            border-radius: 5px;
-        }
-
-        .product-list h3 {
-            margin-top: 0;
-            color: #333333;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <h1>Skins</h1>
-        <ul class="product-list">
-            <li>
-                <img src="skin1.jpg" alt="Skin 1">
+        <div class="tabs">
+            <button (click)="switchTab('owned')" [class.active]="currentTab === 'owned'">Owned Skins</button>
+            <button (click)="switchTab('equipped')" [class.active]="currentTab === 'equipped'">Equipped Skins</button>
+        </div>
+        <div *ngIf="currentTab === 'owned'">
+            <ul class="product-list">
+                <li *ngFor="let skin of ownedSkins" [ngStyle]="{'background-color': getBackgroundColor(skin.tipo)}">
+                    <img [src]="skin.path" [alt]="skin.idSkin">
+                    <div>
+                        <h3>{{ skin.idSkin }}</h3>
+                        <h4>{{ skin.tipo }}</h4>
+                        <button (click)="equipSkin(skin)" *ngIf="!isEquipped(skin)">Equip</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="currentTab === 'equipped'">
+            <div class="product-list" style="display: flex; flex-direction: column;">
                 <div>
-                    <h3>Skin Nombre 1</h3>
+                    <h2>Avatar</h2>
+                    <ul>
+                        <li *ngIf="equippedSkins.avatar">
+                            <img [src]="equippedSkins.avatar.path" [alt]="equippedSkins.avatar.path">
+                            <div>
+                                <h3>{{ equippedSkins.avatar.idSkin }}</h3>
+                                <button disabled>Equipped</button>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </li>
-
-            <li>
-                <img src="skin2.jpg" alt="Skin 2">
                 <div>
-                    <h3>Skin Nombre 2</h3>
+                    <h2>Terreno</h2>
+                    <ul>
+                        <li *ngIf="equippedSkins.terreno">
+                            <img [src]="equippedSkins.terreno.path" [alt]="equippedSkins.terreno.path">
+                            <div>
+                                <h3>{{ equippedSkins.terreno.idSkin }}</h3>
+                                <button disabled>Equipped</button>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </li>
-
-            <!-- Repite para más skins -->
-        </ul>
+                <div>
+                    <h2>Set Fichas</h2>
+                    <ul>
+                        <li *ngIf="equippedSkins.setfichas">
+                            <img [src]="equippedSkins.setfichas.path" [alt]="equippedSkins.setfichas.path">
+                            <div>
+                                <h3>{{ equippedSkins.setfichas.idSkin }}</h3>
+                                <button disabled>Equipped</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

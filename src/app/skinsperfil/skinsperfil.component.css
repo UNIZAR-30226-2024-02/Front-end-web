@@ -1,0 +1,71 @@
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333333;
+    text-align: center;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    color: #333333;
+    outline: none;
+    transition: color 0.3s;
+}
+
+.tabs button.active {
+    color: #ff0000; /* Change color for active tab */
+}
+
+.product-list {
+    list-style: none;
+    padding: 0;
+}
+
+.product-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.product-list li:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.product-list img {
+    width: 100px;
+    margin-right: 20px;
+    border-radius: 5px;
+}
+
+.product-list h3 {
+    margin-top: 0;
+    color: #333333;
+}
+
+button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
