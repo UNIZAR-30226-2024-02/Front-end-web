@@ -21,4 +21,8 @@
     <button class="btn btn-warning" (click)="logout('pigdemon')">Logout pigdemon</button>
     <button class="btn btn-primary" (click)="sendFriendRequest('pigdemon', 'Hello!')">Send Friend Request to pigdemon</button>
     <button class="btn btn-primary" (click)="sendFriendRequest('perro_Sanxe', 'Hello!')">Send Friend Request to perro_Sanxe</button>
+    <button class="btn btn-danger" (click)="joinChat('chat123')">Join Chat123</button>
+    <button class="btn btn-danger" (click)="exitChat('chat123')">Exit Chat123</button>
+    <input type="text" #userInput placeholder="Enter message">
+    <button class="btn btn-primary" (click)="sendChatMessage('chat123', userInput.value)">Send Message</button>
 </div>

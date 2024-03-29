@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UsersService } from "../users/users.service";
 import { Router } from "@angular/router";
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ export class LoginComponent {
   id: string;
   password: string;
 
-  constructor(public userService: UsersService, public router: Router) {
+  constructor(public userService: UsersService, public router: Router, private socket: Socket) {
     this.id="";
     this.password="";
   }
@@ -20,6 +21,7 @@ export class LoginComponent {
     const user = { id: this.id, password: this.password };
     this.userService.login(user).subscribe(data => {
       this.userService.setToken(data.token);
+      this.socket.emit('login', this.id);
       this.router.navigateByUrl("/menu");
     });
   }

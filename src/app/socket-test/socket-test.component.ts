@@ -21,11 +21,31 @@ export class SocketTestComponent implements OnInit {
       this.notifications.push(notification);
       console.log('Notificación de juego:', notification);
     });
+
+    this.socket.on('chatNotification', (notification: string) => {
+      this.notifications.push(notification);
+      console.log('Notificación de juego:', notification);
+    });
+
+    this.socket.on('chatMessage', (message: string) => {
+      this.notifications.push(message);
+      console.log('Mensaje de chat:', message);
+    });
   }
 
   joinGame(gameId: string) {
     this.socket.emit('joinGame', gameId);
     console.log("me intento unir al juego")
+  }
+
+  joinChat(chatId: string) {
+    this.socket.emit('joinChat', chatId);
+    console.log("me intento unir al chat")
+  }
+
+  exitChat(chatId: string) {
+    this.socket.emit('exitChat', chatId);
+    console.log("me intento exitar al chat")
   }
 
   login(userId: string) {
@@ -42,6 +62,11 @@ export class SocketTestComponent implements OnInit {
     this.socket.emit('friendRequest', { userId, notification });
     console.log("intento amistar a alguien")
   
+  }
+
+  sendChatMessage(chatId: string, message: string) {
+    this.socket.emit('sendChatMessage', { chatId, message });
+    console.log("intento enviar mensaje al chat")
   }
   
   exitGame(gameId: string) {
