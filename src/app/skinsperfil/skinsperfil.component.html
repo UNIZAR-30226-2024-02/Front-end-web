@@ -14,7 +14,7 @@
         </div>
         <div *ngIf="currentTab === 'owned'" class="columns">
             <div class="column">
-                <h2>Avatars</h2>
+                <h2>Avatares</h2>
                 <ul class="product-list">
                     <ng-container *ngFor="let skin of ownedSkins">
                         <li [ngStyle]="{'background-color': getBackgroundColor(skin.tipo)}"
@@ -30,7 +30,7 @@
                 </ul>
             </div>
             <div class="column">
-                <h2>Set de Fichas</h2>
+                <h2>Sets de Fichas</h2>
                 <ul class="product-list">
                     <ng-container *ngFor="let skin of ownedSkins">
                         <li [ngStyle]="{'background-color': getBackgroundColor(skin.tipo)}"
@@ -72,7 +72,7 @@
                             <img [src]="equippedSkins.avatar.path" [alt]="equippedSkins.avatar.path">
                             <div>
                                 <h3>{{ equippedSkins.avatar.idSkin }}</h3>
-                                <button disabled>Equipped</button>
+                                <button disabled>Equipada</button>
                             </div>
                         </li>
                     </ul>
@@ -84,7 +84,7 @@
                             <img [src]="equippedSkins.terreno.path" [alt]="equippedSkins.terreno.path">
                             <div>
                                 <h3>{{ equippedSkins.terreno.idSkin }}</h3>
-                                <button disabled>Equipped</button>
+                                <button disabled>Equipada</button>
                             </div>
                         </li>
                     </ul>
@@ -96,7 +96,7 @@
                             <img [src]="equippedSkins.setFichas.path" [alt]="equippedSkins.setFichas.path">
                             <div>
                                 <h3>{{ equippedSkins.setFichas.idSkin }}</h3>
-                                <button disabled>Equipped</button>
+                                <button disabled>Equipada</button>
                             </div>
                         </li>
                     </ul>

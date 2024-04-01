@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SkinsperfilService } from '../skinsperfil.service'; // Asegúrate de importar el servicio SkinService
+import { SkinsperfilService } from './skinsperfil.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
