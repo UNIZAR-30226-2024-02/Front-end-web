@@ -1,53 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .product {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #ffffff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .product img {
-            max-width: 100px;
-            margin-right: 20px;
-        }
-
-        .product button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #ffffff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .back-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #dc3545;
-            color: #ffffff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="tienda.component.css">
 </head>
 <body>
     <div class="background-image">
@@ -55,21 +12,12 @@
             <h1>
                 <font color="#ffffff">Tienda</font>
             </h1>
-            
-            <div class="product">
-                <img src="producto1.jpg" alt="Producto 1">
+            <button (click)="retrieveSkins()">Retrieve Skins</button>
+            <div class="product" *ngFor="let skin of retrievedSkins">
+                <img [src]="skin.path" [alt]="skin.idSkin">
                 <div>
-                    <h3>Nombre</h3>
-                    <p>Precio: --</p>
-                    <button>Comprar</button>
-                </div>
-            </div>
-
-            <div class="product">
-                <img src="producto2.jpg" alt="Producto 2">
-                <div>
-                    <h3>Nombre</h3>
-                    <p>Precio: --</p>
+                    <h3>{{skin.idSkin}}</h3>
+                    <p>Precio: {{skin.precio}}</p>
                     <button>Comprar</button>
                 </div>
             </div>
