@@ -1,14 +1,11 @@
 @import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
 
-
-.background-container {
+.full-screen {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%; /* Cambiado a 100% para cubrir toda la pantalla */
-  z-index: -1;
-  overflow-y: auto; /* Agregado para permitir el desplazamiento vertical */
+  bottom: 0;
+  right: 0;
 }
 
 .background-image {
@@ -18,6 +15,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
 }
 
 body {
@@ -28,6 +26,14 @@ body {
 .container {
   max-width: 800px;
   margin: 20px auto; /* Ajustado para dejar un espacio superior e inferior */
+  height: 95vh; /* Adjust this value as needed */
+  overflow: auto;
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .product {
@@ -68,3 +74,4 @@ body {
   background-color: #888888;
   cursor: not-allowed;
 }
+
