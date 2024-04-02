@@ -16,6 +16,8 @@ import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SocketTestComponent } from './socket-test/socket-test.component';
@@ -45,7 +47,9 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
     RouterModule.forRoot(appRoutes),
     FormsModule,
     HttpClientModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     provideClientHydration(),

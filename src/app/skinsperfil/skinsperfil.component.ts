@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SkinsperfilService } from './skinsperfil.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 interface Skin {
   _id: string;
@@ -28,7 +29,9 @@ export class SkinsperfilComponent implements OnInit {
   ownedSkins: Skin[] = [];
   equippedSkins: EquippedSkins = { avatar: null, terreno: null, setFichas: null };
 
-  constructor(private router: Router, private location: Location, private skinsperfilService: SkinsperfilService) {}
+  constructor(private router: Router, private location: Location, 
+              private skinsperfilService: SkinsperfilService, 
+              private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.loadOwnedSkins(); // obtengo las skins mías
@@ -71,6 +74,7 @@ export class SkinsperfilComponent implements OnInit {
       (response) => {
         if (response.status === 201) {
           console.log('Skin equipped successfully!');
+          this.toastr.success('¡Skin equipada!', 'Éxito');
           this.fetchData();
         } else {
           console.error('Error equipping skin:', response.status);

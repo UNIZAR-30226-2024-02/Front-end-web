@@ -1,51 +1,70 @@
+@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
+
+
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Cambiado a 100% para cubrir toda la pantalla */
+  z-index: -1;
+  overflow-y: auto; /* Agregado para permitir el desplazamiento vertical */
+}
+
 .background-image {
-    background-image: url('/assets/tienda.jpg'); /* Asegúrate de que la ruta de la imagen es correcta */
-    height: 100vh; /* Ajusta la altura al 100% de la pantalla */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative; /* Esto asegura que .buttons-container se posicione correctamente */
-  }
+  background-image: url('/assets/tienda.jpg');
+  height: 100%; /* Cambiado a 100% para que ocupe toda la altura del contenedor */
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
-  body {
-    font-family: Arial, sans-serif;
-  }
+body {
+  font-family: Arial, sans-serif;
+  overflow-x: hidden; /* Evita el desplazamiento horizontal */
+}
 
-  .container {
-    max-width: 800px;
-    margin: auto auto;
-  }
+.container {
+  max-width: 800px;
+  margin: 20px auto; /* Ajustado para dejar un espacio superior e inferior */
+}
 
-  .product {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
+.product {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-  .product img {
-    max-width: 100px;
-    margin-right: 20px;
-  }
+.product img {
+  max-width: 100px;
+  margin-right: 20px;
+}
 
-  .product button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.product button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-  .back-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #dc3545;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.back-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button:disabled {
+  background-color: #888888;
+  cursor: not-allowed;
+}

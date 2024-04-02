@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+@import '../node_modules/ngx-toastr/toastr.css';
+.toast-container {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 300px !important; /* Ajusta el ancho según sea necesario */
+    max-width: calc(100% - 20px) !important; /* Limita el ancho máximo */
+    padding: 15px !important; /* Añade relleno para un aspecto más uniforme */
+    text-align: center !important; /* Centra el texto */
+  }
+  

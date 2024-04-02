@@ -27,6 +27,26 @@ export class TiendaService {
     return this.http.post<any[]>(this.baseURL, opciones, { headers });
   }
 
+  // Método para comprar una skin
+  buySkin(idSkin: string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return of([]);
+    }
+
+    // Realiza una solicitud POST con el id de la skin a comprar en el cuerpo
+    return this.http.post<any>(`${this.baseURL}comprar`, { idSkin }, { headers });
+  }
+
+  getOwnedSkins(): Observable<any[]> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return of([]);
+    }
+
+    return this.http.get<any[]>("http://localhost:4000/misSkins/" + '/enPropiedad', { headers });
+  }
+
   private getHeaders(): HttpHeaders | null {
     const token = this.usersService.getToken();
     if (!token) {

@@ -1,29 +1,62 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda</title>
-    <link rel="stylesheet" href="tienda.component.css">
-</head>
 <body>
+    <div class="background-container">
     <div class="background-image">
         <div class="container">
-            <h1>
+            <h1 class="text-center">
                 <font color="#ffffff">Tienda</font>
             </h1>
-            <button (click)="retrieveSkins()">Retrieve Skins</button>
+
+            <!-- Spinners and input boxes in the same row -->
+            <div class="row">
+                <!-- Order spinner -->
+                <div class="col">
+                    <label class="text-white">Ordenar</label>
+                    <select class="form-control form-control-sm" [(ngModel)]="opciones.sortBy">
+                        <option value="precio">Precio</option>
+                        <option value="idSkin">A-Z</option>
+                    </select>
+                </div>
+
+                <!-- Price boxes -->
+                <div class="col">
+                    <label class="text-white">Precio mínimo</label>
+                    <input type="number" min="0" class="form-control form-control-sm" [(ngModel)]="opciones.precioMin">
+                </div>
+                <div class="col">
+                    <label class="text-white">Precio máximo</label>
+                    <input type="number" min="0" class="form-control form-control-sm" [(ngModel)]="opciones.precioMax">
+                </div>
+
+                <!-- Type spinner -->
+                <div class="col">
+                    <label class="text-white">Filtrar por tipo</label>
+                    <select class="form-control form-control-sm" [(ngModel)]="opciones.tipo">
+                        <option value="Avatar">Avatar</option>
+                        <option value="setFichas">Set Fichas</option>
+                        <option value="Terreno">Terreno</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Retrieve Skins button below the spinners and centered -->
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary mt-3 mb-3" (click)="retrieveSkins()">Buscar</button>
+            </div>
+
             <div class="product" *ngFor="let skin of retrievedSkins">
                 <img [src]="skin.path" [alt]="skin.idSkin">
                 <div>
                     <h3>{{skin.idSkin}}</h3>
                     <p>Precio: {{skin.precio}}</p>
-                    <button>Comprar</button>
+                    <p>Tipo: {{skin.tipo}}</p>
+                    <!-- Comprar button smaller -->
+                    <button class="btn btn-success btn-sm" (click)="buySkin(skin.idSkin)" *ngIf="!isOwned(skin)">Comprar</button>
+                    <p class="text-italic" *ngIf="isOwned(skin)">En propiedad</p>
                 </div>
             </div>
-
-            <button class="button" routerLink="/menu">Volver</button>
+            
+            <button class="btn btn-secondary" routerLink="/menu">Volver</button>
         </div>
     </div>
+    </div>
 </body>
-</html>
