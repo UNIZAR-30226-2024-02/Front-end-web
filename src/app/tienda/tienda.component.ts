@@ -28,6 +28,7 @@ interface Opciones {
 export class TiendaComponent {
   retrievedSkins: Skin[] = [];
   enPropiedad: Skin[] = [];
+  money: number = 0;
   opciones: Opciones = {
     sortBy: undefined,
     precioMin: undefined,
@@ -44,6 +45,7 @@ export class TiendaComponent {
   ngOnInit(): void {
     this.loadOwnedSkins();
     this.retrieveSkins(); 
+    this.getMoney();
   }
 
   retrieveSkins(): void {
@@ -86,6 +88,17 @@ export class TiendaComponent {
   isOwned(skin: Skin) {
       let bool = this.enPropiedad.some(s => s.idSkin === skin.idSkin);
       return bool;
+  }
+
+  getMoney(): void {
+    this.tiendaService.getMoney().subscribe(
+      (response) => {
+        this.money = response.dinero;
+      },
+      (error) => {
+        console.error('Error getting money:', error);
+      }
+    );
   }
 
 }

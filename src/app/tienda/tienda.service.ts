@@ -47,6 +47,15 @@ export class TiendaService {
     return this.http.get<any[]>("http://localhost:4000/misSkins/" + '/enPropiedad', { headers });
   }
 
+  getMoney(): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return of([]);
+    }
+    const res = this.http.get<any>(`${this.baseURL}dineroUser`, { headers });
+    return res;
+  }
+
   private getHeaders(): HttpHeaders | null {
     const token = this.usersService.getToken();
     if (!token) {
