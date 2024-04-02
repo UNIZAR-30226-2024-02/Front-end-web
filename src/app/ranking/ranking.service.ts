@@ -30,7 +30,7 @@ export class RankingService {
     if (!headers) {
       return of([]);
     }
-    return this.http.get<Ranking[]>("https://localhost:4000/ranking", { headers })
+    return this.http.get<Ranking[]>("http://localhost:4000/ranking", { headers })
   }
 
 }
