@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/ngx-toastr/toastr.css';
+
 .toast-container {
     position: fixed !important;
     top: 50% !important;
