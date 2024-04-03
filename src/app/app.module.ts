@@ -16,6 +16,7 @@ import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
+import { PartidaComponent } from './partida/partida.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { CookieService } from "ngx-cookie-service";
     RankingComponent,
     PerfilComponent,
     TuperfilComponent,
-    SkinsperfilComponent
+    SkinsperfilComponent,
+    PartidaComponent
   ],
   imports: [
     BrowserModule,
