@@ -17,6 +17,8 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { PartidaComponent } from './partida/partida.component';
+import { ChatComponent } from './chat/chat.component';
+import { AmigosComponent } from './amigos/amigos.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { PartidaComponent } from './partida/partida.component';
     PerfilComponent,
     TuperfilComponent,
     SkinsperfilComponent,
-    PartidaComponent
+    PartidaComponent,
+    ChatComponent,
+    AmigosComponent
   ],
   imports: [
     BrowserModule,
