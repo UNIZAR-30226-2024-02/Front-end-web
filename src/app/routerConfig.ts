@@ -12,6 +12,7 @@ import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
 import { SocketTestComponent } from './socket-test/socket-test.component';
 import { PartidaComponent } from './partida/partida.component';
 import { AmigosComponent } from './amigos/amigos.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 const appRoutes: Routes = [
@@ -56,6 +57,10 @@ const appRoutes: Routes = [
   {
     path: 'amigos',
     component: AmigosComponent
+  },
+  { // pantalla de prueba para probar los chats
+    path: 'chat',
+    component: ChatComponent
   },
   {
     path: '',

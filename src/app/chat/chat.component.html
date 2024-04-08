@@ -1,1 +1,39 @@
-<p>chat works!</p>
+<h1>Chats</h1>
+
+<ul>
+    <li *ngFor="let chat of chats" (click)="openChat(chat.oid)">
+        {{ chat.nombre }}
+    </li>
+</ul>
+
+<div *ngIf="selectedChat" class="chat-window">
+    <h1 *ngIf="selectedChat">{{ selectedChat.nombre }}</h1>
+
+    <div *ngIf="participants.length > 0" class="chat-participants">
+        <h2>Usuarios</h2>
+        <ul>
+            <li *ngFor="let participant of participants; let isLast=last">
+                {{ participant }}<span *ngIf="!isLast">,</span>
+            </li>
+        </ul>
+    </div>
+
+    <div *ngIf="messages.length > 0" class="chat-messages">
+        <h2>Mensajes</h2>
+        <ul>
+            <li *ngFor="let message of messages">
+                <div class="message-info">
+                    <span class="message-user">{{ message.idUsuario }}</span>
+                    <span class="message-timestamp">{{ message.timestamp | date:'short' }}</span>
+                </div>
+                <p class="message-text">{{ message.texto }}</p>
+            </li>
+        </ul>
+    </div>
+
+    <div *ngIf="selectedChat" class="chat-input">
+        <input [(ngModel)]="newMessage" placeholder="Escribe un mensaje">
+        <button (click)="sendMessage()">Enviar</button>
+    </div>
+
+</div>
