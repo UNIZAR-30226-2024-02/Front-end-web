@@ -25,6 +25,9 @@ import { FilterByTypePipe } from './pipes/filter-by-type.pipe';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 
+import { PartidaComponent } from './partida/partida.component';
+import { ChatComponent } from './chat/chat.component';
+import { AmigosComponent } from './amigos/amigos.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,10 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
     TuperfilComponent,
     SkinsperfilComponent,
     SocketTestComponent,
-    FilterByTypePipe
+    FilterByTypePipe,
+    PartidaComponent,
+    ChatComponent,
+    AmigosComponent
   ],
   imports: [
     BrowserModule,
