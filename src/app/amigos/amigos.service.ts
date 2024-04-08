@@ -4,6 +4,8 @@ import { Observable, of } from "rxjs";
 import { Amigo } from './amigos'
 import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +27,13 @@ export class AmigosService {
 
     return headers;
   }
-  getAmigos(): Observable<Amigo[]>{
+  getAmigos(): Observable<string[]> {
     const headers = this.getHeaders();
     if (!headers) {
       return of([]);
     }
-    return this.http.get<Amigo[]>("http://localhost:4000/amistad/listarAmigos", { headers })
+
+    return this.http.get<{ message: string, friends: string[] }>("http://localhost:4000/amistad/listarAmigos", { headers })
+      .pipe(map(response => response.friends));
   }
 }

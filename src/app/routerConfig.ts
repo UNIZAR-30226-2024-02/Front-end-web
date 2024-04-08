@@ -10,6 +10,7 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { TuperfilComponent } from './tuperfil/tuperfil.component';
 import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
 import { PartidaComponent } from './partida/partida.component';
+import { AmigosComponent } from './amigos/amigos.component';
 
 
 const appRoutes: Routes = [
@@ -46,6 +47,10 @@ const appRoutes: Routes = [
   {
     path: 'partida',
     component: PartidaComponent
+  },
+  {
+    path: 'amigos',
+    component: AmigosComponent
   },
   {
     path: '',

@@ -8,9 +8,10 @@ import { Amigo } from './amigos'
   styleUrl: './amigos.component.css'
 })
 export class AmigosComponent {
-  listaAmigos: Amigo[] = [];
+  listaAmigos: string[] = [];
   ngOnInit(): void{
     this.getAmigos();
+    console.log(this.listaAmigos);
   }
   constructor(private amigosService: AmigosService) { }
   getAmigos(){
