@@ -21,6 +21,7 @@ export class LoginComponent {
     const user = { id: this.id, password: this.password };
     this.userService.login(user).subscribe(data => {
       this.userService.setToken(data.token);
+      this.userService.setUsername(data.idUsuario);
       this.socket.emit('login', this.id);
       this.router.navigateByUrl("/menu");
     });

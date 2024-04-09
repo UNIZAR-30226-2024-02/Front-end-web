@@ -21,4 +21,10 @@ export class UsersService {
   getToken() {
     return this.cookies.get("token");
   }
+  setUsername(username: string){
+    this.cookies.set("username", username);
+  }
+  getUsername(){
+    return this.cookies.get("username");
+  }
 }

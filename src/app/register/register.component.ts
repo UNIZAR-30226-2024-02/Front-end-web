@@ -23,6 +23,7 @@ export class RegisterComponent {
     const user = { idUsuario: this.idUsuario, password: this.password, correo: this.correo };
     this.userService.register(user).subscribe(data => {
       this.userService.setToken(data.token);
+      this.userService.setUsername(data.idUsuario);
       this.socket.emit('login', this.idUsuario);
       this.router.navigateByUrl("/menu");
     });
