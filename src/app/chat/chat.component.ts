@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ChatService } from './chat.service';
 import { ToastrService } from 'ngx-toastr';
 import e from 'express';
+import { Socket } from 'ngx-socket-io';
 
 
 export interface Chat {
@@ -32,10 +33,21 @@ export class ChatComponent implements OnInit {
   nuevoUsuario: string = '';
   selectedChats: Chat[] = [];
 
-  constructor(private chatService: ChatService, private toastr: ToastrService) { }
+  constructor(private chatService: ChatService, private toastr: ToastrService,
+              private socket: Socket) { }
 
   ngOnInit(): void {
     this.getChats();
+      this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
+       // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
+       const chat = this.selectedChats.find(chat => chat.oid === chatId);
+       if (chat) {
+          if (!chat.messages) {
+            chat.messages = [];
+          }
+          chat.messages.push({ texto: mensaje, idUsuario: user, timestamp: timestamp, _id: '' });
+        }
+      }); 
   }
 
   getChats(): void {
@@ -54,6 +66,7 @@ export class ChatComponent implements OnInit {
       this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
         chat.messages = messages;
       });
+      this.socket.emit('sendChatMessage', { chatId: chat.oid, message: message, user: 'user', timestamp: new Date().toISOString()});
     });
   }
 
@@ -107,9 +120,11 @@ export class ChatComponent implements OnInit {
         chat.participants = participants;
       });
       this.selectedChats.push(chat);
+      this.socket.emit('joinChat', chat.oid); // cada vez que abro el chat me uno a él
       console.log(this.selectedChats);
     } else {
         // The chat is currently selected, so remove it from the array
+        this.socket.emit('exitChat', chat.oid); // cada vez que cierro el chat me salgo de él
         this.selectedChats.splice(index, 1);
     }
   }
