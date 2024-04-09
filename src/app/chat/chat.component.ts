@@ -3,7 +3,7 @@ import { ChatService } from './chat.service';
 import { ToastrService } from 'ngx-toastr';
 import e from 'express';
 import { Socket } from 'ngx-socket-io';
-
+import { UsersService } from '../users/users.service';
 
 export interface Chat {
   nombre: string;
@@ -32,11 +32,13 @@ export class ChatComponent implements OnInit {
   usuarios: string[] = [];
   nuevoUsuario: string = '';
   selectedChats: Chat[] = [];
+  myName: string = '';
 
   constructor(private chatService: ChatService, private toastr: ToastrService,
-              private socket: Socket) { }
+              private socket: Socket, private usersService: UsersService) { }
 
   ngOnInit(): void {
+    this.myName = this.usersService.getUsername();
     this.getChats();
       this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
        // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
@@ -66,7 +68,7 @@ export class ChatComponent implements OnInit {
       this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
         chat.messages = messages;
       });
-      this.socket.emit('sendChatMessage', { chatId: chat.oid, message: message, user: 'user', timestamp: new Date().toISOString()});
+      this.socket.emit('sendChatMessage', { chatId: chat.oid, message: message, user: this.myName, timestamp: new Date().toISOString()});
     });
   }
 

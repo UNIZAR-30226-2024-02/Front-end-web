@@ -39,7 +39,7 @@
         <div *ngIf="chat.messages as messages" class="chat-messages">
             <h2>Mensajes</h2>
             <ul>
-                <li *ngFor="let message of messages">
+                <li *ngFor="let message of messages" [ngClass]="{'my-message': message.idUsuario === myName}">
                     <div class="message-info">
                         <span class="message-user">{{ message.idUsuario }}</span>
                         <span class="message-timestamp">{{ message.timestamp | date:'short' }}</span>

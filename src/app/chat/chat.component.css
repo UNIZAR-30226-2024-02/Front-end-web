@@ -87,3 +87,8 @@ li {
     flex-wrap: nowrap;
     overflow-x: auto;
 }
+
+.my-message {
+    background-color: lightgreen;
+    text-align: right;
+}
