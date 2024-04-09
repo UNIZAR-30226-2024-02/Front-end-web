@@ -19,15 +19,14 @@ li {
 }
 
 .chat-window {
-    position: fixed;
-    bottom: 0;
-    right: 0;
     width: 300px;
     height: 400px;
     border: 1px solid #ccc;
     background-color: #fff;
     display: flex;
     flex-direction: column;
+    margin-right: 20px;
+    flex: 0 0 auto;
 }
 
 
@@ -78,4 +77,13 @@ li {
     justify-content: space-between;
     margin-top: 10px;
     flex-shrink: 0;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
 }

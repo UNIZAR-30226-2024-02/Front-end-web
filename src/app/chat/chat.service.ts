@@ -30,13 +30,15 @@ export class ChatService {
     return headers;
   }
 
+
   crearChat(nombreChat: string, usuarios: string[]): Observable<any> {
     const headers = this.getHeaders();
     if (!headers) {
-      return of(null);
+        return of(null);
     }
 
-    return this.http.post<any>(`${this.apiUrl}/crearChat`, { nombreChat, usuarios }, { headers });
+    return this.http.post<any>(`${this.apiUrl}/crearChat`, { nombreChat, usuarios }, { headers })
+        .pipe(map(response => ({ chat: response.chat, mensaje: response.message })));
   }
 
   salirDeChat(OID: string): Observable<any> {
