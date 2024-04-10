@@ -13,6 +13,7 @@ import { SocketTestComponent } from './socket-test/socket-test.component';
 import { PartidaComponent } from './partida/partida.component';
 import { AmigosComponent } from './amigos/amigos.component';
 import { ChatComponent } from './chat/chat.component';
+import { PartidasComponent } from './partidas/partidas.component';
 
 
 const appRoutes: Routes = [
@@ -53,6 +54,10 @@ const appRoutes: Routes = [
   {
     path: 'partida',
     component: PartidaComponent
+  },
+  {
+    path: 'partidas', 
+    component: PartidasComponent
   },
   {
     path: 'amigos',

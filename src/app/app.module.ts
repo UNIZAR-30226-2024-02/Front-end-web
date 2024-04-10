@@ -28,6 +28,7 @@ const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
 import { PartidaComponent } from './partida/partida.component';
 import { ChatComponent } from './chat/chat.component';
 import { AmigosComponent } from './amigos/amigos.component';
+import { PartidasComponent } from './partidas/partidas.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { AmigosComponent } from './amigos/amigos.component';
     FilterByTypePipe,
     PartidaComponent,
     ChatComponent,
-    AmigosComponent
+    AmigosComponent,
+    PartidasComponent
   ],
   imports: [
     BrowserModule,

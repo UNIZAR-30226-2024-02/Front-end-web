@@ -1,0 +1,43 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6" *ngIf="partidas.length > 0; else noPartidas">
+            <h2 class="mb-4">Partidas Públicas</h2>
+            <div class="card mb-3" *ngFor="let partida of partidas">
+                <div class="card-header">
+                    <h3>{{ partida.nombre }}</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Max Jugadores: {{ partida.maxJugadores }}</p>
+                    <p class="card-text">Fecha Inicio: {{ partida.fechaInicio | date:'short' }}</p>
+                    <p class="card-text">Fecha Fin: {{ partida.fechaFin | date:'short' }}</p>
+                    <p class="card-text">Turno: {{ partida.turno }}</p>
+                    <h5 class="card-title">Jugadores:</h5>
+                    <ul>
+                        <li *ngFor="let jugador of partida.jugadores">
+                            Usuario: {{ jugador.usuario }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="mb-4">Invitaciones</h2>
+            <div class="card mb-3" *ngFor="let invitacion of invitaciones">
+                <!-- Display your invitacion fields here -->
+                <!-- TODO CUANDO TENGA EL FORMATO-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noPartidas>
+    <div class="container mt-5">
+        <button class="btn btn-primary mb-3" routerLink="/menu">Go Back</button>
+        <p class="text-center">Actualmente no hay partidas públicas a las que te puedas unir.
+            Puedes probar a crear una partida si lo deseas.
+        </p>
+    </div>
+</ng-template>
+<button class="btn btn-primary mb-3" routerLink="/menu">Atrás</button>
+
