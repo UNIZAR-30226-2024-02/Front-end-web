@@ -14,6 +14,7 @@ import { PartidaComponent } from './partida/partida.component';
 import { AmigosComponent } from './amigos/amigos.component';
 import { ChatComponent } from './chat/chat.component';
 import { PartidasComponent } from './partidas/partidas.component';
+import { LobbyComponent } from './lobby/lobby.component';
 
 
 const appRoutes: Routes = [
@@ -66,6 +67,10 @@ const appRoutes: Routes = [
   { // pantalla de prueba para probar los chats
     path: 'chat',
     component: ChatComponent
+  },
+  {
+    path: 'lobby',
+    component: LobbyComponent
   },
   {
     path: '',

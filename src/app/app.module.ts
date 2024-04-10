@@ -29,6 +29,7 @@ import { PartidaComponent } from './partida/partida.component';
 import { ChatComponent } from './chat/chat.component';
 import { AmigosComponent } from './amigos/amigos.component';
 import { PartidasComponent } from './partidas/partidas.component';
+import { LobbyComponent } from './lobby/lobby.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { PartidasComponent } from './partidas/partidas.component';
     PartidaComponent,
     ChatComponent,
     AmigosComponent,
-    PartidasComponent
+    PartidasComponent,
+    LobbyComponent
   ],
   imports: [
     BrowserModule,

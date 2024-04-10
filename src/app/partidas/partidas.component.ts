@@ -3,6 +3,7 @@ import { PartidasService } from './partidas.service';
 import { ToastrService } from 'ngx-toastr';
 import { Socket } from 'ngx-socket-io';
 import { UsersService } from '../users/users.service';
+import { Router } from '@angular/router';
 
 export interface Partida {
   _id: string;
@@ -38,7 +39,7 @@ export class PartidasComponent {
   invitaciones: Partida[] = [];
   
   constructor(private partidasService: PartidasService, private toastr: ToastrService,
-    private socket: Socket, private usersService: UsersService) { }
+    private socket: Socket, private usersService: UsersService, private router: Router) { }
 
   ngOnInit(): void {
     this.getPartidas();
@@ -72,17 +73,44 @@ export class PartidasComponent {
     );
   }
 
-  unirsePartida(id: string, password: string | null): void {
-    this.partidasService.unirsePartida(id, password).subscribe(
+  unirsePartida(partidaUnirse: Partida): void {
+    this.partidasService.unirsePartida(partidaUnirse._id, partidaUnirse.password).subscribe(
       partida => {
         this.getPartidas();
         //TODO navigate to partida 
         this.toastr.success('Unido a la partida con éxito');
+        setTimeout(() => {
+          // Code to be executed after 1 second
+          this.irALobby(partidaUnirse);
+        }, 1000);
+
       },
       error => {
         this.toastr.error('Error al unirse a la partida');
       }
     );
+  }
+
+  unirsePartida2(id : string, password : string | null): void {
+    this.partidasService.unirsePartida(id, password).subscribe(
+      partida => {
+        this.getPartidas();
+        //TODO navigate to partida 
+        this.toastr.success('Unido a la partida con éxito');
+        setTimeout(() => {
+          // Code to be executed after 1 second
+          
+        }, 1000);
+
+      },
+      error => {
+        this.toastr.error('Error al unirse a la partida');
+      }
+    );
+  }
+
+  irALobby(partida : Partida) {
+    this.router.navigate(['/lobby'], { state: { partida: partida } });
   }
 
 }

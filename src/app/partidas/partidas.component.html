@@ -14,7 +14,7 @@
                             {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
                         </span>
                     </p>
-                    <button class="btn btn-primary" (click)="unirsePartida(partida._id, null)">Unirse</button>
+                    <button class="btn btn-primary" (click)="unirsePartida(partida)">Unirse</button>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
         <div class="col-md-6">
             <div class="col-md-6">
                 <h2 class="mb-4">Unirse a Partida</h2>
-                <form (ngSubmit)="unirsePartida(idPartida.value, passwordPartida.value)">
+                <form (ngSubmit)="unirsePartida2(idPartida.value, passwordPartida.value)">
                   <div class="form-group">
                     <label for="idPartida">ID de Partida</label>
                     <input type="text" id="idPartida" class="form-control" #idPartida required>
@@ -63,7 +63,7 @@
                         <span *ngFor="let jugador of invitacion.jugadores; let isLast=last">
                             {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
                         </span>
-                        <button class="btn btn-primary" (click)="unirsePartida(invitacion._id, invitacion.password)">Unirse</button>
+                        <button class="btn btn-primary" (click)="unirsePartida(invitacion)">Unirse</button>
                     </p>
                 </div>
             </div>
