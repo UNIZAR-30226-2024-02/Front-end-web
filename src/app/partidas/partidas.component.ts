@@ -35,13 +35,14 @@ export interface Jugador {
 
 export class PartidasComponent {
   partidas: Partida[] = [];
-  invitaciones: any[] = [];
+  invitaciones: Partida[] = [];
   
   constructor(private partidasService: PartidasService, private toastr: ToastrService,
     private socket: Socket, private usersService: UsersService) { }
 
   ngOnInit(): void {
     this.getPartidas();
+    this.listarInvitaciones();
   }
 
   getPartidas(): void {
@@ -53,7 +54,35 @@ export class PartidasComponent {
   listarInvitaciones(): void {
     this.partidasService.listarInvitaciones().subscribe(invitaciones => {
       this.invitaciones = invitaciones;
+      console.log(invitaciones)
     });
+  }
+
+  crearPartida(nombre: string, password: string | null | undefined, numJugadores: number): void {
+    if(password=='') password = null;
+    this.partidasService.crearPartida({nombre, password, numJugadores}).subscribe(
+      partida => {
+        this.getPartidas();
+        //TODO navigate to partida 
+        this.toastr.success('Partida creada con éxito');
+      },
+      error => {
+        this.toastr.error('Error al crear la partida');
+      }
+    );
+  }
+
+  unirsePartida(id: string, password: string | null): void {
+    this.partidasService.unirsePartida(id, password).subscribe(
+      partida => {
+        this.getPartidas();
+        //TODO navigate to partida 
+        this.toastr.success('Unido a la partida con éxito');
+      },
+      error => {
+        this.toastr.error('Error al unirse a la partida');
+      }
+    );
   }
 
 }

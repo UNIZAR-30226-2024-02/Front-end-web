@@ -8,24 +8,64 @@
                 </div>
                 <div class="card-body">
                     <p class="card-text">Max Jugadores: {{ partida.maxJugadores }}</p>
-                    <p class="card-text">Fecha Inicio: {{ partida.fechaInicio | date:'short' }}</p>
-                    <p class="card-text">Fecha Fin: {{ partida.fechaFin | date:'short' }}</p>
-                    <p class="card-text">Turno: {{ partida.turno }}</p>
                     <h5 class="card-title">Jugadores:</h5>
-                    <ul>
-                        <li *ngFor="let jugador of partida.jugadores">
-                            Usuario: {{ jugador.usuario }}
-                        </li>
-                    </ul>
+                    <p>
+                        <span *ngFor="let jugador of partida.jugadores; let isLast=last">
+                            {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
+                        </span>
+                    </p>
+                    <button class="btn btn-primary" (click)="unirsePartida(partida._id, null)">Unirse</button>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
+            <div class="col-md-6">
+                <h2 class="mb-4">Unirse a Partida</h2>
+                <form (ngSubmit)="unirsePartida(idPartida.value, passwordPartida.value)">
+                  <div class="form-group">
+                    <label for="idPartida">ID de Partida</label>
+                    <input type="text" id="idPartida" class="form-control" #idPartida required>
+                  </div>
+                  <div class="form-group">
+                    <label for="passwordPartida">Password</label>
+                    <input type="password" id="passwordPartida" class="form-control" #passwordPartida>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Unirse a Partida</button>
+                </form>
+            </div>
+            <h2 class="mb-4">Crear Partida</h2>
+            <form (ngSubmit)="crearPartida(nombre.value, password.value, +numJugadores.value)">
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" class="form-control" #nombre required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" #password>
+              </div>
+              <div class="form-group">
+                <label for="numJugadores">Número de Jugadores</label>
+                <input type="number" id="numJugadores" class="form-control" #numJugadores required>
+              </div>
+              <button type="submit" class="btn btn-primary">Crear Partida</button>
+            </form>
+
+        <div class="col-md-6">
             <h2 class="mb-4">Invitaciones</h2>
             <div class="card mb-3" *ngFor="let invitacion of invitaciones">
-                <!-- Display your invitacion fields here -->
-                <!-- TODO CUANDO TENGA EL FORMATO-->
+                <div class="card-header">
+                    <h3>{{ invitacion.nombre }}</h3>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Usuarios:</h5>
+                    <p>
+                        <span *ngFor="let jugador of invitacion.jugadores; let isLast=last">
+                            {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
+                        </span>
+                        <button class="btn btn-primary" (click)="unirsePartida(invitacion._id, invitacion.password)">Unirse</button>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

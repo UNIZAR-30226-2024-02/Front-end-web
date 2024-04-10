@@ -10,7 +10,7 @@ import { of } from 'rxjs';
   providedIn: 'root'
 })
 export class PartidasService {
-  private apiUrl = 'http://localhost:4000/partidas'; 
+  private apiUrl = 'http://localhost:4000/'; 
 
   constructor(private http: HttpClient, private usersService: UsersService, public router: Router) { }
 
@@ -36,16 +36,37 @@ export class PartidasService {
         return of([]);
     }
 
-    return this.http.get<any[]>(`${this.apiUrl}`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}partidas`, { headers });
   }
 
   listarInvitaciones(): Observable<any[]> {
     const headers = this.getHeaders();
     if (!headers) {
+      return of([]);
+    }
+  
+    return this.http.get<{Partidas: any[]}>(`${this.apiUrl}partidas/invitaciones`, { headers })
+      .pipe(
+        map(response => response.Partidas)
+      );
+  }
+
+  crearPartida(partida: any): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
         return of([]);
     }
 
-    return this.http.get<any[]>(`${this.apiUrl}/invitaciones`, { headers });
+    return this.http.post<any>(`${this.apiUrl}nuevaPartida`, partida, { headers });
+  }
+
+  unirsePartida(id: string, password: string | null | undefined): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of([]);
+    }
+
+    return this.http.put<any>(`${this.apiUrl}nuevaPartida/join`, { idPartida : id, password }, { headers });
   }
   
 }
