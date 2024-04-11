@@ -94,14 +94,7 @@ export class PartidasComponent {
   unirsePartida2(id : string, password : string | null): void {
     this.partidasService.unirsePartida(id, password).subscribe(
       partida => {
-        this.getPartidas();
-        //TODO navigate to partida 
-        this.toastr.success('Unido a la partida con éxito');
-        setTimeout(() => {
-          // Code to be executed after 1 second
-          
-        }, 1000);
-
+        this.getInfo(id);
       },
       error => {
         this.toastr.error('Error al unirse a la partida');
@@ -111,6 +104,23 @@ export class PartidasComponent {
 
   irALobby(partida : Partida) {
     this.router.navigate(['/lobby'], { state: { partida: partida } });
+  }
+
+  getInfo(id : string) {
+    this.partidasService.obtenerInformacion(id).subscribe(
+      info => {
+        const p : Partida = info;
+        console.log(p)
+        this.toastr.success('Unido a la partida con éxito', p.nombre);
+        setTimeout(() => {
+          this.irALobby(p); 
+        }, 1000);
+
+      },
+      error => {
+        this.toastr.error('Error al obtener la información de la partida', error);
+      }
+    );
   }
 
 }

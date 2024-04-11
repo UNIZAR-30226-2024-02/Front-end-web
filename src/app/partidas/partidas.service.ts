@@ -68,5 +68,14 @@ export class PartidasService {
 
     return this.http.put<any>(`${this.apiUrl}nuevaPartida/join`, { idPartida : id, password }, { headers });
   }
+
+  obtenerInformacion(id : string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of([]);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}partidas/partida/${id}`, { headers });
+  }
   
 }

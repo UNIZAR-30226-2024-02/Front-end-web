@@ -1,1 +1,28 @@
 @import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
+
+.background-image {
+    background-image: url('/assets/img-0vyoZ2EwbuNtpdymzDNJY.jpeg');
+    height: 100%; /* Cambiado a 100% para que ocupe toda la altura del contenedor */
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.div-scrollable {
+height: 100vh;
+width: 100vw;
+overflow: auto;
+}
+.div-scrollable::-webkit-scrollbar {
+display: none;
+}
