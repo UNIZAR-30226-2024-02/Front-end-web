@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Socket } from 'ngx-socket-io';
 import { UsersService } from '../users/users.service';
 import { Router } from '@angular/router';
+import { Chat } from '../chat/chat.component';
 
 export interface Partida {
   _id: string;
@@ -17,6 +18,7 @@ export interface Partida {
   cartas: any[];
   descartes: any[];
   mapa: any[];
+  chat: Chat;
   __v: number;
 }
 
@@ -64,8 +66,8 @@ export class PartidasComponent {
     this.partidasService.crearPartida({nombre, password, numJugadores}).subscribe(
       partida => {
         this.getPartidas();
-        //TODO navigate to partida 
         this.toastr.success('Partida creada con éxito');
+        this.getInfo(nombre);
       },
       error => {
         this.toastr.error('Error al crear la partida');
@@ -77,7 +79,6 @@ export class PartidasComponent {
     this.partidasService.unirsePartida(partidaUnirse._id, partidaUnirse.password).subscribe(
       partida => {
         this.getPartidas();
-        //TODO navigate to partida 
         this.toastr.success('Unido a la partida con éxito');
         setTimeout(() => {
           // Code to be executed after 1 second

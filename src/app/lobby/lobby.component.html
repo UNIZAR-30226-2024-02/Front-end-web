@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
+<div class="d-flex">
     <div class="container mt-5">
         <div class="card">
             <div class="card-body">
@@ -25,6 +26,20 @@
               </div>
             </div>
           </div>
+    </div>
+    
+      <div class="card mt-4 ml-4">
+        <div class="card-header">
+          <h2 class="card-title text-center">Chat de la partida</h2>
+        </div>
+        <div class="card-body">
+          <div class="message" *ngFor="let mensaje of chat.mensajes">
+            <p><strong>{{mensaje.idUsuario}}:</strong></p>
+            <p>{{mensaje.texto}}</p>
+            <p class="timestamp">{{mensaje.timestamp | date:'short'}}</p>
+          </div>
+        </div>
+      </div>
     </div>
 </body>
 </html>

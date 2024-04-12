@@ -4,14 +4,29 @@ import {Partida} from '../partidas/partidas.component';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
+export interface Chat {
+  nombreChat : string;
+  usuarios: string[];
+  _id : string;
+  mensajes : Mensaje[];
+}
+
+export interface Mensaje{
+  texto: string;
+  idUsuario: string;
+  timestamp: string;
+}
+
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.css']
 })
+
 export class LobbyComponent implements OnInit {
   partidaId: string = '';
   partida: Partida = {} as Partida;
+  chat: Chat = {} as Chat;
 
   constructor(private router: Router, private lobbyService: LobbyService, private toastr: ToastrService) {
     const navigation = this.router.getCurrentNavigation();
@@ -20,6 +35,7 @@ export class LobbyComponent implements OnInit {
       this.router.navigate(['/menu']);
     } else {
       this.partida = state.partida;
+      this.chat = state.partida.chat;
     }
   }
 
