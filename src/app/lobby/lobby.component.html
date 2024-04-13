@@ -11,9 +11,12 @@
             <div class="card-body">
                 <h1 class="card-title text-center">{{partida.nombre}}</h1>
                 <p class="card-text">Max Jugadores: {{partida.maxJugadores}}</p>
-                <p class="card-text">Usuarios: 
-                    <span *ngFor="let jugador of partida.jugadores; let isLast=last">{{jugador.usuario}}{{isLast ? '' : ', '}}</span>
-                </p>
+                <div class="user-container">
+                  <div class="user" *ngFor="let user of users | keyvalue">
+                    <img class="user-img" [src]="user.value" alt="User skin">
+                    <div class="user-name">{{user.key}}</div>
+                  </div>
+                </div>
             </div>
         </div>
         <div class="card-footer">
@@ -34,10 +37,16 @@
         </div>
         <div class="card-body">
           <div class="message" *ngFor="let mensaje of chat.mensajes">
-            <p><strong>{{mensaje.idUsuario}}:</strong></p>
-            <p>{{mensaje.texto}}</p>
-            <p class="timestamp">{{mensaje.timestamp | date:'short'}}</p>
+            <div class="chat-bubble" [ngClass]="{'my-message': mensaje.idUsuario == myUser}">
+              <p><strong>{{mensaje.idUsuario}}:</strong></p>
+              <p>{{mensaje.texto}}</p>
+              <p class="timestamp">{{mensaje.timestamp | date:'short'}}</p>
+            </div>
           </div>
+        </div>
+        <div class="card-footer">
+          <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
+          <button class="btn btn-primary mt-2" (click)="sendMessage(enviarMensaje.value); enviarMensaje.value=''">Enviar</button>
         </div>
       </div>
     </div>

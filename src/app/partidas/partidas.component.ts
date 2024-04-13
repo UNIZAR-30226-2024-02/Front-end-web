@@ -82,7 +82,7 @@ export class PartidasComponent {
         this.toastr.success('Unido a la partida con éxito');
         setTimeout(() => {
           // Code to be executed after 1 second
-          this.irALobby(partidaUnirse);
+          this.getInfo(partidaUnirse._id);
         }, 1000);
 
       },
