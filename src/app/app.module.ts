@@ -30,6 +30,7 @@ import { ChatComponent } from './chat/chat.component';
 import { AmigosComponent } from './amigos/amigos.component';
 import { PartidasComponent } from './partidas/partidas.component';
 import { LobbyComponent } from './lobby/lobby.component';
+import { HistorialComponent } from './historial/historial.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { LobbyComponent } from './lobby/lobby.component';
     ChatComponent,
     AmigosComponent,
     PartidasComponent,
-    LobbyComponent
+    LobbyComponent,
+    HistorialComponent
   ],
   imports: [
     BrowserModule,

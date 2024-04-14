@@ -15,6 +15,7 @@ import { AmigosComponent } from './amigos/amigos.component';
 import { ChatComponent } from './chat/chat.component';
 import { PartidasComponent } from './partidas/partidas.component';
 import { LobbyComponent } from './lobby/lobby.component';
+import { HistorialComponent } from './historial/historial.component';
 
 
 const appRoutes: Routes = [
@@ -71,6 +72,10 @@ const appRoutes: Routes = [
   {
     path: 'lobby',
     component: LobbyComponent
+  },
+  {
+    path: 'historial',
+    component: HistorialComponent
   },
   {
     path: '',

@@ -1,0 +1,18 @@
+<div class="container">
+    <h2 class="text-center mt-5">Historial</h2>
+    <ul class="list-group mt-4">
+        <li class="list-group-item" *ngFor="let partida of partidas">
+            <h5>{{ partida.nombre }}</h5>
+            <p><strong>Fecha de inicio:</strong> {{ partida.fechaInicio }}</p>
+            <p><strong>Fecha de fin:</strong> {{ partida.fechaFin }}</p>
+            <p><strong>Turno:</strong> {{ partida.turno }}</p>
+            <p><strong>Jugadores:</strong>
+                <span *ngFor="let jugador of partida.jugadores; let isLast=last">
+                    <!-- Ganador TODO: ponle el emoji de la corona -->
+                    {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
+                    <!-- <span *ngIf="jugador.esGanador">&#127942;</span> <!-- Emoji de la corona -->
+                </span>
+            </p>
+        </li>
+    </ul>
+</div>
