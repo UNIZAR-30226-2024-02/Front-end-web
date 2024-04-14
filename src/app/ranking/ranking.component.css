@@ -1,48 +1,66 @@
+
+
+/* Main layout containers */
 .main-container {
     display: flex;
     justify-content: space-between;
-    background-color: #e0f7fa; /* El mismo color de fondo que el ranking-container */
+    background: linear-gradient(to right, #e0f7fa, #b2ebf2); /* Smooth gradient background */
+    font-family: 'Roboto', sans-serif; /* Roboto font for modern typography */
 }
 
 .side-container {
-    flex-grow: 1; /* Hace que los contenedores de los lados crezcan y ocupen el espacio disponible */
-    background-color: #e0f7fa; /* Asegúrate de que este sea el mismo color que el del ranking-container */
+    flex-grow: 1;
+    background: none; /* Transparent sides to emphasize the center */
 }
 
 .ranking-container {
-    /* Tus estilos existentes aquí */
-    /* Asegúrate de que no tenga un ancho fijo si quieres que los contenedores laterales se ajusten correctamente */
-    flex-grow: 2; /* Esto hará que el contenedor central sea más ancho que los laterales */
-    margin: 0 20px; /* Esto agrega un poco de espacio entre los contenedores laterales y el central */
+    flex-grow: 2;
+    margin: 0 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white for mild contrast */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Subtle shadow */
 }
 
-.ranking-container {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-    background-color: #e0f7fa; /* Color celeste claro */
-}
-
-  
-  .user-container {
+/* User display inside the leaderboard */
+.user-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
-  
-  .user-info {
+    border-radius: 15px;
+    background-color: #ffffff;
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.user-container:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.user-info {
     margin: 0 10px;
-  }
-  
-  .leaderboard {
-    margin-top: 40px;
-  }
-  
-  .leaderboard h2 {
+    color: #333; /* Darker font color for better readability */
+}
+
+/* Leaderboard header styling */
+.leaderboard h2 {
+    color: #007bff; /* Blue color for headings to stand out */
     margin-bottom: 20px;
-  }
+}
+
+/* Button styling with hover effect */
+.button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
