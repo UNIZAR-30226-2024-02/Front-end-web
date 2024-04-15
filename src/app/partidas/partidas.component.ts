@@ -13,6 +13,7 @@ export interface Partida {
   fechaInicio: Date | null;
   fechaFin: Date | null;
   password: string | null;
+  ganador? : string | null;
   turno: number;
   jugadores: Jugador[];
   cartas: any[];
@@ -46,6 +47,18 @@ export class PartidasComponent {
   ngOnInit(): void {
     this.getPartidas();
     this.listarInvitaciones();
+    this.socket.on('gameInvitation', (gameId: string, user_from: string) => {
+      this.partidasService.obtenerInformacion(gameId).subscribe(
+        info => {
+          const p : Partida = info;
+          this.invitaciones.push(p);
+  
+        },
+        error => {
+          this.toastr.error('Error al obtener la información de la partida', error);
+        }
+      );
+      });
   }
 
   getPartidas(): void {

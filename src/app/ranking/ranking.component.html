@@ -1,40 +1,25 @@
 <div class="main-container">
     <div class="side-container left"></div>
-    <div class="ranking-container">    
-    
     <div class="ranking-container">
         <h1>Ranking</h1>
-        
+
         <div class="user-container">
-        <div class="user-info">
-            <p>Tu Nombre</p>
-            <p>Tus Puntos</p>
-        </div>
-        </div>
-        
-        <div class="leaderboard">
-        <h2>Tabla de Clasificación</h2>
-        <!--
-        <div class="user-container" *ngFor="let user of leaderboard">
             <div class="user-info">
-            <p>{{ user.name }}</p>
-            <p>{{ user.points }}</p>
+                <p>Tu Nombre</p>
+                <p>Tus Puntos</p>
             </div>
         </div>
-        -->
-        <!-- Jugadores adicionales -->
-        <ul class="user-container">
-            <li *ngFor="let spot of leaderboard">
-                <div class="user-info">
-                    <span class="uid">{{spot.idUsuario}}</span>
-                    <span class="pts">{{spot.elo}}</span>
-                </div>
-            </li>
-        </ul>
+
+        <div class="leaderboard">
+            <h2>Tabla de Clasificación</h2>
+            <ul class="list-unstyled">
+                <li *ngFor="let spot of leaderboard" class="user-container">
+                    <div class="user-info">
+                        <span>{{spot.idUsuario}}</span> - <span>{{spot.elo}}</span>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
-  
-
-</div>
-<div class="side-container right"></div>
+    <div class="side-container right"></div>
 </div>

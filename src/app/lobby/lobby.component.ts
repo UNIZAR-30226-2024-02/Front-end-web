@@ -35,6 +35,7 @@ export class LobbyComponent implements OnInit {
   chat: Chat = {} as Chat;
   myUser = this.userService.getUsername();
   users: { [key: string]: any } = {};
+  nombreJugador : string = '';
 
   constructor(private router: Router, private lobbyService: LobbyService, private toastr: ToastrService, 
       private chatService: ChatService, private userService: UsersService, private socket: Socket)
@@ -47,7 +48,7 @@ export class LobbyComponent implements OnInit {
         this.partida = state.partida;
         this.chat = state.partida.chat;
         this.socket.emit('joinChat', this.chat._id);
-        this.socket.emit('joinGame', { chatId: this.partida._id, user: this.userService.getUsername() });
+        this.socket.emit('joinGame', { gameId: this.partida._id, user: this.userService.getUsername() });
         const userRequests = this.partida.jugadores.map((jugador: any) => 
           this.userService.getUserSkin(jugador.usuario).pipe(
             map(response => [jugador.usuario, response.path])
@@ -97,7 +98,7 @@ export class LobbyComponent implements OnInit {
       this.router.navigate(['/menu']);
       this.toastr.success('Has salido de la partida');
     });
-    this.socket.emit('disconnectGame', { chatId: this.partida._id, user: this.userService.getUsername() });
+    this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
     this.router.navigate(['/menu']);
     this.toastr.success('Has salido de la partida');
   }
@@ -116,6 +117,19 @@ export class LobbyComponent implements OnInit {
       this.chat.mensajes.push({texto: texto, idUsuario: this.myUser , timestamp: new Date().toISOString()});
       this.socket.emit('sendChatMessage', { chatId: this.chat._id, message: texto, user: this.myUser, timestamp: new Date().toISOString()});
     });
+  }
+
+  invitar(user : string, partida_id: string) {
+    console.log(partida_id)
+    this.lobbyService.invitar(user, partida_id).subscribe(
+      info => {
+        this.toastr.success('Invitación enviada con éxito al jugador ' + user);
+        this.socket.emit('inviteGame', { gameId: partida_id, user_dest: user, user_from: this.userService.getUsername()})
+      },
+      error => {
+        this.toastr.error('Error al enviar la invitación', error);
+      }
+    );
   }
 
 }

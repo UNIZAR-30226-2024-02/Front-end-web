@@ -47,5 +47,14 @@ export class LobbyService {
 
     return this.http.post<any>(`${this.apiUrl}partidas/salirPartida`, { partidaId }, { headers });
   }
+
+  invitar(user : string, partida_id : string) : Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of([]);
+    }
+
+    return this.http.put<any>(`${this.apiUrl}nuevaPartida/invite`, {user, idPartida : partida_id}, { headers });
+  }
   
 }

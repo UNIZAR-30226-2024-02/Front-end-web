@@ -28,7 +28,7 @@
 }
 
 .card-body {
-    height: 60vh; /* adjust this value as needed */
+    height: 50vh; /* adjust this value as needed */
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -71,4 +71,8 @@
     border-radius: 5px; /* Round the corners */
     padding: 1rem; /* Add some padding */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Add a shadow */
+}
+
+.custom-card {
+    height: 250px;
 }
