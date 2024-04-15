@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { Chat, Mensaje} from '../lobby/lobby.component'
+import {Partida} from '../partidas/partidas.component';
+import { UsersService } from '../users/users.service';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-partida',
@@ -7,29 +12,80 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './partida.component.css'
 })
 export class PartidaComponent {
-
+  colores = ['verde', 'rojo', 'azul', 'amarillo', 'rosa', 'morado'];
   numTropas = 0;
   tropas: Map<string, { numTropas: number, user: string }>;
-  whoami : string = 'player1';
+  whoami : string = '';
+  turnoJugador = '';
   colorMap: Map<string, string>;
   numJugadores: number = 3; // stub
   etapa: string = 'preparacion'; // preparación, juego y final
   subetapa: string = 'waiting'; // waiting, colocación, ataque, movimiento, carta
+  partida: Partida = {} as Partida;
+  chat : Chat = {} as Chat;
+  text : string = '';
+  tropasPuestas = 0;
 
-  constructor(private toastr: ToastrService) {
+  constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket) {
     this.tropas = new Map<string, { numTropas: number, user: string }>();
     this.colorMap = new Map<string, string>();
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as {partida: any};
+    // TODO DE MOMENTO ASÍ PERO LUEGO TENDRÉ QUE COGER LA INFO DEL BACKEND
+    if (!state || !state.partida) {
+      console.error('Error: No partida found');
+     // this.router.navigate(['/menu']);
+    } else {
+      this.partida = state.partida;
+      this.chat = state.partida.chat;
+    }
   }
 
   onRegionClick(regionId: string) {
     console.log(`Se ha hecho clic en la región con ID: ${regionId}`)
   }
 
+  distribuirPiezas(){
+    switch(this.partida.jugadores.length){
+      case 2: 
+        this.numTropas = 40;
+        break;
+      case 3:
+        this.numTropas = 35;
+        break;
+      case 4:
+        this.numTropas = 30;
+        break;
+      case 5:
+        this.numTropas = 25;
+        break;
+      case 6:
+        this.numTropas = 20;
+        break;
+    }
+  }
+
   ngOnInit() {
-    this.numTropas = 35;
-    this.colorMap.set('player1', 'verde');
-    this.colorMap.set('player2', 'rojo');
-    this.colorMap.set('player3', 'azul');
+    // Randomly reorder the colores array (Fisher-Yates shuffle algorithm)
+    for (let i = this.colores.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.colores[i], this.colores[j]] = [this.colores[j], this.colores[i]];
+    }
+    for(let jugador of this.partida.jugadores){
+      if (this.colores.length > 0) {
+        this.colorMap.set(jugador.usuario, this.colores.pop() as string);
+      } else {
+        console.error('No more colors available');
+      }
+    }
+    console.log(this.colorMap)
+    this.whoami = this.userService.getUsername();
+    let result = this.partida.turno % this.partida.jugadores.length;
+    this.turnoJugador = this.partida.jugadores[result].usuario;
+    // TODO LLAMADA AL BACK QUE OBTENGA EN QUÉ ESTADO ESTÁ LA PARTIDA REALMENTE, 
+    // U OBTENERLO DE LA PARTIDA REAL DE ALGÚN MODO, Y SI ES UNA PARTIDA NUEVA, HACER ESTO
+    // EN CASO CONTRARIO, ACTUALIZAR EL ESTADO A SEGÚN CORRESPONDA
+    this.distribuirPiezas();
   }
 
   onSVGLoad(event: any) {
@@ -41,12 +97,7 @@ export class PartidaComponent {
       // Agrega un event listener a cada elemento <path>
       paths.forEach((path: SVGElement) => {
         path.addEventListener('click', (e: MouseEvent) => {
-          const targetId = path.id;
-          console.log(`Clic en la región con ID: ${targetId}`);
-          const imgWidth = 50;
-          const imgHeight = 50;
-
-          this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami);
+          this.stateMachine(path, svgDoc, e);
         });
 
         if (!this.tropas.has(path.id)) {
@@ -57,9 +108,54 @@ export class PartidaComponent {
     }
   }
 
-  colocarTropas(e: MouseEvent, svgDoc: Document, imgWidth: number, imgHeight: number, user: string) {
+  waitForTropasPuestas(): Promise<void> {
+    return new Promise((resolve) => {
+      const checkInterval = setInterval(() => {
+        if (this.tropasPuestas === 1) {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 1000); // Check every second
+    });
+  }
+
+  async stateMachine(path : SVGElement, svgDoc : any, e: MouseEvent){
+    const targetId = path.id;
+    console.log(`Clic en la región con ID: ${targetId}`);
+    const imgWidth = 50;
+    const imgHeight = 50;
+    switch(this.etapa){
+      case 'preparacion':
+        if(this.turnoJugador === this.whoami){
+          this.tropasPuestas=0;
+          this.text = 'Coloca una tropa en un país libre'
+          this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami, 1);
+          await this.waitForTropasPuestas();
+          this.turnoJugador = this.partida.jugadores[(this.partida.turno + 1) % this.partida.jugadores.length].usuario;
+          console.log(this.turnoJugador)
+          // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
+        } else {
+          this.text = 'Espera tu turno'
+          this.clickWrongTerrain(e, 'No es tu turno')
+        }
+        break;
+      case 'juego':
+        //this.juego(e, svgDoc, imgWidth, imgHeight);
+        break;
+      case 'final':
+        //this.final(e, svgDoc, imgWidth, imgHeight);
+        break;
+    }
+    //this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami);
+  }
+
+  colocarTropas(e: MouseEvent, svgDoc: Document, imgWidth: number, imgHeight: number, user: string, limite? : number) {
     // Ask the user for the number of troops
-    const troops = window.prompt('How many troops do you want to add?');
+    let troops;
+    if(limite)
+      troops = "1"
+    else 
+     troops = window.prompt('How many troops do you want to add?');
     const terrainId = (e.target as SVGElement).id;
     console.log(this.tropas)
     console.log(this.whoami)
@@ -77,6 +173,7 @@ export class PartidaComponent {
     }
 
     this.numTropas -= numTroops;
+    this.tropasPuestas += numTroops;
 
     const terrainInfo = this.tropas.get(terrainId);
     if (terrainInfo) {
@@ -165,6 +262,14 @@ export class PartidaComponent {
       addImage(`/assets/infanteria_${this.colorMap.get(this.whoami)}.png`, index);
     }
     svgDoc.documentElement.appendChild(text);
+  }
+
+  clickWrongTerrain(e: MouseEvent, errorMessage: string) {
+    // Get the terrain ID
+    const terrainId = (e.target as SVGElement).id;
+
+    // Display the error message
+    this.toastr.error(errorMessage);
   }
   
 }

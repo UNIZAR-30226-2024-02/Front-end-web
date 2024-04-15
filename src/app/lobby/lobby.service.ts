@@ -30,13 +30,16 @@ export class LobbyService {
     return headers;
   }
 
+
+  //TODO HACER FUNCIONAL --> BACK END!! 
   empezarPartida(partidaId: string): Observable<any> {
     const headers = this.getHeaders();
     if (!headers) {
         return of([]);
     }
 
-    return this.http.post<any>(`${this.apiUrl}partidas/empezarPartida`, { partidaId }, { headers });
+    //return this.http.post<any>(`${this.apiUrl}partidas/empezarPartida`, { partidaId }, { headers });
+    return of([]);
   }
 
   salirPartida(partidaId: string): Observable<any> {

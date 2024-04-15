@@ -65,6 +65,7 @@ export class LobbyComponent implements OnInit {
     }
 
   ngOnInit(): void {
+
     this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
       // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
       console.log("recibido")
@@ -82,6 +83,7 @@ export class LobbyComponent implements OnInit {
       this.toastr.info(user + ' se ha unido a la partida', 'Nuevo jugador');
       this.userService.getUserSkin(user).subscribe(response => {
         this.users[user] = response.path;
+        this.partida.jugadores.push({ usuario: user, territorios: [], cartas: [], abandonado: false, _id: ''});
       });
       console.log(this.users);
       });
@@ -90,6 +92,10 @@ export class LobbyComponent implements OnInit {
         this.toastr.info(user + ' ha abandonado la partida', 'Jugador desconectado');
         delete this.users[user];
         console.log(this.users);
+      });
+      this.socket.on('gameStarted', (gameId: string) => {
+        console.log('gameStarted', gameId);
+        this.router.navigate(['/partida'], { state: { partida: this.partida } });
       });
   }
   //TODO HACERLA FUNCIONAL
@@ -106,7 +112,10 @@ export class LobbyComponent implements OnInit {
   //TODO HACERLA FUNCIONAL
   empezarPartida() {
     this.lobbyService.empezarPartida(this.partidaId).subscribe(() => {
-      //this.router.navigate(['/partida']);
+      // this.service.empezarPartida.... / inicialziar / loquesea -> BACK EDN API
+      this.socket.emit('gameStarted', this.partida._id);
+      console.log(this.partidaId)
+      this.router.navigate(['/partida'], { state: { partida: this.partida } });
       this.toastr.success('Imagina que la partida ha comenzado');
     });
     this.toastr.success('Imagina que la partida ha comenzado');
