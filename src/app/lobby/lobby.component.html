@@ -29,6 +29,15 @@
               </div>
             </div>
           </div>
+        <div class="card mt-4 ml-4 custom-card">
+            <div class="card-header">
+                <h2 class="card-title text-center">Invitar a un jugador</h2>
+            </div>
+            <div class="card-body">
+                <input type="text" [(ngModel)]="nombreJugador" class="form-control" placeholder="Nombre del jugador">
+                <button class="btn btn-primary mt-2" (click)="invitar(nombreJugador, partida._id)">Invitar</button>
+            </div>
+        </div>
     </div>
     
       <div class="card mt-4 ml-4">
