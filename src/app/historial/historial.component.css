@@ -1,1 +1,12 @@
 @import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
+
+.jugador {
+    position: relative;
+}
+
+.corona {
+    position: absolute;
+    top: -10px; /* Ajusta este valor según sea necesario */
+    left: 0;
+    font-size: 0.8em; /* Adjust this value to make the icon larger or smaller */
+}

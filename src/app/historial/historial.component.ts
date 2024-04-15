@@ -21,4 +21,9 @@ export class HistorialComponent {
   getHistorico(){
     this.historialService.getHistorial().subscribe(listaPartidas => this.partidas = listaPartidas);
   }
+
+  esGanador(jugador : string, id : string){
+    let foundPartida = this.partidas.find(partida => partida._id === id);
+    return foundPartida ? jugador === foundPartida.ganador : false;
+  }
 }

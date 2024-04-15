@@ -13,6 +13,7 @@ export interface Partida {
   fechaInicio: Date | null;
   fechaFin: Date | null;
   password: string | null;
+  ganador? : string | null;
   turno: number;
   jugadores: Jugador[];
   cartas: any[];
