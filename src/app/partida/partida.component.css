@@ -1,0 +1,13 @@
+@keyframes war {
+    0% { background-color: red; }
+    50% { background-color: yellow; }
+    100% { background-color: red; }
+}
+
+.war {
+    animation: war 1s infinite;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    z-index: 1000;
+}

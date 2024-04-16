@@ -1,22 +1,19 @@
-<div>
-    Tropas: {{ numTropas }}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div>Tropas: {{ numTropas }}</div>
+            <div>Turno Jugador: {{ turnoJugador }}</div>
+            <div>
+                <button (click)="updateFase()" class="btn btn-primary">Siguiente fase</button>
+            </div>
+            <div>{{ text }}</div>
+            <div *ngIf="fase == 1" style="font-size: 1.5em; border: 1px solid black; padding: 10px; margin: 10px;">
+                Tropas seleccionadas: {{ ataqueTropas }}
+            </div>
+        </div>
+        <div class="col-md-9">
+            <object type="image/svg+xml" data="assets/Risk_game_board.svg" (load)="onSVGLoad($event)" style="width: 100%; height: auto;"></object>
+        </div>
+    </div>
 </div>
-
-<div>
-    Turno Jugador: {{ turnoJugador }}
-</div>
-<!--
-<select [(ngModel)]="whoami">
-    <option value="player1">Option 1</option>
-    <option value="player2">Option 2</option>
-    <option value="player3">Option 3</option>
-</select>
--->
-<div>
-    {{ text }}
-</div>
-
-<div>
-    <object type="image/svg+xml" data="assets/Risk_game_board.svg" (load)="onSVGLoad($event)" style="width: 50%; height: 50%;"></object>
-</div>
-

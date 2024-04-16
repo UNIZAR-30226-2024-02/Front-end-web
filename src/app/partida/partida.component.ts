@@ -5,6 +5,7 @@ import {Partida} from '../partidas/partidas.component';
 import { Chat } from '../chat/chat.component';
 import { UsersService } from '../users/users.service';
 import { Socket } from 'ngx-socket-io';
+import { ChangeDetectorRef } from '@angular/core';
 
 export interface Territorio{
   nombre: string;
@@ -53,7 +54,7 @@ export class PartidaComponent {
   partida: Partida = {} as Partida; // para inicializarlo
   fase?: number = 0; // Colocar- -> 0; Atacar -> 1; Maniobrar -> 2; Robar -> 3; Fin -> 4;
   // Atributos especfícios (míos, del jugador que juega en este cliente)
-  numTropas = 0;
+  numTropas = 1000;
   tropas: Map<string, { numTropas: number, user: string }>;
   whoami : string = '';
   colorMap: Map<string, string>; // no parece necesario
@@ -67,8 +68,16 @@ export class PartidaComponent {
   const Robar = 3;
   const Fin = 4; // No se usa
   */
+  svgDoc: Document | null = null;
+  eventoCancelado = false;
+  // Ataque
+  ataqueOrigen: string = '';
+  ataqueDestino: string = '';
+  ataqueTropas: number = 0; 
 
-  constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket) {
+  constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
+              private cdr: ChangeDetectorRef
+  ) {
     this.tropas = new Map<string, { numTropas: number, user: string }>();
     this.colorMap = new Map<string, string>();
     const navigation = this.router.getCurrentNavigation();
@@ -274,7 +283,7 @@ export class PartidaComponent {
    this.jugadores.forEach((jugador, i) => {
       jugador.territorios = shuffledTerritories
         .filter((_: any, index: number) => index % this.jugadores.length === i)
-        .slice(0, 4) // Take only the first 4 territories
+        .slice(0, Math.floor(shuffledTerritories.length / this.jugadores.length)) 
         .map(territorio => territorio.nombre); // Store only the territory name
     });
   }
@@ -311,6 +320,7 @@ export class PartidaComponent {
       this.ganador = partida.ganador;
       this.fase = partida.fase;
       this.fase = 0; // stub
+      this.updateText(this.fase)
       this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
     }
 
@@ -331,9 +341,34 @@ export class PartidaComponent {
         // If a player was found, get their color
         let color = jugador ? jugador.color : undefined;
   
-        console.log(`The color of territory ${territorio.nombre} is ${color}`);
         if(color !== undefined) {
-         // this.colocarPiezas(territorio, color);
+         console.log(`The color of territory ${territorio.nombre} is ${color}`);
+         let svgElement = this.svgDoc?.getElementById(territorio.nombre);
+         let event: MouseEvent | undefined;
+         //console.log(territorio.nombre, svgElement);
+         //console.log(this.svgDoc)
+          if (svgElement && svgElement.nodeName === 'path') {
+            console.log(' entro en el if')
+            let bbox = ((svgElement as unknown) as SVGGraphicsElement).getBBox();
+            let rect = svgElement.getBoundingClientRect();
+
+            let centerX = rect.left + bbox.width / 2;
+            let centerY = rect.top + bbox.height / 2 - 70; 
+
+            // Create a fake MouseEvent
+            event = new MouseEvent('click', {
+              clientX: centerX,
+              clientY: centerY,
+            });
+             // Dispatch the event on svgElement
+            svgElement.dispatchEvent(event);
+            console.log(event)
+          }
+        
+         if(jugador && event && this.svgDoc){
+          this.colocarTropas(event, this.svgDoc, 50, 50, jugador.usuario, true, false, territorio.tropas)
+          console.log(jugador.usuario)
+          }
         }
       }
     }
@@ -370,15 +405,16 @@ export class PartidaComponent {
     this.mapaStub(); this.cartasStub();
     console.log(this.mapa); console.log(this.jugadores)
     this.inicializacionPartida(this.partida);
-    this.distribuirPiezas();
+    //TODO ABRIR LISTENERS DE LOS SOCKETS
   }
 
   onSVGLoad(event: any) {
     const svgDoc = event.target.contentDocument;
+    this.svgDoc = svgDoc;
+    this.distribuirPiezas();
     if (svgDoc) {
       // Busca todos los elementos <path> dentro del grupo con ID "map"
       const paths = svgDoc.querySelectorAll('#map path');
-
       // Agrega un event listener a cada elemento <path>
       paths.forEach((path: SVGElement) => {
         path.addEventListener('click', (e: MouseEvent) => {
@@ -396,7 +432,7 @@ export class PartidaComponent {
   waitForTropasPuestas(): Promise<void> {
     return new Promise((resolve) => {
       const checkInterval = setInterval(() => {
-        if (this.tropasPuestas === 1) {
+        if (this.tropasPuestas >= 1 || this.eventoCancelado) {
           clearInterval(checkInterval);
           resolve();
         }
@@ -413,19 +449,43 @@ export class PartidaComponent {
       case 0: // colocación
         if(this.turnoJugador === this.whoami){
           this.tropasPuestas=0;
-          this.text = 'Coloca una tropa en un país libre'
-          this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami, 1);
+          this.eventoCancelado = false;
+          this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami, false, false);
           await this.waitForTropasPuestas();
-          this.turnoJugador = this.partida.jugadores[(this.partida.turno + 1) % this.partida.jugadores.length].usuario;
-          console.log(this.turnoJugador)
-          // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
+          if(!this.eventoCancelado){
+            // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
+            // colocarTropas(this.partida._id, this.whoami, territorio, tropas)
+            // ESTO RECIBIRÁ EL BACK END
+            console.log(this.partida._id, this.whoami, targetId, this.tropasPuestas)   
+          }       
         } else {
-          this.text = 'Espera tu turno'
           this.clickWrongTerrain(e, 'No es tu turno')
         }
         break;
       case 1: // ataque
-        //this.juego(e, svgDoc, imgWidth, imgHeight);
+        // antes de atacar, selecciono las tropas q quiero utilizar para atacar
+        if(this.ataqueTropas === 0){
+          this.ataqueTropas = 0;
+          this.ataqueDestino = '';
+          this.ataqueOrigen = '';
+          const numTroops = await this.seleccionarTropas(e, svgDoc, this.whoami);
+          console.log(`Player has selected ${numTroops} troops`);
+          this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, -numTroops); // las quito del mapa
+          this.numTropas -= numTroops; // tampoco las tengo colocables, las tengo seleccionadas así que las quito de ahí
+          this.cdr.detectChanges();
+        } else {
+          // una vez seleccionadas las tropas me tocará elegir un territorio enemigo
+          const enemyTerritoryId = await this.seleccionarTerritorioEnemigo(e, svgDoc, this.whoami);
+          console.log(`Player has selected enemy territory ${enemyTerritoryId}`);
+          this.ataqueDestino = enemyTerritoryId;
+          // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
+          //this.partida._id, this.whoami, targetId, this.tropasPuestas
+          //atacarTerritorio(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
+          // esto recibe el back end
+          console.log(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
+          // dependiendo del resultado de la llamada al back, se actualizará el estado de la partida y permitirá continuar
+        }
+
         break;
       case 2: // maniobra 
         //this.final(e, svgDoc, imgWidth, imgHeight);
@@ -438,18 +498,25 @@ export class PartidaComponent {
         break;
     }
     //this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami);
+    this.cdr.detectChanges();
   }
 
-  colocarTropas(e: MouseEvent, svgDoc: Document, imgWidth: number, imgHeight: number, user: string, limite? : number) {
+  colocarTropas(e: MouseEvent, svgDoc: Document, imgWidth: number, imgHeight: number, user: string, init : boolean, select : boolean, limite? : number) {
     // Ask the user for the number of troops
+
     let troops;
-    if(limite)
-      troops = "1"
-    else 
-     troops = window.prompt('How many troops do you want to add?');
     const terrainId = (e.target as SVGElement).id;
-    console.log(this.tropas)
-    console.log(this.whoami)
+    let duenno = this.jugadores.find(jugador => jugador.usuario == user);
+    if(!(terrainId && duenno && duenno.territorios.includes(terrainId))){
+      this.toastr.error('No puedes poner tropas en territorios que no te pertenecen');
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if(limite)
+      troops = limite.toString();
+    else 
+     troops = window.prompt('Cuántas tropas deseas añadir?');
 
     // Check if the user clicked the Cancel button
     if (troops === null) {
@@ -458,8 +525,9 @@ export class PartidaComponent {
 
     let numTroops = parseInt(troops);
 
-    if (numTroops > this.numTropas) {
+    if (!init && (numTroops > this.numTropas)) {
       this.toastr.error('¡No tienes suficientes tropas!');
+      this.cdr.detectChanges();
       return;
     }
 
@@ -476,8 +544,9 @@ export class PartidaComponent {
     }
 
     // Check if the input is a valid number
-    if (isNaN(numTroops) || numTroops < 1) {
+    if (isNaN(numTroops) || (numTroops < 1 && !select)) {
       alert('Please enter a valid number of troops.');
+      this.cdr.detectChanges();
       return;
     }
 
@@ -527,6 +596,7 @@ export class PartidaComponent {
       img.setAttribute('x', (svgP.x - imgWidth / 2 + index * imgWidth * 0.15).toString());
       img.setAttribute('y', (svgP.y - imgHeight / 2).toString());
       img.setAttribute('data-terrain-id', terrainId);
+      img.style.pointerEvents = 'none'; // Make the image click-through
       svgDoc.documentElement.appendChild(img);
     };
 
@@ -541,7 +611,7 @@ export class PartidaComponent {
 
     // Add the images
     let index = 0;
-    let jugador = this.jugadores.find(jugador => jugador.usuario === this.whoami);
+    let jugador = this.jugadores.find(jugador => jugador.usuario === user);
     if (!jugador) {
       this.toastr.error('Ha ocurrido un error interno.', 'Atención');
       return;
@@ -566,6 +636,185 @@ export class PartidaComponent {
 
     // Display the error message
     this.toastr.error(errorMessage);
+    this.cdr.detectChanges();
+    
+  }
+
+  updateFase(){
+    //TODO -> CONECTAR AL BACK END, ESTO ES UN STUB
+    if(this.fase !== undefined && this.fase !== null){
+      this.fase = (this.fase + 1) % 4;
+      console.log(this.fase)
+      this.updateText(this.fase);
+    } else {
+      this.toastr.error('Ha ocurrido un error intero', 'Atención');
+    }
+    this.cdr.detectChanges();
+    this.eventoCancelado = true;
+  }
+
+  updateText(fase : number){
+    switch(this.fase){
+      case 0:
+        if(this.turnoJugador === this.whoami)
+          this.text = 'Fase colocación: Coloca una tropa en un país libre'
+        else 
+          this.text = 'Espera tu turno'
+        break;
+      case 1:
+        this.text = 'Fase ataque: Mueve las tropas de un país tuyo a uno enemigo contiguo'
+        break;
+      case 2:
+        this.text = 'Fase maniobra: Mueve las tropas de un país tuyo a otro tuyo'
+        break;
+      case 3:
+        this.text = 'Fase robo: Roba una carta'
+        break;
+    }
+  }
+
+  /*
+    Puedes enviar hasta 3 tropas para atacar al mismo tiempo. No importa cuántas
+    tropas haya en tu territorio atacante, cada ataque puede usar sólo 1,
+    2 ó 3 atacantes. Cuando muevas tropas a un territorio para atacarlo, deja siempre 
+    al menos 1 tropa en tu territorio para protegerlo.  
+  */
+  seleccionarTropas(e: MouseEvent, svgDoc: Document, user: string): Promise<number> {
+    return new Promise((resolve, reject) => {
+      
+      const terrainId = (e.target as SVGElement).id;
+      let duenno = this.jugadores.find(jugador => jugador.usuario == user);
+      if(!(terrainId && duenno && duenno.territorios.includes(terrainId))){
+        this.toastr.error('No puedes seleccionar tropas en territorios que no te pertenecen');
+        this.cdr.detectChanges();
+        reject('Cannot select troops from territories you do not own');
+        return;
+      }
+      
+      // Ask the user for the number of troops
+      const troops = window.prompt('¿Cuántas tropas deseas seleccionar?');
+
+      // Check if the user clicked the Cancel button
+      if (troops === null) {
+        reject('No troops selected');
+        return;
+      }
+
+      let numTroops = parseInt(troops);
+
+      // Check if the input is a valid number
+      if (isNaN(numTroops) || numTroops < 1) {
+        this.toastr.error('Por favor, introduce un número válido de tropas.');
+        this.cdr.detectChanges();
+        reject('Invalid number of troops');
+        return;
+      }
+
+      if(numTroops > 3){
+        this.toastr.error('Sólo puedes seleccionar hasta 3 tropas para atacar');
+        this.cdr.detectChanges();
+        reject('Too many troops selected');
+        return;
+      }
+
+      const terrainInfo = this.tropas.get(terrainId);
+      if (terrainInfo) {
+        if (terrainInfo.numTropas < numTroops + 1) { // no podemos dejar una tropa sola, ni quedarnos con tropas negativasd
+          this.toastr.error('No tienes suficientes tropas en este territorio. Recuerda que no puedes dejar una tropa sola.');
+          this.cdr.detectChanges();
+          reject('Not enough troops in this territory');
+          return;
+        }
+        this.ataqueTropas += numTroops;
+      } else {
+        this.toastr.error('Ha ocurrido un error interno.', 'Atención');
+        reject('Internal error');
+        return;
+      }
+
+      this.toastr.success(`Has seleccionado ${numTroops} tropas.`);
+      this.ataqueOrigen = terrainId;
+      this.cdr.detectChanges();
+      resolve(numTroops);
+    });
+  }
+
+  seleccionarTerritorioEnemigo(e: MouseEvent, svgDoc: Document, user: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const terrainId = (e.target as SVGElement).id;
+      let duenno = this.jugadores.find(jugador => jugador.usuario == user);
+
+      // Check if the territory belongs to the player (it should not)
+      if (terrainId && duenno && duenno.territorios.includes(terrainId)) {
+        this.toastr.error('No puedes atacar tu propio territorio');
+        this.cdr.detectChanges();
+        reject('Cannot select your own territory');
+        return;
+      }
+
+      // Get the origin of the attack
+      const territorios = this.mapa.flatMap(continent => continent.territorios);
+      const origenAtaque = territorios.find(territorio => territorio.nombre === this.ataqueOrigen);
+
+      // Check if the origin of the attack exists and has a border
+      if (origenAtaque && origenAtaque.frontera) {
+        // Check if the selected territory is in the border of the origin of the attack
+        if (origenAtaque.frontera.includes(terrainId)) {
+          // The selected territory is in the border of the origin of the attack, everything is ok 
+        } else {
+          // The selected territory is not in the border of the origin of the attack --> fatal error user is stupid xd
+          this.toastr.error('El territorio seleccionado no está en la frontera del origen del ataque');
+          this.cdr.detectChanges();
+          reject('The selected territory is not in the border of the origin of the attack');
+          return;
+        }
+      } else {
+        // The origin of the attack does not exist or does not have a border (never should happen... )
+        this.toastr.error('El origen del ataque no existe o no tiene una frontera');
+        this.cdr.detectChanges();
+        reject('The origin of the attack does not exist or does not have a border');
+        return;
+      }
+
+      // Check if the territory exists and belongs to an enemy
+      const terrainInfo = this.tropas.get(terrainId);
+      if (terrainInfo) {
+        const enemy = this.jugadores.find(jugador => jugador.territorios.some(territorio => territorio == terrainId));
+        if (!enemy) {
+          this.toastr.error('Este territorio no pertenece a ningún enemigo');
+          this.cdr.detectChanges();
+          reject('This territory does not belong to an enemy');
+          return;
+        }
+      } else {
+        this.toastr.error('Ha ocurrido un error interno.', 'Atención');
+        reject('Internal error');
+        return;
+      }
+
+      this.toastr.success(`Has seleccionado el territorio enemigo ${terrainId}`);
+      const enemyTerritoryElement = svgDoc.getElementById(terrainId);
+      if (enemyTerritoryElement) {
+        let isRed = true;
+        const animation = setInterval(() => {
+          enemyTerritoryElement.style.fill = isRed ? 'red' : 'yellow';
+          isRed = !isRed;
+        }, 1000);
+      
+        setTimeout(() => {
+          // Stop the animation after 5 seconds
+          clearInterval(animation);
+          // Continue with the rest of your code here
+        }, 5000);
+      }
+      this.cdr.detectChanges();
+      resolve(terrainId);
+    });
+  }
+
+  // TODO -> será una simple llamada al back , de momento lo falseo para poder seguir haciendo cosas
+  resolverAtaque(){
+    // resolverAtaque(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
   }
   
 }
