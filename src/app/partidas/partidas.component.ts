@@ -20,6 +20,7 @@ export interface Partida {
   descartes: any[];
   mapa: any[];
   chat: Chat;
+  fase?: number;
   __v: number;
 }
 
@@ -28,6 +29,8 @@ export interface Jugador {
   territorios: any[];
   cartas: any[];
   abandonado: boolean;
+  skinFichas: string;
+  color: string;
   _id: string;
 }
 

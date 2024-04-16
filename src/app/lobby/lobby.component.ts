@@ -83,7 +83,7 @@ export class LobbyComponent implements OnInit {
       this.toastr.info(user + ' se ha unido a la partida', 'Nuevo jugador');
       this.userService.getUserSkin(user).subscribe(response => {
         this.users[user] = response.path;
-        this.partida.jugadores.push({ usuario: user, territorios: [], cartas: [], abandonado: false, _id: ''});
+        this.partida.jugadores.push({ usuario: user, territorios: [], cartas: [], abandonado: false, _id: '', skinFichas: '', color: ''});
       });
       console.log(this.users);
       });
