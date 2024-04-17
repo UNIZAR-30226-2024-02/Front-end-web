@@ -1,66 +1,66 @@
-
-
-/* Main layout containers */
-.main-container {
+.full-screen-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/assets/OIG2.jpg');
+    background-size: cover;
+    background-position: center;
     display: flex;
-    justify-content: space-between;
-    background: linear-gradient(to right, #e0f7fa, #b2ebf2); /* Smooth gradient background */
-    font-family: 'Roboto', sans-serif; /* Roboto font for modern typography */
-}
-
-.side-container {
-    flex-grow: 1;
-    background: none; /* Transparent sides to emphasize the center */
-}
-
-.ranking-container {
-    flex-grow: 2;
-    margin: 0 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white for mild contrast */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Subtle shadow */
-}
-
-/* User display inside the leaderboard */
-.user-container {
-    display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
+    flex-direction: column;  /* Ajusta la dirección del contenido a columna */
+}
+
+.scrollable-container {
+    width: 90%;
+    max-width: 800px;
+    height: 90vh;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 30px;
     border-radius: 15px;
-    background-color: #ffffff;
-    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 2;  /* Asegura que esté sobre el botón si es necesario */
+    position: relative;  /* Relativo para mantener centrado */
+}
+
+.btn-secondary {
+    position: absolute;  /* Posicionamiento absoluto dentro del contenedor de fondo */
+    bottom: 10px;  /* Abajo del todo, con un pequeño margen */
+    left: 10px;  /* A la izquierda del todo, con un pequeño margen */
+    z-index: 1;  /* Menor z-index para no interferir con el scrollable container */
+}
+
+.list-unstyled {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-container {
+    background-color: rgba(248, 249, 250, 0.9);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .user-container:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
 }
 
-.user-info {
-    margin: 0 10px;
-    color: #333; /* Darker font color for better readability */
+.user-info span {
+    display: inline-block;
+    margin-right: 5px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-/* Leaderboard header styling */
-.leaderboard h2 {
-    color: #007bff; /* Blue color for headings to stand out */
-    margin-bottom: 20px;
-}
-
-/* Button styling with hover effect */
-.button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+.user-info span:last-child {
+    float: right;
 }

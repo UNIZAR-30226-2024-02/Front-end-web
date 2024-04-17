@@ -2,7 +2,31 @@
 
 
 
-/* login.component.css */
+.full-screen-background {
+    position: fixed; /* Posición fija en toda la pantalla */
+    top: 0;
+    left: 0;
+    width: 100vw; /* 100% del ancho del viewport */
+    height: 100vh; /* 100% de la altura del viewport */
+    background-image: url('/assets/login_regis.jpg'); /* Usa tu imagen como fondo */
+    background-size: cover; /* Asegura que la imagen cubra toda el área disponible */
+    background-position: center; /* Centra la imagen en el contenedor */
+    display: flex; /* Flexbox para centrar el contenido */
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+    z-index: -1; /* Pone el fondo detrás del contenido */
+}
+
+.login-container {
+    max-width: 400px;
+    width: 90%; /* Agrega un máximo de ancho relativo */
+    margin: auto; /* Centrado automático en el flexbox parent */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: white; /* Fondo blanco para el formulario */
+    z-index: 1; /* Asegura que el formulario esté sobre el fondo */
+}
 
 body {
     margin: 0;
@@ -57,13 +81,23 @@ body {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #ccc; /* Color gris cuando está deshabilitado */
     color: white;
     font-size: 18px;
-    cursor: pointer;
+    cursor: not-allowed; /* Indica que no se puede hacer clic */
     margin-top: 10px;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+.btn-primary:enabled {
+    background-color: #28a745; /* Verde cuando está habilitado */
+    cursor: pointer; /* Indica que se puede hacer clic */
+}
+
+.btn-primary:hover:enabled {
+    background-color: #218838; /* Verde más oscuro para el estado hover */
+}
+
+.form-control:focus {
+    border-color: #28a745; /* Cambio de azul a verde */
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, .25); /* Sombra verde alrededor del input en foco */
 }

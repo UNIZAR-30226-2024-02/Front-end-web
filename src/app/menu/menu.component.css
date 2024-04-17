@@ -22,22 +22,22 @@
 
 .button {
   margin: 0 50px; /* Ajusta el espacio entre los botones */
-  background-color: #007bff; /* Blue background */
-  border: none; /* Remove borders */
-  color: white; /* White text */
-  padding: 12px 30px; /* Some padding */
-  text-align: center; /* Center the text */
-  text-decoration: none; /* Remove underline from links */
-  display: inline-block; /* Used to be able to set a width */
-  font-size: 18px; /* Set a font-size */
-  cursor: pointer; /* Mouse pointer on hover */
-  border-radius: 25px; /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Adds a subtle shadow */
-  transition: all 0.2s; /* Smooth transition for hover effects */
+  background-color: #28a745; /* Verde como color de fondo */
+  border: none; /* Sin bordes */
+  color: white; /* Texto en blanco */
+  padding: 12px 30px; /* Relleno alrededor del texto */
+  text-align: center; /* Centra el texto */
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
+  display: inline-block; /* Permite establecer un ancho */
+  font-size: 18px; /* Tamaño de fuente */
+  cursor: pointer; /* Cursor de puntero al pasar el ratón */
+  border-radius: 25px; /* Esquinas redondeadas */
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra sutil */
+  transition: all 0.2s; /* Transición suave para efectos de hover */
 }
 
 .button:hover {
-  transform: translateY(-2px);
-  background-color: #0056b3; /* Darker shade of blue */
-  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
+  transform: translateY(-2px); /* Ligeramente hacia arriba al pasar el ratón */
+  background-color: #218838; /* Un tono de verde más oscuro para el estado hover */
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Sombra aumentada */
 }

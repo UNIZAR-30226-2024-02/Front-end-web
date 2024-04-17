@@ -29,7 +29,7 @@
 
 .btn {
     margin: 0 50px; /* Ajusta el espacio entre los botones */
-    background-color: #007bff; /* Blue background */
+    background-color: #28a745; /* Green background */
     border: none; /* Remove borders */
     color: white; /* White text */
     padding: 12px 30px; /* Some padding */
@@ -43,9 +43,8 @@
     transition: all 0.2s; /* Smooth transition for hover effects */
 }
 
-
 .btn:hover {
     transform: translateY(-2px);
-    background-color: #0056b3; /* Darker shade of blue */
+    background-color: #218838; /* Darker shade of green */
     box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
 }
