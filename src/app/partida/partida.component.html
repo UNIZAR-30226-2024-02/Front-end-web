@@ -1,19 +1,92 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Interface</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .container {
+            padding-top: 25px; /* Añade espacio sobre el SVG */
+        }
+        .row {
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .svg-column {
+            position: relative; /* Establece la posición relativa para contener los elementos internos */
+        }
+        .svg-container {
+            width: 80vw;
+            height: 80vh;
+        }
+        .other-content {
+            position: absolute; /* Establece la posición absoluta para evitar superposiciones */
+            top: 45%; /* Alinea desde la mitad superior */
+            transform: translateY(-50%); /* Centra verticalmente */
+            left: calc(72vw + 30px); /* Coloca a la derecha del SVG con un pequeño espacio */
+            width: calc(20vw - 30px); /* Define el ancho */
+        }
+    </style>
+</head>
+<body>
+
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
-            <div>Tropas: {{ numTropas }}</div>
-            <div>Turno Jugador: {{ turnoJugador }}</div>
-            <div>
-                <button (click)="updateFase()" class="btn btn-primary">Siguiente fase</button>
-            </div>
-            <div>{{ text }}</div>
-            <div *ngIf="fase == 1" style="font-size: 1.5em; border: 1px solid black; padding: 10px; margin: 10px;">
-                Tropas seleccionadas: {{ ataqueTropas }}
+
+        <!-- Columna para el SVG -->
+        <div class="col-md-6 svg-column">
+            <!-- Contenedor centrado para el SVG -->
+            <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+                <object type="image/svg+xml" data="assets/Risk_game_board.svg" (load)="onSVGLoad($event)" class="svg-container"></object>
             </div>
         </div>
-        <div class="col-md-9">
-            <object type="image/svg+xml" data="assets/Risk_game_board.svg" (load)="onSVGLoad($event)" style="width: 100%; height: auto;"></object>
+
+        <!-- Columna para el resto del contenido -->
+        <div class="col-md-6 other-content">
+            <!-- Contenedor para el chat y otros elementos -->
+
+            <!-- Contenido anterior -->
+            <div class="mb-3">Tropas: {{ numTropas }}</div>
+            <div class="mb-3 user-container">
+                <div class="mb-2">Turno Jugador: </div>
+                <div class="image-box">
+                    <img class="user-img" [src]="avatarAMostrar" alt="User skin">
+                </div>
+                <div class="user-name">{{turnoJugador}}</div>
+            </div>
+            <div class="mb-3">
+                <button (click)="updateFase()" class="btn btn-primary mr-2">Siguiente fase</button>
+                <button (click)="cambiarTurno()" class="btn btn-primary">Cambiar Turno</button>
+            </div>
+            <div class="mb-3">{{ text }}</div>
+            <div *ngIf="fase == 1 || fase == 2" class="mb-3" style="font-size: 1.5em; border: 1px solid black; padding: 10px;">
+                Tropas seleccionadas: {{ ataqueTropas }}
+            </div>
+
+            <!-- Chat -->
+            <div class="card mt-4" style="width: 90%;">
+                <div class="card-header">
+                    <h2 class="card-title text-center">Chat de la partida</h2>
+                </div>
+                <div class="card-body" style="height: 300px; overflow-y: auto;">
+                    <div class="message" *ngFor="let mensaje of partida.chat.mensajes">
+                        <div class="chat-bubble" [ngClass]="{'my-message': mensaje.idUsuario == whoami}">
+                            <p><strong>{{mensaje.idUsuario}}:</strong></p>
+                            <p>{{mensaje.texto}}</p>
+                            <p class="timestamp">{{mensaje.timestamp | date:'short'}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
+                    <button class="btn btn-primary mt-2" (click)="sendMessage(enviarMensaje.value); enviarMensaje.value=''">Enviar</button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
+
+</body>
+</html>

@@ -8,20 +8,7 @@ import { UsersService } from '../users/users.service';
 import { map, switchMap } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
-
-
-export interface Chat {
-  nombreChat : string;
-  usuarios: string[];
-  _id : string;
-  mensajes : Mensaje[];
-}
-
-export interface Mensaje{
-  texto: string;
-  idUsuario: string;
-  timestamp: string;
-}
+import { Chat, Mensaje } from '../chat/chat.component';
 
 @Component({
   selector: 'app-lobby',
@@ -67,10 +54,7 @@ export class LobbyComponent implements OnInit {
   ngOnInit(): void {
 
     this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
-      // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
-      console.log("recibido")
       if (this.chat) {
-        console.log('hola!')
          if (!this.chat.mensajes) {
            this.chat.mensajes = [];
          }

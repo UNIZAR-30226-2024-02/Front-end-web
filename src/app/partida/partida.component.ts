@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import {Partida} from '../partidas/partidas.component';
-import { Chat } from '../chat/chat.component';
 import { UsersService } from '../users/users.service';
 import { Socket } from 'ngx-socket-io';
 import { ChangeDetectorRef } from '@angular/core';
+import { ChatService } from '../chat/chat.service';
 
 export interface Territorio{
   nombre: string;
@@ -47,7 +47,6 @@ export class PartidaComponent {
   cartas: Carta[] = [];
   descartes: Carta[] = [];
   mapa: Continente[] = [];
-  chat: Chat = {} as Chat;
   colores = ['verde', 'rojo', 'azul', 'amarillo', 'rosa', 'morado'];
   turnoJugador = '';
   numJugadores: number = 3; // stub
@@ -74,9 +73,10 @@ export class PartidaComponent {
   ataqueOrigen: string = '';
   ataqueDestino: string = '';
   ataqueTropas: number = 0; 
+  avatarAMostrar = '';
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
-              private cdr: ChangeDetectorRef
+              private cdr: ChangeDetectorRef, private chatService : ChatService
   ) {
     this.tropas = new Map<string, { numTropas: number, user: string }>();
     this.colorMap = new Map<string, string>();
@@ -89,7 +89,6 @@ export class PartidaComponent {
     } else {
       this.inicializacionPartida(state.partida);
       this.partida = state.partida;
-      this.chat = state.partida.chat;
     }
   }
 
@@ -316,12 +315,17 @@ export class PartidaComponent {
       this.cartasStub(); // stub
 
       this.descartes = partida.descartes;
-      this.chat = partida.chat;
+
+      // pueblo el chat
+      console.log('El chat de la partida', this.partida.chat)
+      
+
       this.ganador = partida.ganador;
       this.fase = partida.fase;
       this.fase = 0; // stub
       this.updateText(this.fase)
       this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
+      this.getAvatar(this.turnoJugador);
     }
 
 
@@ -342,13 +346,13 @@ export class PartidaComponent {
         let color = jugador ? jugador.color : undefined;
   
         if(color !== undefined) {
-         console.log(`The color of territory ${territorio.nombre} is ${color}`);
+         //console.log(`The color of territory ${territorio.nombre} is ${color}`);
          let svgElement = this.svgDoc?.getElementById(territorio.nombre);
          let event: MouseEvent | undefined;
          //console.log(territorio.nombre, svgElement);
          //console.log(this.svgDoc)
           if (svgElement && svgElement.nodeName === 'path') {
-            console.log(' entro en el if')
+            //console.log(' entro en el if')
             let bbox = ((svgElement as unknown) as SVGGraphicsElement).getBBox();
             let rect = svgElement.getBoundingClientRect();
 
@@ -362,12 +366,12 @@ export class PartidaComponent {
             });
              // Dispatch the event on svgElement
             svgElement.dispatchEvent(event);
-            console.log(event)
+            //console.log(event)
           }
         
          if(jugador && event && this.svgDoc){
           this.colocarTropas(event, this.svgDoc, 50, 50, jugador.usuario, true, false, territorio.tropas)
-          console.log(jugador.usuario)
+          //console.log(jugador.usuario)
           }
         }
       }
@@ -406,6 +410,14 @@ export class PartidaComponent {
     console.log(this.mapa); console.log(this.jugadores)
     this.inicializacionPartida(this.partida);
     //TODO ABRIR LISTENERS DE LOS SOCKETS
+    this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
+      if (this.partida.chat) {
+         if (!this.partida.chat.mensajes) {
+           this.partida.chat.mensajes = [];
+         }
+         this.partida.chat.mensajes.push({ texto: mensaje, idUsuario: user, timestamp: timestamp});
+       }
+     }); 
   }
 
   onSVGLoad(event: any) {
@@ -445,6 +457,11 @@ export class PartidaComponent {
     console.log(`Clic en la región con ID: ${targetId}`);
     const imgWidth = 50;
     const imgHeight = 50;
+    if(this.turnoJugador !== this.whoami){
+      this.clickWrongTerrain(e, 'No es tu turno');
+      console.log('No es tu turno');
+      return;
+    }
     switch(this.fase){
       case 0: // colocación
         if(this.turnoJugador === this.whoami){
@@ -484,11 +501,32 @@ export class PartidaComponent {
           // esto recibe el back end
           console.log(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
           // dependiendo del resultado de la llamada al back, se actualizará el estado de la partida y permitirá continuar
+          await new Promise(resolve => setTimeout(resolve, 5000)); // falseo llamada al back
+          this.resolverAtaque(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas);
+          // TODO ACTUALIZAR ESTADO ETC -> de momento no lo hago, es trivial
+          this.ataqueDestino = '';
+          this.ataqueOrigen = '';
+          this.ataqueTropas = 0;
         }
 
         break;
-      case 2: // maniobra 
-        //this.final(e, svgDoc, imgWidth, imgHeight);
+      case 2: // maniobra -> reutilizo las variables de ataque jeje
+        if(this.ataqueTropas === 0){
+          this.ataqueTropas = 0;
+          this.ataqueDestino = ''; 
+          this.ataqueOrigen = '';
+          const numTroops = await this.seleccionarTropas(e, svgDoc, this.whoami);
+          console.log(`Player has selected ${numTroops} troops`);
+          this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, -numTroops); // las quito del mapa
+          this.numTropas -= numTroops; // tampoco las tengo colocables, las tengo seleccionadas así que las quito de ahí
+          this.cdr.detectChanges();
+        } else {
+          // una vez seleccionadas las tropas me tocará elegir otro territorio mio
+          // este segundo territorio mio 
+          // 1. Deberá ser alcanzable desde el territorio origen sin pasar por territorios enemigos
+
+          
+        }
         break;
       case 3: // robo 
         //this.final(e, svgDoc, imgWidth, imgHeight);
@@ -617,7 +655,7 @@ export class PartidaComponent {
       return;
     }
     let color = jugador.color;
-    console.log(color)
+    //console.log(color)
     for (let i = 0; i < numTanks; i++, index++) {
       addImage(`/assets/tanque_${color}.png`, index);
     }
@@ -654,22 +692,26 @@ export class PartidaComponent {
   }
 
   updateText(fase : number){
-    switch(this.fase){
-      case 0:
-        if(this.turnoJugador === this.whoami)
-          this.text = 'Fase colocación: Coloca una tropa en un país libre'
-        else 
-          this.text = 'Espera tu turno'
-        break;
-      case 1:
-        this.text = 'Fase ataque: Mueve las tropas de un país tuyo a uno enemigo contiguo'
-        break;
-      case 2:
-        this.text = 'Fase maniobra: Mueve las tropas de un país tuyo a otro tuyo'
-        break;
-      case 3:
-        this.text = 'Fase robo: Roba una carta'
-        break;
+    if(this.turnoJugador === this.whoami){
+      switch(this.fase){
+        case 0:
+          if(this.turnoJugador === this.whoami)
+            this.text = 'Fase colocación: Coloca una tropa en un país libre'
+          else 
+            this.text = 'Espera tu turno'
+          break;
+        case 1:
+          this.text = 'Fase ataque: Mueve las tropas de un país tuyo a uno enemigo contiguo'
+          break;
+        case 2:
+          this.text = 'Fase maniobra: Mueve las tropas de un país tuyo a otro tuyo'
+          break;
+        case 3:
+          this.text = 'Fase robo: Roba una carta'
+          break;
+      }
+    } else {
+      this.text = 'Espera tu turno'
     }
   }
 
@@ -812,9 +854,121 @@ export class PartidaComponent {
     });
   }
 
+  numTropasTerritorio(territorioName : string) : number{
+    let troops = 0;
+
+    for (let continente of this.mapa) {
+      for (let territorio of continente.territorios) {
+        if (territorio.nombre === territorioName) {
+          troops = territorio.tropas;
+          break;
+        }
+      }
+    }
+    return troops;
+  }
+
+  cambiarTurno(){
+    this.turnoJugador = this.jugadores[(this.turno + 1) % this.numJugadores].usuario;
+    this.turno++;
+    this.fase = 0;
+    this.getAvatar(this.turnoJugador);
+  }
+
   // TODO -> será una simple llamada al back , de momento lo falseo para poder seguir haciendo cosas
-  resolverAtaque(){
+  resolverAtaque(partida: string, jugador: string, origen: string, destino: string, tropas: number){
     // resolverAtaque(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
+    console.log(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
+    // ESTO LO HARÁ EL BACK DE MOMENTO LO METO COMO STUB PARA PODER SEGUIR AVANZANDO
+    let troops = 0;
+    let territorioName = destino;
+
+    for (let continente of this.mapa) {
+      for (let territorio of continente.territorios) {
+        if (territorio.nombre === territorioName) {
+          troops = territorio.tropas;
+          break;
+        }
+      }
+    }
+    let tropasDefensoras = 0;
+    if(this.numTropasTerritorio(destino) > 1) tropasDefensoras = Math.floor(Math.random() * 2) + 1;
+    else tropasDefensoras = 1;
+    console.log('El enemigo defiende con ', tropasDefensoras)
+    this.toastr.success('El enemigo ha defendido con ' + tropasDefensoras + ' tropas')
+    let dadosNegros : number[] = [];
+    let dadosRojos : number[] = [];
+    for(let i = 0; i < tropas; i++){
+      dadosNegros.push(Math.floor(Math.random() * 6) + 1);
+    }
+    for(let i = 0; i < tropasDefensoras; i++){
+      dadosRojos.push(Math.floor(Math.random() * 6) + 1);
+    }
+    dadosNegros.sort((a, b) => b - a); 
+    dadosRojos.sort((a, b) => b - a);
+    console.log('Mis dados', dadosNegros)
+    console.log('Dados enemigos', dadosRojos)
+    let muertosAtacante = 0;
+    let muertosDefensor = 0;
+    for(let i = 0; i < tropasDefensoras; i++){
+      if(dadosNegros[i] > dadosRojos[i]){
+        muertosDefensor++;
+      } else {
+        muertosAtacante++;
+      }
+    }
+    console.log('Muertos atacante', muertosAtacante)
+    console.log('Muertos defensor', muertosDefensor)
+    this.toastr.success('Has perdido ' + muertosAtacante + ' tropas')
+    this.toastr.success('El enemigo ha perdido ' + muertosDefensor + ' tropas')
+    this.cdr.detectChanges();
+    // FIN DEL STUB
+    if(this.numTropasTerritorio(destino) === 0){
+      this.toastr.success('Has conquistado ' + destino)
+      console.log('Has conquistado ' + destino)
+      this.cdr.detectChanges();
+      // 1. Add the territory to the player with jugador.usuario === whoami
+      let jugador = this.jugadores.find(j => j.usuario === this.whoami);
+      if (jugador) {
+        jugador.territorios.push(destino);
+      }
+
+      // 2. Remove the territory from the player who currently owns it
+      for (let j of this.jugadores) {
+        let index = j.territorios.indexOf(destino);
+        if (index !== -1) {
+          j.territorios.splice(index, 1);
+          break;
+        }
+      }
+    }
+  }
+
+  getAvatar(user: string) {
+    this.userService.getUserSkin(user).subscribe(response => {
+      this.avatarAMostrar = response.path;
+      console.log('skin', this.avatarAMostrar);
+    });
+  }
+
+  sendMessage(texto: string) {
+    console.log("El chat", this.partida.chat)
+    console.log(this.partida.chat._id, texto, this.whoami)
+    if (this.partida.chat && this.partida.chat.mensajes) { // Check if chat and messages are defined
+      this.partida.chat.mensajes.push({
+        texto: texto,
+        idUsuario: this.whoami,
+        timestamp: new Date().toISOString(),
+      });
+    }
+    this.chatService.enviarMensaje(this.partida.chat._id, texto).subscribe(() => {
+      this.socket.emit('sendChatMessage', {
+        chatId: this.partida.chat._id,
+        message: texto,
+        user: this.whoami,
+        timestamp: new Date().toISOString()
+      });
+    });
   }
   
 }

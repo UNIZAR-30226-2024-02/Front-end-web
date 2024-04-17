@@ -6,17 +6,16 @@ import { Socket } from 'ngx-socket-io';
 import { UsersService } from '../users/users.service';
 
 export interface Chat {
-  nombre: string;
-  oid: string;
-  participants?: string[];
-  messages?: Message[];
+  nombreChat : string;
+  usuarios: string[];
+  _id : string;
+  mensajes : Mensaje[];
 }
 
-export interface Message {
+export interface Mensaje{
   texto: string;
   idUsuario: string;
   timestamp: string;
-  _id: string;
 }
 
 @Component({
@@ -42,19 +41,27 @@ export class ChatComponent implements OnInit {
     this.getChats();
       this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
        // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
-       const chat = this.selectedChats.find(chat => chat.oid === chatId);
+       const chat = this.selectedChats.find(chat => chat._id === chatId);
        if (chat) {
-          if (!chat.messages) {
-            chat.messages = [];
+          if (!chat.mensajes) {
+            chat.mensajes = [];
           }
-          chat.messages.push({ texto: mensaje, idUsuario: user, timestamp: timestamp, _id: '' });
+          chat.mensajes.push({ texto: mensaje, idUsuario: user, timestamp: timestamp});
         }
       }); 
   }
 
   getChats(): void {
-    this.chatService.listarChats().subscribe(chats => {
-      this.chats = chats;
+      this.chatService.listarChats().subscribe(chats => {
+      console.log(chats);
+      this.chats = chats.map(chat => {
+        return {
+          _id: chat.oid,
+          nombreChat: chat.nombre,
+          mensajes: [],
+          usuarios: []
+        };
+      });
     });
   }
 
@@ -62,13 +69,13 @@ export class ChatComponent implements OnInit {
     if (!message.trim()) {
       return;
     }
-    this.chatService.enviarMensaje(chat.oid, message).subscribe(response => {
+    this.chatService.enviarMensaje(chat._id, message).subscribe(response => {
       // handle response
       this.newMessage = '';
-      this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
-        chat.messages = messages;
+      this.chatService.obtenerMensajes(chat._id).subscribe(messages => {
+        chat.mensajes = messages;
       });
-      this.socket.emit('sendChatMessage', { chatId: chat.oid, message: message, user: this.myName, timestamp: new Date().toISOString()});
+      this.socket.emit('sendChatMessage', { chatId: chat._id, message: message, user: this.myName, timestamp: new Date().toISOString()});
     });
   }
 
@@ -76,8 +83,10 @@ export class ChatComponent implements OnInit {
       this.chatService.crearChat(nombreChat, usuarios).subscribe(
           response => {
               const newChat: Chat = {
-                  nombre: response.chat.nombreChat,
-                  oid: response.chat._id
+                  nombreChat: response.chat.nombreChat,
+                  _id: response.chat._id,
+                  usuarios: response.chat.usuarios, 
+                  mensajes: []
               };
               this.chats.push(newChat);
               this.usuarios = [];
@@ -111,22 +120,22 @@ export class ChatComponent implements OnInit {
   }
 
   toggleChatSelection(chat: Chat): void {
-    const index = this.selectedChats.findIndex(selectedChat => selectedChat.oid === chat.oid);
+    const index = this.selectedChats.findIndex(selectedChat => selectedChat._id === chat._id);
 
     if (index === -1) {
       // The chat is not currently selected, so add it to the array
-      this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
-        chat.messages = messages;
+      this.chatService.obtenerMensajes(chat._id).subscribe(messages => {
+        chat.mensajes = messages;
       });
-      this.chatService.obtenerParticipantes(chat.oid).subscribe(participants => {
-        chat.participants = participants;
+      this.chatService.obtenerParticipantes(chat._id).subscribe(participants => {
+        chat.usuarios = participants;
       });
       this.selectedChats.push(chat);
-      this.socket.emit('joinChat', chat.oid); // cada vez que abro el chat me uno a él
+      this.socket.emit('joinChat', chat._id); // cada vez que abro el chat me uno a él
       console.log(this.selectedChats);
     } else {
         // The chat is currently selected, so remove it from the array
-        this.socket.emit('exitChat', chat.oid); // cada vez que cierro el chat me salgo de él
+        this.socket.emit('exitChat', chat._id); // cada vez que cierro el chat me salgo de él
         this.selectedChats.splice(index, 1);
     }
   }
