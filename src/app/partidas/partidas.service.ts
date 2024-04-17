@@ -77,5 +77,14 @@ export class PartidasService {
 
     return this.http.get<any>(`${this.apiUrl}partidas/partida/${id}`, { headers });
   }
+
+  invitar(user : string, partida_id : string) : Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of([]);
+    }
+
+    return this.http.put<any>(`${this.apiUrl}nuevaPartida/invite`, {}, { headers });
+  }
   
 }
