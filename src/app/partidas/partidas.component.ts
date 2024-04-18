@@ -61,7 +61,7 @@ export class PartidasComponent {
           this.toastr.error('Error al obtener la información de la partida', error);
         }
       );
-      });
+    });
   }
 
   getPartidas(): void {

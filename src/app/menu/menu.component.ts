@@ -22,14 +22,29 @@ export class MenuComponent {
   num: number;
   nombre: string;
   password: string;
+  showNotif = false;
 
   ngOnInit(): void {
     this.socket.off('friendRequest');
     this.socket.on('friendRequest', (notification: string) => {
-      this.notifications.push(notification);
+      this.notifications.push('Nueva solicitud de amistad: ' + notification);
       console.log('Nueva solicitud de amistad:', notification);
-      this.toastr.info(notification, 'Nueva solicitud de amistad:');
+      //this.toastr.info(notification, 'Nueva solicitud de amistad:');
     });
+    this.socket.off('chatMessage')
+    // TODO unirse a los sockets de todos los chats
+    this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
+      // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
+      this.notifications.push('Nuevo mensaje en chat: ' + mensaje + ' de ' + user + ' en ' + timestamp + ' en ' + chatId);
+      console.log('Nuevo mensaje en chat:', mensaje, user, timestamp, chatId);
+     });
+     this.socket.off()
+     this.socket.on('gameInvitation', (gameId: string, user_from: string) => {
+      this.notifications.push('Nueva invitación a partida: ' + ' de ' + user_from);
+      console.log('Nueva invitación a partida:', gameId, user_from);
+      //this.toastr.info('Nueva invitación a partida: ' + gameId + ' de ' + user_from);
+    });
+     
   }
 
   NuevaPartida() {

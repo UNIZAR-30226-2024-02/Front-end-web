@@ -854,6 +854,101 @@ export class PartidaComponent {
     });
   }
 
+  recursiveTerritorySearch(origenTropas: Territorio, terrainId: string, user: Jugador): boolean {
+    const territorios = this.mapa.flatMap(continent => continent.territorios);
+    for (let nombre of origenTropas.frontera) {
+      const territorio = territorios.find(territorio => territorio.nombre === nombre)
+      if (territorio && territorio.nombre === terrainId) {
+        return true
+      } else {
+        const terrainOwner = this.jugadores.find(jugador => jugador.territorios.some(territorio => territorio == terrainId));
+        if (territorio && terrainOwner === user) {
+          return this.recursiveTerritorySearch(territorio, terrainId, user)
+        }
+      }
+    }
+    return false
+  }
+
+  seleccionarTerritorioAmigo(e: MouseEvent, svgDoc: Document, user: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const terrainId = (e.target as SVGElement).id;
+      let duenno = this.jugadores.find(jugador => jugador.usuario == user);
+
+      // Check if the territory belongs to the player (it should)
+      if (terrainId && duenno && !duenno.territorios.includes(terrainId)) {
+        this.toastr.error('No puedes mover tropas fuera de tu territorio');
+        this.cdr.detectChanges();
+        reject('Must select your own territory');
+        return;
+      }
+
+      // Get the origin of the attack
+      const territorios = this.mapa.flatMap(continent => continent.territorios);
+      const origenTropas = territorios.find(territorio => territorio.nombre === this.ataqueOrigen);
+
+      // Check if the origin of the attack exists and has a border
+      if (origenTropas && origenTropas.frontera) {
+        // Check if the selected territory is in the border of the origin of the attack
+        if (origenTropas.frontera.includes(terrainId)) {
+          // The selected territory is in the border of the origin of the attack, everything is ok 
+        } else {
+          // Search borders until exhaustion
+          if (duenno) {
+            const ok = this.recursiveTerritorySearch(origenTropas, terrainId, duenno);
+            // TODO comprobar que funcione
+          }
+          // The selected territory is not in the border of the origin of the attack --> fatal error user is stupid xd
+          this.toastr.error('El territorio seleccionado no está en la frontera del origen del ataque');
+          this.cdr.detectChanges();
+          reject('The selected territory is not in the border of the origin of the attack');
+          return;
+        }
+      } else {
+        // The origin of the attack does not exist or does not have a border (never should happen... )
+        this.toastr.error('El origen de las tropas no existe o no tiene una frontera');
+        this.cdr.detectChanges();
+        reject('The origin of the troops does not exist or does not have a border');
+        return;
+      }
+
+      // Check if the territory exists and belongs to the player
+      const terrainInfo = this.tropas.get(terrainId);
+      if (terrainInfo) {
+        const terrainOwner = this.jugadores.find(jugador => jugador.territorios.some(territorio => territorio == terrainId));
+        if (terrainOwner != duenno) {
+          this.toastr.error('Este territorio no te pertenece');
+          this.cdr.detectChanges();
+          reject('This territory does not belong to you');
+          return;
+        }
+      } else {
+        this.toastr.error('Ha ocurrido un error interno.', 'Atención');
+        reject('Internal error');
+        return;
+      }
+
+      this.toastr.success(`Has seleccionado tu territorio ${terrainId}`);
+      const territoryElement = svgDoc.getElementById(terrainId);
+      if (territoryElement) {
+        // TODO quizás renta hacer una animación: (+numero de tropas, por ejemplo)
+        let isRed = true;
+        const animation = setInterval(() => {
+          territoryElement.style.fill = isRed ? 'red' : 'yellow';
+          isRed = !isRed;
+        }, 1000);
+      
+        setTimeout(() => {
+          // Stop the animation after 5 seconds
+          clearInterval(animation);
+          // Continue with the rest of your code here
+        }, 5000);
+      }
+      this.cdr.detectChanges();
+      resolve(terrainId);
+    });
+  }
+
   numTropasTerritorio(territorioName : string) : number{
     let troops = 0;
 
