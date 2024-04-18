@@ -36,4 +36,10 @@ export class AmigosService {
     return this.http.get<{ message: string, friends: string[] }>("http://localhost:4000/amistad/listarAmigos", { headers })
       .pipe(map(response => response.friends));
   }
+  addAmigos(user: any): Observable<any>{
+    return this.http.post("http://localhost:4000/amistad", user);
+  }
+  delAmigos(user: any): Observable<any>{
+    return this.http.delete("http://localhost:4000/amistad", user);
+  }
 }
