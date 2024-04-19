@@ -55,6 +55,10 @@ export class TiendaComponent {
       },
       (error) => {
         console.error('Error retreiving skins:', error);
+        this.toastr.error('Error al cargar las skins', 'Error');
+        if(error.status == 401) {
+          this.router.navigateByUrl('/login');
+        }
       }
     );
   }
@@ -68,8 +72,12 @@ export class TiendaComponent {
         this.toastr.success('¡Skin comprada!', 'Éxito');
       },
       (error) => {
-        console.error('Error buying skin:', error);
-        this.toastr.error('¡No tiene suficiente dinero!', 'Error');
+        if(error.status == 400 || error.status == 500) {
+          console.error('Error buying skin:', error.error.mensaje);
+          this.toastr.error(error.error.mensaje, 'Error');
+        } else if (error.status == 401) {
+          this.router.navigateByUrl('/login');
+        }
       }
     );
   }
@@ -80,6 +88,10 @@ export class TiendaComponent {
         this.enPropiedad = skins;
       },
       (error) => {
+        if(error.status == 401) {
+          this.router.navigateByUrl('/login');
+        }
+        this.toastr.error('Error al cargar las skins en propiedad', 'Error');
         console.error('Error loading owned skins:', error);
       }
     );
@@ -96,7 +108,11 @@ export class TiendaComponent {
         this.money = response.dinero;
       },
       (error) => {
+        if(error.status == 401) {
+          this.router.navigateByUrl('/login');
+        }
         console.error('Error getting money:', error);
+        this.toastr.error('Error al cargar el dinero', 'Error');
       }
     );
   }
