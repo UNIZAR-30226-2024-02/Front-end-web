@@ -7,7 +7,8 @@
             <ul class="list-unstyled">
                 <li *ngFor="let spot of listaAmigos" class="user-container">
                     <div class="user-info">
-                        <!-- <span>{{spot}}</span> -->
+                        <span>{{spot}}</span>
+                        <button class="btn-elim" (click)="delAmigos(spot)">X</button>
                     </div>
                 </li>
             </ul>

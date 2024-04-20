@@ -37,9 +37,26 @@ export class AmigosService {
       .pipe(map(response => response.friends));
   }
   addAmigos(user: any): Observable<any>{
-    return this.http.post("http://localhost:4000/amistad", user);
+    const headers = this.getHeaders();
+    if (!headers) {
+      return of([]);
+    }
+    return this.http.post("http://localhost:4000/amistad", user, { headers });
   }
-  delAmigos(user: any): Observable<any>{
-    return this.http.delete("http://localhost:4000/amistad", user);
+  delAmigos(user: string): Observable<any>{
+    const headers = this.getHeaders();
+    if (!headers) {
+      return of([]);
+    }
+    const options = {
+      headers: headers,
+      body:{
+        idDestino: user
+      }
+    }
+    return this.http.delete("http://localhost:4000/amistad/"+user, {
+      headers: headers,
+      body:{idDestino: this.usersService.getUsername()}
+    });
   }
 }
