@@ -1,7 +1,13 @@
 <div class="full-screen-background">
     <div class="scrollable-container">
-        <h1>Amigos</h1>
-
+        <form class="custom-form" method="post" #loginForm="ngForm">
+            <h1>Amigos</h1>
+            <div class="NuevoAmigo">
+                <h2>Añadir Amigos</h2>
+                <input type="nuevoAmigo" id="nuevoAmigo" [(ngModel)]="nuevoAmigo" name="nuevoAmigo" placeholder="Nombre de Jugador" required="required" class="form-control" ngModel />
+                <button type="submit" class="btn-primary" [disabled]="!loginForm.valid" (click)="addAmigos()">Añadir Amigo</button>
+            </div>
+        </form>
         <div class="leaderboard">
             <h2>Lista de Amigos</h2>
             <ul class="list-unstyled">

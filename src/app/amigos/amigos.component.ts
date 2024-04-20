@@ -12,21 +12,30 @@ import { error } from 'console';
 })
 export class AmigosComponent {
   listaAmigos: string[] = [];
+  nuevoAmigo: string;
 
   ngOnInit(): void{
     this.getAmigos();
     console.log(this.listaAmigos);
   }
-  constructor(private amigosService: AmigosService, private toastr: ToastrService) {}
+  constructor(private amigosService: AmigosService, private toastr: ToastrService) {
+    this.nuevoAmigo = "";
+  }
   getAmigos(){
     this.amigosService.getAmigos().subscribe(amigos => this.listaAmigos = amigos);
   }
-  addAmigos(id: string){
-    const user = {idDestino: id}
-    this.amigosService.addAmigos(user).subscribe(data => {
-      this.toastr.success("Amigo añadido con éxito.")
-      this.toastr.error("No se pudo añadir el usuario.")
-    })
+  addAmigos(){
+    const user = {idDestino: this.nuevoAmigo}
+    this.amigosService.addAmigos(user).subscribe(
+      (response) => {
+        console.log("Amigo añadido con éxito");
+        this.toastr.success("Amigo añadido con éxito.");
+      },
+      (error) => {
+        console.error('Error al añadir amigo:', error);
+        this.toastr.error("No se pudo añadir el amigo.");
+      }
+    );
   }
   delAmigos(id: string){
     this.amigosService.delAmigos(id).subscribe(
