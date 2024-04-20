@@ -31,6 +31,7 @@ import { AmigosComponent } from './amigos/amigos.component';
 import { PartidasComponent } from './partidas/partidas.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { HistorialComponent } from './historial/historial.component';
+import { SolicitudesComponent } from './solicitudes/solicitudes.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { HistorialComponent } from './historial/historial.component';
     AmigosComponent,
     PartidasComponent,
     LobbyComponent,
-    HistorialComponent
+    HistorialComponent,
+    SolicitudesComponent
   ],
   imports: [
     BrowserModule,

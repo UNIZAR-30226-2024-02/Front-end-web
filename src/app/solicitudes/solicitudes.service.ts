@@ -5,11 +5,11 @@ import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 
-
 @Injectable({
   providedIn: 'root'
 })
-export class AmigosService {
+export class SolicitudesService {
+
   constructor(private http: HttpClient, private usersService: UsersService, public router: Router) { }
   private getHeaders(): HttpHeaders | null {
     const token = this.usersService.getToken();
@@ -26,15 +26,6 @@ export class AmigosService {
 
     return headers;
   }
-  getAmigos(): Observable<string[]> {
-    const headers = this.getHeaders();
-    if (!headers) {
-      return of([]);
-    }
-
-    return this.http.get<{ message: string, friends: string[] }>("http://localhost:4000/amistad/listarAmigos", { headers })
-      .pipe(map(response => response.friends));
-  }
   addAmigos(user: any): Observable<any>{
     const headers = this.getHeaders();
     if (!headers) {
@@ -42,20 +33,14 @@ export class AmigosService {
     }
     return this.http.post("http://localhost:4000/amistad", user, { headers });
   }
-  delAmigos(user: string): Observable<any>{
+  getSol(): Observable<string[]> {
     const headers = this.getHeaders();
     if (!headers) {
       return of([]);
     }
-    const options = {
-      headers: headers,
-      body:{
-        idDestino: user
-      }
-    }
-    return this.http.delete("http://localhost:4000/amistad/"+user, {
-      headers: headers,
-      body:{idDestino: this.usersService.getUsername()}
-    });
+
+    return this.http.get<{ message: string, solicitudes: string[] }>("http://localhost:4000/amistad/listarSolicitudes", { headers })
+      .pipe(map(response => response.solicitudes));
   }
+
 }
