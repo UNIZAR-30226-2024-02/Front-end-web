@@ -4,6 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import e from 'express';
 import { Socket } from 'ngx-socket-io';
 import { UsersService } from '../users/users.service';
+import { interval } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 
 export interface Chat {
   nombreChat : string;
@@ -36,20 +39,28 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService, private toastr: ToastrService,
               private socket: Socket, private usersService: UsersService) { }
 
-  ngOnInit(): void {
-    this.myName = this.usersService.getUsername();
-    this.getChats();
-      this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
-       // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
-       const chat = this.selectedChats.find(chat => chat._id === chatId);
-       if (chat) {
-          if (!chat.mensajes) {
-            chat.mensajes = [];
-          }
-          chat.mensajes.push({ texto: mensaje, idUsuario: user, timestamp: timestamp});
+fetchNewMessages(chat: Chat) {
+    this.chatService.obtenerMensajes(chat._id).subscribe(messages => {
+        // Asegúrate de actualizar solo si hay nuevos mensajes
+        if (!chat.mensajes || messages.length !== chat.mensajes.length) {
+            chat.mensajes = messages;
         }
-      }); 
+    });
+}
+
+
+ngOnInit(): void {
+      this.myName = this.usersService.getUsername();
+      this.getChats();
+      this.setupMessagePolling();
   }
+  
+setupMessagePolling() {
+      interval(1000).pipe(
+          switchMap(() => this.selectedChats.map(chat => this.fetchNewMessages(chat)))
+      ).subscribe();
+  }
+          
 
   getChats(): void {
       this.chatService.listarChats().subscribe(chats => {
