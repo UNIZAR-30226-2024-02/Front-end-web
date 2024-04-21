@@ -1,18 +1,20 @@
 <div class="full-screen-background">
     <div class="scrollable-container">
         <div class="leaderboard">
-            <h2>Lista de Solicitudes</h2>
+            <h1 class="text-center">
+                <font color="#000000">Solicitudes de Amistad</font>
+            </h1>
             <ul class="list-unstyled">
                 <li *ngFor="let spot of listaSol" class="user-container">
                     <div class="user-info">
                         <span>{{spot}}</span>
-                        <button class="btn-elim" (click)="addAmigos(spot)">Aceptar</button>
+                        <button class="accept-button" (click)="addAmigos(spot)">Aceptar</button>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
-    <button class="btn btn-secondary" routerLink="/menu">Volver</button>
+    <button class="back-button" routerLink="/menu">Volver</button>
     
 
 </div>

@@ -4,7 +4,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('/assets/OIG2.jpg');
+    background-image: url('/assets/tienda.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -27,13 +27,6 @@
     position: relative;  /* Relativo para mantener centrado */
 }
 
-.btn-secondary {
-    position: absolute;  /* Posicionamiento absoluto dentro del contenedor de fondo */
-    bottom: 10px;  /* Abajo del todo, con un pequeño margen */
-    left: 10px;  /* A la izquierda del todo, con un pequeño margen */
-    z-index: 1;  /* Menor z-index para no interferir con el scrollable container */
-}
-
 .list-unstyled {
     list-style-type: none;
     padding: 0;
@@ -47,6 +40,7 @@
     border: 1px solid rgba(0,0,0,0.1);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 
 .user-container:hover {
@@ -59,8 +53,47 @@
     margin-right: 5px;
     font-size: 16px;
     font-weight: bold;
+    position: relative;
 }
 
 .user-info span:last-child {
     float: right;
+    position: relative;
+}
+
+.back-button {
+    
+    position: absolute;  /* Posicionamiento absoluto dentro del contenedor de fondo */
+    bottom: 10px;  /* Abajo del todo, con un pequeño margen */
+    left: 10px;  /* A la izquierda del todo, con un pequeño margen */
+    z-index: 1;  /* Menor z-index para no interferir con el scrollable container */
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #888888;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button {
+    position: absolute;
+    z-index: 1;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0; /* Ajusta el botón al borde derecho */
+    margin-right: 10px; /* Agrega un pequeño margen a la derecha del contenedor */
+}
+
+.add-button{
+    background-color: #28a745;
+    color: #ffffff;
 }

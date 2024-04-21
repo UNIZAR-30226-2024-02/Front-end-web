@@ -5,7 +5,7 @@
             <div class="NuevoAmigo">
                 <h2>Añadir Amigos</h2>
                 <input type="nuevoAmigo" id="nuevoAmigo" [(ngModel)]="nuevoAmigo" name="nuevoAmigo" placeholder="Nombre de Jugador" required="required" class="form-control" ngModel />
-                <button type="submit" class="btn-primary" [disabled]="!loginForm.valid" (click)="addAmigos()">Añadir Amigo</button>
+                <button type="submit" class="add-button" [disabled]="!loginForm.valid" (click)="addAmigos()">Añadir Amigo</button>
             </div>
         </form>
         <div class="leaderboard">
@@ -14,13 +14,12 @@
                 <li *ngFor="let spot of listaAmigos" class="user-container">
                     <div class="user-info">
                         <span>{{spot}}</span>
-                        <button class="btn-elim" (click)="delAmigos(spot)">X</button>
+                        <button class="delete-button" (click)="delAmigos(spot)">X</button>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
-    <button class="btn btn-secondary" routerLink="/menu">Volver</button>
-    <button class="btn" routerLink="/solicitudes">Solicitudes</button>
+    <button class="back-button" routerLink="/menu">Volver</button>
 
 </div>
