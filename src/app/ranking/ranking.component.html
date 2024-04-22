@@ -1,23 +1,20 @@
 <div class="full-screen-background">
     <div class="scrollable-container">
-        <h1>Ranking</h1>
-
-        <div class="user-info">
-            <p>Tu Nombre</p>
-            <p>Tus Puntos</p>
-        </div>
-
+        <h2>Tabla de Clasificación</h2>
         <div class="leaderboard">
-            <h2>Tabla de Clasificación</h2>
+            <div class="user-info">
+                <h3> Mi elo: {{getElo()}}</h3>
+    
+            </div>
             <ul class="list-unstyled">
                 <li *ngFor="let spot of leaderboard" class="user-container">
                     <div class="user-info">
-                        <span>{{spot.idUsuario}}</span> - <span>{{spot.elo}}</span>
+                        <span>{{spot.idUsuario}}</span><span>{{spot.elo}}</span>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
-    <button class="btn btn-secondary" routerLink="/menu">Volver</button>
+    <button class="back-button" routerLink="/menu">Volver</button>
 
 </div>
