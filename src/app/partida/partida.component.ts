@@ -74,6 +74,7 @@ export class PartidaComponent {
   ataqueDestino: string = '';
   ataqueTropas: number = 0; 
   avatarAMostrar = '';
+  firefox = false;
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
               private cdr: ChangeDetectorRef, private chatService : ChatService
@@ -421,9 +422,23 @@ export class PartidaComponent {
   }
 
   onSVGLoad(event: any) {
-    const svgDoc = event.target.contentDocument;
+    if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+      this.firefox = true;
+    } else {
+      this.firefox = false;
+    }
+    const iframeElement = event.target;
+    let svgDoc = iframeElement.contentDocument;  // Get the SVG document
+    const svgUrl = iframeElement.src; // Obtain the URL of the SVG
+    let svgObj = '';
+    console.log('URL del SVG:', svgUrl);
+
+    
+
     this.svgDoc = svgDoc;
+    
     this.distribuirPiezas();
+    console.log(svgDoc)
     if (svgDoc) {
       // Busca todos los elementos <path> dentro del grupo con ID "map"
       const paths = svgDoc.querySelectorAll('#map path');
@@ -437,6 +452,12 @@ export class PartidaComponent {
           this.tropas.set(path.id, { numTropas: 0, user: '' });
         }
 
+      });
+      svgDoc.querySelectorAll('path').forEach((path: SVGElement) => {
+        path.addEventListener('click', (event: MouseEvent) => {
+          console.log('Path clicked:', event.target);
+          // Handle the click event...
+        });
       });
     }
   }

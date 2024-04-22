@@ -38,10 +38,15 @@
         <div class="col-md-6 svg-column">
             <!-- Contenedor centrado para el SVG -->
             <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-                <object type="image/svg+xml" data="assets/Risk_game_board.svg" (load)="onSVGLoad($event)" class="svg-container"></object>
+                <iframe 
+                    src="assets/Risk_game_board.svg" 
+                    class="svg-container" 
+                    (load)="onSVGLoad($event)">
+                    Tu navegador no soporta SVG
+                </iframe>
             </div>
         </div>
-
+        
         <!-- Columna para el resto del contenido -->
         <div class="col-md-6 other-content">
             <!-- Contenedor para el chat y otros elementos -->
