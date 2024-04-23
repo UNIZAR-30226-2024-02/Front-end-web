@@ -34,6 +34,7 @@ export class LobbyComponent implements OnInit {
       } else {
         this.partida = state.partida;
         this.chat = state.partida.chat;
+        this.partidaId = this.partida._id;
         this.socket.emit('joinChat', this.chat._id);
         this.socket.emit('joinGame', { gameId: this.partida._id, user: this.userService.getUsername() });
         const userRequests = this.partida.jugadores.map((jugador: any) => 
@@ -93,16 +94,18 @@ export class LobbyComponent implements OnInit {
     this.toastr.success('Has salido de la partida');
   }
 
-  //TODO HACERLA FUNCIONAL
   empezarPartida() {
-    this.lobbyService.empezarPartida(this.partidaId).subscribe(() => {
-      // this.service.empezarPartida.... / inicialziar / loquesea -> BACK EDN API
-      this.socket.emit('gameStarted', this.partida._id);
-      console.log(this.partidaId)
-      this.router.navigate(['/partida'], { state: { partida: this.partida } });
-      this.toastr.success('Imagina que la partida ha comenzado');
-    });
-    this.toastr.success('Imagina que la partida ha comenzado');
+    console.log(this.partidaId)
+    this.lobbyService.empezarPartida(this.partidaId).subscribe(
+      () => {
+        this.socket.emit('gameStarted', this.partida._id);
+        console.log(this.partidaId)
+        this.router.navigate(['/partida'], { state: { partida: this.partida } });
+      },
+      error => {
+        this.toastr.error(error.error.error);
+      }
+    );
   }
 
   sendMessage(texto : string){
@@ -124,5 +127,7 @@ export class LobbyComponent implements OnInit {
       }
     );
   }
+
+  
 
 }

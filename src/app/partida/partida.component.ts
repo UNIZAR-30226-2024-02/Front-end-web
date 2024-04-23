@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { Socket } from 'ngx-socket-io';
 import { ChangeDetectorRef } from '@angular/core';
 import { ChatService } from '../chat/chat.service';
+import { PartidaService } from '../partida/partida.service';
 
 export interface Territorio{
   nombre: string;
@@ -75,10 +76,38 @@ export class PartidaComponent {
   ataqueTropas: number = 0; 
   avatarAMostrar = '';
   firefox = false;
+  myColor = '';
+  texture : string | undefined = undefined;
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
-              private cdr: ChangeDetectorRef, private chatService : ChatService
+              private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService
   ) {
+    this.texture = undefined;
+    this.whoami = this.userService.getUsername();
+    // TODO OBTENER SKIN DEL TERRENO
+    this.partidaService.ObtenerTerreno(this.whoami).subscribe(response => {
+
+      console.log('response', response);
+  
+      const terrenoName = response.idSkin;
+      console.log('Terreno path:', terrenoName);
+  
+      // TODO: Use the terrenoPath variable
+      // TODO Hacer que cambie en base al equipado
+      switch(terrenoName){
+        case 'defaultMap':
+          this.texture = 'assets/Risk_game_board.svg';
+          break;
+        case 'lavaMap':
+          this.texture = 'assets/Risk_game_board_lava.svg';
+          break; 
+        default:
+          this.texture = 'assets/Risk_game_board.svg';
+          break;
+      }
+      this.cdr.detectChanges();
+
+    });
     this.tropas = new Map<string, { numTropas: number, user: string }>();
     this.colorMap = new Map<string, string>();
     const navigation = this.router.getCurrentNavigation();
@@ -93,251 +122,35 @@ export class PartidaComponent {
     }
   }
 
-
-  cartasStub() {
-    this.cartas = [
-      // NA
-      {territorio: "ALASKA", estrellas: 1},
-      {territorio: "ALBERTA", estrellas: 2},
-      {territorio: "AMERICA CENTRAL", estrellas: 1},
-      {territorio: "ESTADOS UNIDOS ESTE", estrellas: 2},
-      {territorio: "GROENLANDIA", estrellas: 1},
-      {territorio: "TERRITORIOS DEL NOROESTE", estrellas: 2},
-      {territorio: "ONTARIO", estrellas: 1},
-      {territorio: "QUEBEC", estrellas: 2},
-      {territorio: "ESTADOS UNIDOS OESTE", estrellas: 1},
-      // SA
-      {territorio: "ARGENTINA", estrellas: 1},
-      {territorio: "BRASIL", estrellas: 2},
-      {territorio: "PERU", estrellas: 1},
-      {territorio: "VENEZUELA", estrellas: 2},
-      // EU
-      {territorio: "GRAN BRETANA", estrellas: 1},
-      {territorio: "ISLANDIA", estrellas: 2},
-      {territorio: "EUROPA NORTE", estrellas: 1},
-      {territorio: "ESCANDINAVIA", estrellas: 1},
-      {territorio: "EUROPA SUR", estrellas: 2},
-      {territorio: "RUSIA", estrellas: 1},
-      {territorio: "EUROPA OCCIDENTAL", estrellas: 1},
-      // AF
-      {territorio: "CONGO", estrellas: 1},
-      {territorio: "AFRICA ORIENTAL", estrellas: 2},
-      {territorio: "EGIPTO", estrellas: 1},
-      {territorio: "MADAGASCAR", estrellas: 1},
-      {territorio: "AFRICA NORTE", estrellas: 2},
-      {territorio: "SUDAFRICA", estrellas: 1},
-      // AS
-      {territorio: "AFGANISTAN", estrellas: 1},
-      {territorio: "CHINA", estrellas: 2},
-      {territorio: "INDIA", estrellas: 1},
-      {territorio: "IRKUTSK", estrellas: 2},
-      {territorio: "JAPON", estrellas: 1},
-      {territorio: "KAMCHATKA", estrellas: 2},
-      {territorio: "ORIENTE MEDIO", estrellas: 1},
-      {territorio: "MONGOLIA", estrellas: 2},
-      {territorio: "SUDESTE ASIATICO", estrellas: 1},
-      {territorio: "SIBERIA", estrellas: 2},
-      {territorio: "URAL", estrellas: 1},
-      {territorio: "YAKUTSK", estrellas: 2},
-      // OC
-      {territorio: "AUSTRALIA ORIENTAL", estrellas: 1},
-      {territorio: "AUSTRALIA OCCIDENTAL", estrellas: 2},
-      {territorio: "INDONESIA", estrellas: 1},
-      {territorio: "NUEVA GUINEA", estrellas: 2}
-    ];
-  }
-
-  mapaStub(){
-    const Alaska : Territorio ={ nombre: "ALASKA", frontera: ["ALBERTA", "TERRITORIOS DEL NOROESTE", "KAMCHATKA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Alberta: Territorio = { nombre: "ALBERTA", frontera: ["ALASKA", "ESTADOS UNIDOS OESTE" , "ONTARIO", "TERRITORIOS DEL NOROESTE"], tropas: Math.floor(Math.random() * 2) + 1};
-    const AmericaCentral: Territorio = { nombre: "AMERICA CENTRAL", frontera: ["ESTADOS UNIDOS ESTE", "ESTADOS UNIDOS OESTE", "VENEZUELA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const EstadosUnidosEste: Territorio = { nombre: "ESTADOS UNIDOS ESTE", frontera: ["ALBERTA", "AMERICA CENTRAL", "ESTADOS UNIDOS OESTE", "ONTARIO"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Groenlandia: Territorio = { nombre: "GROENLANDIA", frontera: ["TERRITORIOS DEL NOROESTE", "ONTARIO", "QUEBEC", "ISLANDIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const TerritoriosDelNoroeste: Territorio = { nombre: "TERRITORIOS DEL NOROESTE", frontera: ["ALASKA", "ALBERTA", "ONTARIO", "GROENLANDIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Ontario: Territorio = { nombre: "ONTARIO", frontera: ["TERRITORIOS DEL NOROESTE", "ALASKA", "QUEBEC", "GROENLANDIA", "ESTADOS UNIDOS OESTE", "ESTADOS UNIDOS ESTE"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Quebec: Territorio = { nombre: "QUEBEC", frontera: ["ONTARIO", "ESTADOS UNIDOS ESTE", "GROENLANDIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const EstadosUnidosOeste: Territorio = { nombre: "ESTADOS UNIDOS OESTE", frontera: ["ESTADOS UNIDOS ESTE", "ONTARIO", "QUEBEC", "AMERICA CENTRAL"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Argentina: Territorio = { nombre: "ARGENTINA", frontera: ["PERU", "BRASIL"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Brasil: Territorio = { nombre: "BRASIL", frontera: ["ARGENTINA", "VENEZUELA", "PERU", "AFRICA NORTE"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Peru: Territorio = { nombre: "PERU", frontera: ["ARGENTINA", "VENEZUELA", "BRASIL"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Venezuela: Territorio = { nombre: "VENEZUELA ", frontera: ["AMERICA CENTRAL", "PERU", "BRASIL"], tropas: Math.floor(Math.random() * 2) + 1};
-    const GranBretana: Territorio = { nombre: "GRAN BRETANA", frontera: ["EUROPA OCCIDENTAL", "EUROPA NORTE", "ESCANDINAVIA", "ISLANDIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Islandia: Territorio = { nombre: "ISLANDIA", frontera: ["GRAN BRETANA", "GROENLANDIA", "ESCANDINAVIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const EuropaNorte: Territorio = { nombre: "EUROPA NORTE", frontera: ["EUROPA SUR", "EUROPA OCCIDENTAL", "RUSIA", "GRAN BRETANA", "ESCANDINAVIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Escandinavia: Territorio = { nombre: "ESCANDINAVIA", frontera: ["RUSIA", "EUROPA NORTE", "GRAN BRETANA", "ISLANDIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const EuropaSur: Territorio = { nombre: "EUROPA SUR", frontera: ["EUROPA OCCIDENTAL", "EUROPA NORTE", "RUSIA", "AFRICA NORTE", "EGIPTO"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Rusia: Territorio = { nombre: "RUSIA", frontera: ["ESCANDINAVIA", "EUROPA NORTE", "EUROPA SUR", "URAL", "AFGANISTAN", "ORIENTE MEDIO"], tropas: Math.floor(Math.random() * 2) + 1};
-    const EuropaOccidental: Territorio = { nombre: "EUROPA OCCIDENTAL", frontera: ["EUROPA NORTE", "EUROPA SUR", "AFRICA NORTE", "GRAN BRETANA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Congo: Territorio = { nombre: "CONGO", frontera: ["AFRICA ORIENTAL", "SUDAFRICA", "AFRICA NORTE"], tropas: Math.floor(Math.random() * 2) + 1};
-    const AfricaOriental: Territorio = { nombre: "AFRICA ORIENTAL", frontera: ["EGIPTO", "AFRICA NORTE", "CONGO", "SUDAFRICA", "MADAGASCAR"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Egipto: Territorio = { nombre: "EGIPTO", frontera: ["AFRICA NORTE", "AFRICA ORIENTAL", "EUROPA SUR"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Madagascar: Territorio = { nombre: "MADAGASCAR", frontera: ["AFRICA ORIENTAL", "SUDAFRICA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const AfricaNorte: Territorio = { nombre: "AFRICA NORTE", frontera: ["EGIPTO", "BRASIL", "AFRICA ORIENTAL", "CONGO"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Sudafrica: Territorio = { nombre: "SUDAFRICA", frontera: ["MADAGASCAR", "CONGO", "AFRICA ORIENTAL"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Afganistan: Territorio = { nombre: "AFGANISTAN", frontera: ["RUSIA", "URAL", "INDIA", "ORIENTE MEDIO", "CHINA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const China: Territorio = { nombre: "CHINA", frontera: ["INDIA", "SUDESTE ASIATIOCO", "MONGOLIA", "SIBERIA", "URAL", "AFGANISTAN"], tropas: Math.floor(Math.random() * 2) + 1};
-    const India: Territorio = { nombre: "INDIA", frontera: ["CHINA", "ORIENTE MEDIO", "AFGANISTAN", "SUDESTE ASIATICO"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Irkutsk: Territorio = { nombre: "IRKUTSK", frontera: ["YAKUTSK", "SIBERIA", "MONGOLIA", "KAMCHATKA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Japon: Territorio = { nombre: "JAPON", frontera: ["KAMCHATKA", "MONGOLIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Kamchatka: Territorio = { nombre: "KAMCHATKA", frontera: ["ALASKA", "YAKUTSK", "IRKUTSK", "MONGOLIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const OrienteMedio: Territorio = { nombre: "ORIENTE MEDIO", frontera: ["RUSIA", "AFGANISTAN", "INDIA", "EGIPTO"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Mongolia: Territorio = { nombre: "MONGOLIA", frontera: ["IRKUTSK", "CHINA", "JAPON", "SIBERIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const SudesteAsiatico: Territorio = { nombre: "SUDESTE ASIATICO", frontera: ["CHINA", "INDIA", "INDONESIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Siberia: Territorio = { nombre: "SIBERIA", frontera: ["IRKUTSK", "YAKUTSK", "MONGOLIA", "CHINA", "URAL"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Ural: Territorio = { nombre: "URAL", frontera: ["SIBERIA", "RUSIA", "AFGANISTAN"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Yakutsk: Territorio = { nombre: "YAKUTSK", frontera: ["IRKUTSK", "KAMCHATKA", "SIBERIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const Indonesia: Territorio = { nombre: "INDONESIA", frontera: ["SUDESTE ASIATICO", "NUEVA GUINEA", "AUSTRALIA OCCIDENTAL"], tropas: Math.floor(Math.random() * 2) + 1};
-    const NuevaGuinea: Territorio = { nombre: "NUEVA GUINEA", frontera: ["AUSTRALIA OCCIDENTAL", "AUSTRALIA ORIENTAL", "INDONESIA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const AustraliaOccidental: Territorio = { nombre: "AUSTRALIA OCCIDENTAL", frontera: ["AUSTRALIA ORIENTAL", "INDONESIA", "NUEVA GUINEA"], tropas: Math.floor(Math.random() * 2) + 1};
-    const AustraliaOriental: Territorio = { nombre: "AUSTRALIA ORIENTAL", frontera: ["AUSTRALIA OCCIDENTAL", "NUEVA GUINEA"], tropas: Math.floor(Math.random() * 2) + 1};
-
-    const NATerritorios: Territorio[] = [
-      Alaska, Alberta, AmericaCentral, EstadosUnidosEste,
-      Groenlandia, TerritoriosDelNoroeste, Ontario, Quebec, EstadosUnidosOeste
-    ];
-
-    const SATerritorios: Territorio[] = [
-      Argentina, Brasil, Peru, Venezuela
-    ];
-
-    const EUTerritorios: Territorio[] = [
-      GranBretana, Islandia, EuropaNorte, Escandinavia,
-      EuropaSur, Rusia, EuropaOccidental
-    ];
-
-    const AFTerritorios: Territorio[] = [
-      Congo, AfricaOriental, Egipto, Madagascar,
-      AfricaNorte, Sudafrica
-    ];
-
-    const ASTerritorios: Territorio[] = [
-      Afganistan, China, India, Irkutsk, Japon,
-      Kamchatka, OrienteMedio, Mongolia, SudesteAsiatico,
-      Siberia, Ural, Yakutsk
-    ];
-
-    const OCTerritorios: Territorio[] = [
-      Indonesia, NuevaGuinea, AustraliaOccidental, AustraliaOriental
-    ];
-
-    // Create continents
-    const NA: Continente = {
-      territorios: NATerritorios,
-      valor: 5
-    }
-
-    const SA: Continente = {
-      territorios: SATerritorios,
-      valor: 2
-    }
-
-    const EU: Continente = {
-      territorios: EUTerritorios,
-      valor: 5
-    }
-
-    const AF: Continente = {
-      territorios: AFTerritorios,
-      valor: 3
-    }
-
-    const AS: Continente = {
-      territorios: ASTerritorios,
-      valor: 7
-    }
-
-    const OC: Continente = {
-      territorios: OCTerritorios,
-      valor: 2
-    }
-
-    const Mapa: Continente[] = [NA, SA, EU, AF, AS, OC];
-    this.mapa = Mapa;
-    // Shuffle function
-    let shuffle = (array: Territorio[]): Territorio[] => {
-      let currentIndex = array.length, temporaryValue, randomIndex;
-
-      // While there remain elements to shuffle...
-      while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-      }
-
-      return array;
-    }; 
-
-    // Flatten the Mapa array to get an array of all Territorio objects
-    let allTerritories = this.mapa.flatMap(continente => continente.territorios);
-
-    // Shuffle the territories
-    let shuffledTerritories = shuffle(allTerritories);
-
-    // Distribute the territories among the players
-   this.jugadores.forEach((jugador, i) => {
-      jugador.territorios = shuffledTerritories
-        .filter((_: any, index: number) => index % this.jugadores.length === i)
-        .slice(0, Math.floor(shuffledTerritories.length / this.jugadores.length)) 
-        .map(territorio => territorio.nombre); // Store only the territory name
-    });
-  }
-
+  // Obtiene la partida del back end, en su estado actual, e inicializa las variables
   inicializacionPartida(partida: Partida){
-      //backend.iniciarPartida(partida._id) // TODO LLAMADA AL BACK
-      // será algo así como un subscribe
-      // de momento inicializo todo con los valores que conozco del lobby + stub
-      this.jugadores = partida.jugadores;
-      // De momento inicializo de forma stub, luego no me hará falta este trozo de código
+    this.partidaService.obtenerPartida(partida._id).subscribe(response => {
+      this.partida = response.partida; // cojo la partida 
+      this.jugadores = response.partida.jugadores; // cojo sus jugadores, ya vienen con su color
+      // busco mi color
       for(let jugador of this.jugadores){
-        if (this.colores.length > 0) {
-          let color = this.colores.pop();
-          if (color !== undefined) {
-            jugador.color = color;
-          } else {
-            console.error('Unexpected error: No more colors available');
-          }
-        } else {
-          console.error('No more colors available');
+        if(jugador.usuario === this.whoami){
+          this.myColor = jugador.color;
         }
       }
-      this.turno = partida.turno;
-      this.nombrePartida = partida.nombre;
-      this.numJugadores = partida.jugadores.length;
-      this.mapa = partida.mapa;
-      this.mapaStub(); // stub
-
-      this.cartas = partida.cartas;
-      this.cartasStub(); // stub
-
-      this.descartes = partida.descartes;
-
-      // pueblo el chat
-      console.log('El chat de la partida', this.partida.chat)
-      
-
-      this.ganador = partida.ganador;
-      this.fase = partida.fase;
-      this.fase = 0; // stub
-      this.updateText(this.fase)
+      this.turno = response.partida.turno;
+      this.nombrePartida = response.partida.nombre;
+      this.numJugadores = response.partida.jugadores.length;
+      this.mapa = response.partida.mapa;
+      this.cartas = response.partida.cartas;
+      this.descartes = response.partida.descartes;
+      this.ganador = response.partida.ganador;
+      this.fase = response.partida.fase;
+      if(this.fase !== undefined) this.updateText(this.fase);
       this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
       this.getAvatar(this.turnoJugador);
-    }
 
-
-  onRegionClick(regionId: string) {
-    console.log(`Se ha hecho clic en la región con ID: ${regionId}`)
+    });
 
   }
 
+  // Pinta el mapa con las piezas actuales
   distribuirPiezas(){
-    console.log("Continentes", this.mapa)
-    console.log("Jugadores", this.jugadores)
     for(let continente of this.mapa){
       for(let territorio of continente.territorios){
         // Find the player who owns this territory
@@ -378,8 +191,8 @@ export class PartidaComponent {
       }
     }
 
-    
     // Esto es stub, luego se hará una llamada al back para obtener el número de tropas
+    // TODO NO ESTÁ EN EL BACK 
     switch(this.partida.jugadores.length){
       case 2: 
         this.numTropas = 40;
@@ -401,13 +214,10 @@ export class PartidaComponent {
 
   ngOnInit() {
     console.log(this.colorMap)
-    this.whoami = this.userService.getUsername();
+    
     let result = this.partida.turno % this.partida.jugadores.length;
     this.turnoJugador = this.partida.jugadores[result].usuario;
-    // TODO LLAMADA AL BACK QUE OBTENGA EN QUÉ ESTADO ESTÁ LA PARTIDA REALMENTE, 
-    // U OBTENERLO DE LA PARTIDA REAL DE ALGÚN MODO, Y SI ES UNA PARTIDA NUEVA, HACER ESTO
-    // EN CASO CONTRARIO, ACTUALIZAR EL ESTADO A SEGÚN CORRESPONDA
-    this.mapaStub(); this.cartasStub();
+
     console.log(this.mapa); console.log(this.jugadores)
     this.inicializacionPartida(this.partida);
     //TODO ABRIR LISTENERS DE LOS SOCKETS
@@ -444,6 +254,8 @@ export class PartidaComponent {
       const paths = svgDoc.querySelectorAll('#map path');
       // Agrega un event listener a cada elemento <path>
       paths.forEach((path: SVGElement) => {
+
+        //path.setAttribute('fill', 'url(#lava_verde)');
         path.addEventListener('click', (e: MouseEvent) => {
           this.stateMachine(path, svgDoc, e);
         });
@@ -453,12 +265,7 @@ export class PartidaComponent {
         }
 
       });
-      svgDoc.querySelectorAll('path').forEach((path: SVGElement) => {
-        path.addEventListener('click', (event: MouseEvent) => {
-          console.log('Path clicked:', event.target);
-          // Handle the click event...
-        });
-      });
+     
     }
   }
 
@@ -580,11 +387,11 @@ export class PartidaComponent {
     // Ask the user for the number of troops
 
     let troops;
-    console.log(e.target)
+    //console.log(e.target)
     const terrainId = (e.target as SVGElement).id;
     let duenno = this.jugadores.find(jugador => jugador.usuario == user);
-    console.log("terreno: " + terrainId)
-    console.log("duenno: " + duenno?.territorios)
+    //console.log("terreno: " + terrainId)
+    //console.log("duenno: " + duenno?.territorios)
     if(!(terrainId && duenno && duenno.territorios.includes(terrainId))){
       this.toastr.error('No puedes poner tropas en territorios que no te pertenecen');
       this.cdr.detectChanges();

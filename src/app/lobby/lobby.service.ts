@@ -31,15 +31,13 @@ export class LobbyService {
   }
 
 
-  //TODO HACER FUNCIONAL --> BACK END!! 
-  empezarPartida(partidaId: string): Observable<any> {
+  empezarPartida(id: string): Observable<any> {
     const headers = this.getHeaders();
     if (!headers) {
         return of([]);
     }
 
-    //return this.http.post<any>(`${this.apiUrl}partidas/empezarPartida`, { partidaId }, { headers });
-    return of([]);
+    return this.http.put<any>(`${this.apiUrl}partida/iniciarPartida`, {idPartida: id}, { headers });
   }
 
   salirPartida(partidaId: string): Observable<any> {
@@ -59,5 +57,6 @@ export class LobbyService {
 
     return this.http.put<any>(`${this.apiUrl}nuevaPartida/invite`, {user, idPartida : partida_id}, { headers });
   }
+  
   
 }
