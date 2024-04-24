@@ -22,6 +22,8 @@ export interface Partida {
   chat: Chat;
   fase?: number;
   __v: number;
+  auxColocar? : number;
+  auxRobar?: boolean;
 }
 
 export interface Jugador {

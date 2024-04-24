@@ -54,7 +54,7 @@ export class PartidaComponent {
   partida: Partida = {} as Partida; // para inicializarlo
   fase?: number = 0; // Colocar- -> 0; Atacar -> 1; Maniobrar -> 2; Robar -> 3; Fin -> 4;
   // Atributos especfícios (míos, del jugador que juega en este cliente)
-  numTropas = 1000;
+  numTropas = 0;
   tropas: Map<string, { numTropas: number, user: string }>;
   whoami : string = '';
   colorMap: Map<string, string>; // no parece necesario
@@ -134,6 +134,7 @@ export class PartidaComponent {
         }
       }
       this.turno = response.partida.turno;
+      this.cambiarTurno();
       this.nombrePartida = response.partida.nombre;
       this.numJugadores = response.partida.jugadores.length;
       this.mapa = response.partida.mapa;
@@ -141,8 +142,7 @@ export class PartidaComponent {
       this.descartes = response.partida.descartes;
       this.ganador = response.partida.ganador;
       this.fase = response.partida.fase;
-      if(this.fase !== undefined) this.updateText(this.fase);
-      this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
+      //this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
       this.getAvatar(this.turnoJugador);
 
     });
@@ -190,35 +190,11 @@ export class PartidaComponent {
         }
       }
     }
-
-    // Esto es stub, luego se hará una llamada al back para obtener el número de tropas
-    // TODO NO ESTÁ EN EL BACK 
-    switch(this.partida.jugadores.length){
-      case 2: 
-        this.numTropas = 40;
-        break;
-      case 3:
-        this.numTropas = 35;
-        break;
-      case 4:
-        this.numTropas = 30;
-        break;
-      case 5:
-        this.numTropas = 25;
-        break;
-      case 6:
-        this.numTropas = 20;
-        break;
-    }
   }
 
   ngOnInit() {
     console.log(this.colorMap)
     
-    let result = this.partida.turno % this.partida.jugadores.length;
-    this.turnoJugador = this.partida.jugadores[result].usuario;
-
-    console.log(this.mapa); console.log(this.jugadores)
     this.inicializacionPartida(this.partida);
     //TODO ABRIR LISTENERS DE LOS SOCKETS
     this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
@@ -248,6 +224,7 @@ export class PartidaComponent {
     this.svgDoc = svgDoc;
     
     this.distribuirPiezas();
+    if(this.fase !== undefined) this.updateText(this.fase);
     console.log(svgDoc)
     if (svgDoc) {
       // Busca todos los elementos <path> dentro del grupo con ID "map"
@@ -298,11 +275,22 @@ export class PartidaComponent {
           this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami, false, false)
           await this.waitForTropasPuestas()
           if(!this.eventoCancelado){
-            // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
-            // colocarTropas(this.partida._id, this.whoami, territorio, tropas)
-            // ESTO RECIBIRÁ EL BACK END
+            console.log(this.numTropas)
+            this.partidaService.ColocarTropas(this.partida._id, targetId, this.tropasPuestas).subscribe(
+              response => {
+                console.log(response);
+                this.tropasPuestas = 0;
+                this.cdr.detectChanges();
+              },
+              error => {
+                this.toastr.error('¡ERROR FATAL!');
+                this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, this.tropasPuestas);
+              }
+            );
             console.log(this.partida._id, this.whoami, targetId, this.tropasPuestas)   
-          }       
+          } else{
+            console.log('Evento cancelado')
+          }      
         } else {
           this.clickWrongTerrain(e, 'No es tu turno')
         }
@@ -395,6 +383,7 @@ export class PartidaComponent {
     if(!(terrainId && duenno && duenno.territorios.includes(terrainId))){
       this.toastr.error('No puedes poner tropas en territorios que no te pertenecen');
       this.cdr.detectChanges();
+      this.eventoCancelado = true;
       return;
     }
 
@@ -412,6 +401,7 @@ export class PartidaComponent {
 
     if (!init && (numTroops > this.numTropas)) {
       this.toastr.error('¡No tienes suficientes tropas!');
+      this.eventoCancelado = true;
       this.cdr.detectChanges();
       return;
     }
@@ -431,6 +421,7 @@ export class PartidaComponent {
     // Check if the input is a valid number
     if (isNaN(numTroops) || (numTroops < 1 && !select)) {
       alert('Please enter a valid number of troops.');
+      this.eventoCancelado = true;
       this.cdr.detectChanges();
       return;
     }
@@ -526,24 +517,42 @@ export class PartidaComponent {
   }
 
   updateFase(){
-    //TODO -> CONECTAR AL BACK END, ESTO ES UN STUB
-    if(this.fase !== undefined && this.fase !== null){
-      this.fase = (this.fase + 1) % 4;
-      console.log(this.fase)
-      this.updateText(this.fase);
-    } else {
-      this.toastr.error('Ha ocurrido un error intero', 'Atención');
+   if(this.turnoJugador === this.whoami){
+      this.partidaService.SiguienteFase(this.partida._id).subscribe(
+        response => {
+          // This will be executed when the HTTP request is successful
+          this.fase = response.fase; // cojo la fase 
+          if(this.turno !== response.turno){ // si ha cambiado el turno, lo cambio
+            this.turno = response.turno;
+            console.log("Cambia el turno")
+            this.cambiarTurno();
+          }
+          if(this.fase !== undefined && this.fase !== null){
+            this.updateText(this.fase);
+          }
+          this.cdr.detectChanges(); 
+          this.eventoCancelado = true;
+        },
+        error => {
+          // This will be executed when the HTTP request fails
+          this.toastr.error(error.error.message, 'Atención');
+        }
+      );
+    } else{
+      this.toastr.error('No es tu turno');
     }
-    this.cdr.detectChanges();
-    this.eventoCancelado = true;
   }
 
   updateText(fase : number){
     if(this.turnoJugador === this.whoami){
       switch(this.fase){
         case 0:
-          if(this.turnoJugador === this.whoami)
+          if(this.turnoJugador === this.whoami){
             this.text = 'Fase colocación: Coloca una tropa en un país libre'
+            console.log(this.partida.auxColocar)
+            this.numTropas = this.partida.auxColocar || 0 ;
+            console.log(this.numTropas)
+          }
           else 
             this.text = 'Espera tu turno'
           break;
@@ -559,6 +568,7 @@ export class PartidaComponent {
       }
     } else {
       this.text = 'Espera tu turno'
+      this.numTropas =  0 ;
     }
   }
 
@@ -805,9 +815,8 @@ export class PartidaComponent {
   }
 
   cambiarTurno(){
-    this.turnoJugador = this.jugadores[(this.turno + 1) % this.numJugadores].usuario;
-    this.turno++;
-    this.fase = 0;
+    this.turnoJugador = this.jugadores[(this.turno) % this.numJugadores].usuario;
+    console.log(this.turnoJugador)
     this.getAvatar(this.turnoJugador);
   }
 

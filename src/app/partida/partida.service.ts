@@ -46,4 +46,23 @@ export class PartidaService {
 
     return this.http.get("http://localhost:4000/misSkins/obtenerTerreno/" + jugador, { headers });
   }
+
+  // Cambia de fase en la partida
+  SiguienteFase(idPartida: string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of(null);
+    }
+
+    return this.http.put("http://localhost:4000/partida/siguienteFase", {idPartida}, { headers });
+  }
+
+  ColocarTropas(idPartida: string, territorio: string, numTropas: number): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of(null);
+    }
+
+    return this.http.put("http://localhost:4000/partida/colocarTropas", {idPartida, territorio, numTropas}, { headers });
+  }
 }
