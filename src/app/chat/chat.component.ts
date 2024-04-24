@@ -59,6 +59,12 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage(chat : Chat, message : string): void {
+    if (message) {
+      
+    }
+    else{
+      this.toastr.error("No se pueden enviar mensajes vacíos");
+    }
     if (!message.trim()) {
       return;
     }
@@ -73,7 +79,9 @@ export class ChatComponent implements OnInit {
   }
 
   crearChat(nombreChat: string, usuarios: string[]): void {
-      this.chatService.crearChat(nombreChat, usuarios).subscribe(
+    if (nombreChat) {
+      if (usuarios.length >= 1) {
+        this.chatService.crearChat(nombreChat, usuarios).subscribe(
           response => {
               const newChat: Chat = {
                   nombre: response.chat.nombreChat,
@@ -88,13 +96,27 @@ export class ChatComponent implements OnInit {
           error => {
               this.toastr.error('Error al crear el chat:', error.error.message || 'Intente de nuevo más tarde');
           }
-      );
+        );
+      }
+      else{
+        this.toastr.error("Los chats deben tener dos o más participantes");
+      }
+    }
+    else{
+      this.toastr.error("Los chats deben tener nombre");
+    }
+      
   }
 
   addUser(usuario: string): void {
-    if (usuario && !this.usuarios.includes(usuario)) {
-        this.usuarios.push(usuario);
-        this.nuevoUsuario = '';
+    if (usuario) {
+      if (usuario && !this.usuarios.includes(usuario)) {
+          this.usuarios.push(usuario);
+          this.nuevoUsuario = '';
+      }
+    }
+    else{
+      this.toastr.error("Introduce un nombre de usuario para añadir");
     }
   }
 
