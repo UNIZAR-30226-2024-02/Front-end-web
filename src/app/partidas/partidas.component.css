@@ -2,7 +2,7 @@
 
 .background-image {
     background-image: url('/assets/img-0vyoZ2EwbuNtpdymzDNJY.jpeg');
-    height: 100%; /* Cambiado a 100% para que ocupe toda la altura del contenedor */
+    height: 100%;
     width: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -19,10 +19,44 @@
 }
 
 .div-scrollable {
-height: 100vh;
-width: 100vw;
-overflow: auto;
+    height: 100vh;
+    width: 100vw;
+    overflow: auto;
 }
+
 .div-scrollable::-webkit-scrollbar {
-display: none;
+    display: none;
+}
+
+/* Personalizando los botones */
+.btn-primary {
+    background-color: #28a745; /* Cambia el color a verde */
+    border-color: #28a745; /* Borde del mismo color verde */
+    transition: background-color 0.3s ease-in-out, transform 0.2s; /* Suaviza la transición de color y añade transformación */
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #218838; /* Un verde más oscuro al pasar el mouse o enfocar */
+    border-color: #1e7e34;
+    transform: translateY(-2px); /* Eleva el botón al pasar el mouse o enfocar */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); /* Sombra para dar efecto de elevación */
+}
+
+/* Cambio de color para el botón 'Atrás' */
+button[routerLink="/menu"] {
+    background-color: #6c757d; /* Gris */
+    border-color: #6c757d;
+}
+
+button[routerLink="/menu"]:hover, button[routerLink="/menu"]:focus {
+    background-color: #5a6268; /* Un gris más oscuro para hover y focus */
+    border-color: #545b62;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Espacio adicional entre contenedores de Unirse a Partida y Crear Partida */
+.unirse-partida-container {
+    margin-bottom: 50px; /* La idea seria separar un poco el unirse a partida y el de crearla */
 }
