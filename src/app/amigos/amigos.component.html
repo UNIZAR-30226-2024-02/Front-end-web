@@ -1,23 +1,42 @@
 <div class="full-screen-background">
     <div class="scrollable-container">
-        <form class="custom-form" method="post" #loginForm="ngForm">
-            <h1>Amigos</h1>
-            <div class="NuevoAmigo">
-                <h2>Añadir Amigos</h2>
-                <input type="nuevoAmigo" id="nuevoAmigo" [(ngModel)]="nuevoAmigo" name="nuevoAmigo" placeholder="Nombre de Jugador" required="required" class="form-control" ngModel />
-                <button type="submit" class="add-button" [disabled]="!loginForm.valid" (click)="addAmigos()">Añadir Amigo</button>
+        <h1>Amigos</h1>
+        <div class="tabs">
+            <button (click)="switchTab('Amigos')" [class.active]="currentTab === 'Amigos'">En propiedad</button>
+            <button (click)="switchTab('Solicitudes')" [class.active]="currentTab === 'equipped'">Solicitudes de Amistad</button>
+        </div>
+        <div *ngIf="currentTab === 'Amigos'">
+            <form class="custom-form" method="post" #loginForm="ngForm">
+                <div class="NuevoAmigo">
+                    <h2>Añadir Amigos</h2>
+                    <input type="nuevoAmigo" id="nuevoAmigo" [(ngModel)]="nuevoAmigo" name="nuevoAmigo" placeholder="Nombre de Jugador" required="required" class="form-control" ngModel />
+                    <button type="submit" class="add-button" [disabled]="!loginForm.valid" (click)="addAmigos()">Añadir Amigo</button>
+                </div>
+            </form>
+            <div class="leaderboard">
+                <h2>Lista de Amigos</h2>
+                <ul class="list-unstyled">
+                    <li *ngFor="let spot of listaAmigos" class="user-container">
+                        <div class="user-info">
+                            <span>{{spot}}</span>
+                            <button class="delete-button" (click)="delAmigos(spot)">X</button>
+                        </div>
+                    </li>
+                </ul>
             </div>
-        </form>
-        <div class="leaderboard">
-            <h2>Lista de Amigos</h2>
-            <ul class="list-unstyled">
-                <li *ngFor="let spot of listaAmigos" class="user-container">
-                    <div class="user-info">
-                        <span>{{spot}}</span>
-                        <button class="delete-button" (click)="delAmigos(spot)">X</button>
-                    </div>
-                </li>
-            </ul>
+        </div>
+        <div *ngIf="currentTab === 'Solicitudes'">
+            <div class="leaderboard">
+                <h2 class="text-center">Solicitudes de Amistad</h2>
+                <ul class="list-unstyled">
+                    <li *ngFor="let spot of listaSol" class="user-container">
+                        <div class="user-info">
+                            <span>{{spot}}</span>
+                            <button class="accept-button" (click)="aceptarSol(spot)">Aceptar</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <button class="back-button" routerLink="/perfil">Volver</button>

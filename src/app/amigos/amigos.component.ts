@@ -13,9 +13,12 @@ import { error } from 'console';
 export class AmigosComponent {
   listaAmigos: string[] = [];
   nuevoAmigo: string;
+  listaSol: string[] = [];
+  currentTab: string = 'Amigos';
 
   ngOnInit(): void{
     this.getAmigos();
+    this.getSol();
     console.log(this.listaAmigos);
   }
   constructor(private amigosService: AmigosService, private toastr: ToastrService) {
@@ -48,5 +51,27 @@ export class AmigosComponent {
         this.toastr.error("No se pudo eliminar el amigo.");
       }
     );
+  }
+
+  getSol(){
+    this.amigosService.getSol().subscribe(solicitudes => this.listaSol = solicitudes);
+  }
+  
+  aceptarSol(id: string){
+    const user = {idDestino: id}
+    this.amigosService.addAmigos(user).subscribe(
+      (response) => {
+        console.log("Solicitud aceptada con éxito.");
+        this.toastr.success("Solicitud aceptada con éxito.");
+      },
+      (error) => {
+        console.error('Error al aceptar la solicitud:', error);
+        this.toastr.error("No se pudo aceptar la solicitud.");
+      }
+    );
+  }
+
+  switchTab(tab: string): void {
+    this.currentTab = tab;
   }
 }

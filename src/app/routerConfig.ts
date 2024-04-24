@@ -16,7 +16,6 @@ import { ChatComponent } from './chat/chat.component';
 import { PartidasComponent } from './partidas/partidas.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { HistorialComponent } from './historial/historial.component';
-import { SolicitudesComponent } from './solicitudes/solicitudes.component';
 
 
 const appRoutes: Routes = [
@@ -77,10 +76,6 @@ const appRoutes: Routes = [
   {
     path: 'historial',
     component: HistorialComponent
-  },
-  {
-    path: 'solicitudes',
-    component: SolicitudesComponent
   },
   {
     path: '',

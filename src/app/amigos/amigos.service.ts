@@ -58,4 +58,13 @@ export class AmigosService {
       body:{idDestino: this.usersService.getUsername()}
     });
   }
+  getSol(): Observable<string[]> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return of([]);
+    }
+
+    return this.http.get<{ message: string, solicitudes: string[] }>("http://localhost:4000/amistad/listarSolicitudes", { headers })
+      .pipe(map(response => response.solicitudes));
+  }
 }

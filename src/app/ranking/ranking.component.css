@@ -27,6 +27,11 @@
     position: relative;  /* Relativo para mantener centrado */
 }
 
+h1 {
+    color: #333333;
+    text-align: center;
+}
+
 .list-unstyled {
     list-style-type: none;
     padding: 0;

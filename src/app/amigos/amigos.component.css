@@ -99,7 +99,70 @@
     margin-right: 10px; /* Agrega un pequeño margen a la derecha del contenedor */
 }
 
+.delete-button:hover{
+    background-color: #992732; /* Darker shade of blue */
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
+}
+
 .add-button{
     background-color: #28a745;
     color: #ffffff;
+}
+
+.add-button:hover{
+    background-color: #19652b; /* Darker shade of blue */
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
+}
+
+.accept-button {
+    position: absolute;
+    z-index: 1;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0; /* Ajusta el botón al borde derecho */
+    margin-right: 10px; /* Agrega un pequeño margen a la derecha del contenedor */
+}
+
+.accept-button:hover{
+    background-color: #19652b; /* Darker shade of blue */
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
+}
+
+h1 {
+    color: #333333;
+    text-align: center;
+}
+
+h2 {
+    color: #333333;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    color: #333333;
+    outline: none;
+    transition: color 0.3s;
+}
+
+.tabs button.active {
+    color: #ff0000; /* Change color for active tab */
 }
