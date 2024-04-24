@@ -1,4 +1,7 @@
 .full-screen-container {
+    position: fixed; /* Posición fija en toda la pantalla */
+    top: 0;
+    left: 0;
     width: 100vw; /* 100% del viewport width */
     height: 100vh; /* 100% del viewport height */
     background-image: url('/assets/login_regis.jpg'); /* Establece la imagen de fondo */
@@ -7,18 +10,66 @@
     display: flex; /* Usamos flexbox para centrar el contenido */
     justify-content: center; /* Centrado horizontal */
     align-items: center; /* Centrado vertical */
+    z-index: -1; /* Pone el fondo detrás del contenido */
   }
   
   .login-container {
-    width: 300px; /* Ancho del contenedor de login */
-    padding: 20px; /* Espacio interior para mejor visualización */
-    background: white; /* Fondo blanco para el formulario */
-    border-radius: 8px; /* Bordes redondeados */
+    max-width: 400px;
+    width: 90%; /* Agrega un máximo de ancho relativo */
+    margin: auto; /* Centrado automático en el flexbox parent */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: white; /* Fondo blanco para el formulario */
+    z-index: 1; /* Asegura que el formulario esté sobre el fondo */
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-image: url('/assets/login_regis.jpg'); /* Cambia 'ruta/de/la/imagen.jpg' por la ruta de tu imagen */
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif; /* Cambia la fuente según tu preferencia */
+  }
+  
+  .login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: white;
+  }
+  
+  /* Resto del código CSS sigue igual */
+  
+  .form-group {
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
   }
   
   .form-control {
-    width: 100%; /* Ancho del input al 100% del contenedor padre */
-    margin-bottom: 10px; /* Margen inferior para separar los inputs */
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: block;
+  }
+  
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,.25);
   }
   
   .btn-primary {
