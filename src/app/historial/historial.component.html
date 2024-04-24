@@ -1,23 +1,21 @@
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-<body>
-<ul class="list-group mt-4">
-    <li class="list-group-item" *ngFor="let partida of partidas">
-        <h5>{{ partida.nombre }}</h5>
-        <p><strong>Fecha de inicio:</strong> {{ partida.fechaInicio }}</p>
-        <p><strong>Fecha de fin:</strong> {{ partida.fechaFin }}</p>
-        <p><strong>Turno:</strong> {{ partida.turno }}</p>
-        <p><strong>Jugadores:</strong>
-            <span *ngFor="let jugador of partida.jugadores; let isLast=last">
-                <!-- Ganador TODO: ponle el emoji de la corona -->
-                <div class="jugador">
-                    <p></p>
-                    <i *ngIf="esGanador(jugador.usuario, partida._id)" class="fas fa-crown corona"></i> <!-- Icono de la corona -->
-                    <span class="nombre">{{ jugador.usuario }}</span>
-                    <ng-container *ngIf="!isLast">, </ng-container>
-                </div>
-            </span>
-        </p>
-    </li>
-</ul>
-</body>
+<div class="full-screen-background">
+    <div class="scrollable-container">
+        <div class="leaderboard">
+            <h1 class="text-center">
+                <font color="#000000">Historial</font>
+            </h1>
+            <ul class="list-unstyled">
+                <li *ngFor="let spot of partidas" class="user-container">
+                    <div class="user-info">
+                        <span>{{spot.nombre}}</span>
+                        <p><strong>Fecha de inicio:</strong> {{ spot.fechaInicio }}</p>
+                        <p><strong>Fecha de fin:</strong> {{ spot.fechaFin }}</p>
+                        <p><strong>Turno:</strong> {{ spot.turno }}</p>
+                        <p><strong>Jugadores: {{getJugadores(spot)}}</strong>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <button class="back-button" routerLink="/menu">Volver</button>
+</div>

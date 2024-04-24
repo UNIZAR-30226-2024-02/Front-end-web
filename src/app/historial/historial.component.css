@@ -1,12 +1,81 @@
-@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
+.full-screen-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/assets/guerra.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;  /* Ajusta la dirección del contenido a columna */
+}
 
-.jugador {
+.scrollable-container {
+    width: 90%;
+    max-width: 800px;
+    height: 90vh;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 2;  /* Asegura que esté sobre el botón si es necesario */
+    position: relative;  /* Relativo para mantener centrado */
+}
+
+.list-unstyled {
+    list-style-type: none;
+    padding: 0;
+}
+
+
+.user-container {
+    background-color: rgba(248, 249, 250, 0.9);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
 }
 
-.corona {
-    position: absolute;
-    top: -10px; /* Ajusta este valor según sea necesario */
-    left: 0;
-    font-size: 0.8em; /* Adjust this value to make the icon larger or smaller */
+.user-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
 }
+
+.user-info span {
+    display: inline-block;
+    margin-right: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+}
+
+.user-info span:last-child {
+    float: right;
+    position: relative;
+}
+
+.back-button {
+    
+    position: absolute;  /* Posicionamiento absoluto dentro del contenedor de fondo */
+    bottom: 10px;  /* Abajo del todo, con un pequeño margen */
+    left: 10px;  /* A la izquierda del todo, con un pequeño margen */
+    z-index: 1;  /* Menor z-index para no interferir con el scrollable container */
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #888888;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+
