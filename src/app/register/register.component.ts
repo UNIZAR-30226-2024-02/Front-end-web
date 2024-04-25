@@ -38,7 +38,7 @@ export class RegisterComponent {
         );
       }
       else{
-        console.error('Contraseña no Válido');
+        console.error('Contraseña no válida');
         this.toastr.error("La contraseña debe contener:</br>- 8 o más caracteres</br>- Al menos una letra minúscula</br>- Al menos una letra mayúscula</br>- Al menos un número", '', { closeButton: true, timeOut: 4000, progressBar: true, enableHtml: true });
       }
     }
