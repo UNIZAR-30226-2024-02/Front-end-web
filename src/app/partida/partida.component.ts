@@ -78,6 +78,7 @@ export class PartidaComponent {
   firefox = false;
   myColor = '';
   texture : string | undefined = undefined;
+  ocupado = false;
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
               private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService
@@ -266,25 +267,31 @@ export class PartidaComponent {
       this.clickWrongTerrain(e, 'No es tu turno')
       console.log('No es tu turno')
       return
-    }
+    } 
+    if(this.ocupado) return;
     switch(this.fase){
       case 0: // colocación
-        if (this.turnoJugador === this.whoami) {
+        if (this.turnoJugador === this.whoami && !this.ocupado) {
           this.tropasPuestas=0
           this.eventoCancelado = false
           this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami, false, false)
           await this.waitForTropasPuestas()
           if(!this.eventoCancelado){
             console.log(this.numTropas)
+            this.ocupado = true
             this.partidaService.ColocarTropas(this.partida._id, targetId, this.tropasPuestas).subscribe(
               response => {
                 console.log(response);
                 this.tropasPuestas = 0;
                 this.cdr.detectChanges();
+                this.ocupado = false;
+                this.numTropas -= this.tropasPuestas;
               },
               error => {
                 this.toastr.error('¡ERROR FATAL!');
                 this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, this.tropasPuestas);
+                this.ocupado = false
+                this.numTropas += this.tropasPuestas;
               }
             );
             console.log(this.partida._id, this.whoami, targetId, this.tropasPuestas)   
@@ -292,7 +299,7 @@ export class PartidaComponent {
             console.log('Evento cancelado')
           }      
         } else {
-          this.clickWrongTerrain(e, 'No es tu turno')
+          if(!this.ocupado) this.clickWrongTerrain(e, 'No es tu turno')
         }
         break
       case 1: // ataque
@@ -312,14 +319,31 @@ export class PartidaComponent {
           console.log(`Player has selected enemy territory ${enemyTerritoryId}`)
           this.ataqueDestino = enemyTerritoryId
           // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
-          //this.partida._id, this.whoami, targetId, this.tropasPuestas
-          //atacarTerritorio(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
-          // esto recibe el back end
-          console.log(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
-          // dependiendo del resultado de la llamada al back, se actualizará el estado de la partida y permitirá continuar
-          await new Promise(resolve => setTimeout(resolve, 5000)) // falseo llamada al back
-          this.resolverAtaque(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
-          // TODO ACTUALIZAR ESTADO ETC -> de momento no lo hago, es trivial
+          console.log("Info:", this.partida._id, this.ataqueOrigen, this.ataqueDestino, this.tropasPuestas)
+          this.partidaService.ResolverAtaque(this.partida._id, this.ataqueOrigen, this.ataqueDestino, -this.tropasPuestas).subscribe(
+            async response => {
+              console.log(response);
+              this.toastr.success('¡Ataque realizado con éxito!');
+              await new Promise(resolve => setTimeout(resolve, 1000)) 
+              this.toastr.info('Tus dados: ' + response.dadosAtacante + ' Dados defensor: ' + response.dadosDefensor);
+              await new Promise(resolve => setTimeout(resolve, 1000)) 
+              this.toastr.info('Tus bajas: ' + response.resultadoBatalla.tropasPerdidasAtacante + ' Bajas defensor: ' + response.resultadoBatalla.tropasPerdidasDefensor);
+              await new Promise(resolve => setTimeout(resolve, 1000))
+              if(response.conquistado){
+                this.toastr.success('¡Territorio conquistado!');
+                //  TODO ACTUALIZAR EL MAPA COMO CORRESPONDA
+              } else {
+                this.toastr.error('¡No has conquistado el territorio!');
+              }
+              this.fase = 0;
+              this.fase = 1;
+            },
+            error => {
+              this.toastr.error('¡ERROR FATAL!');
+              this.fase = 0;
+              this.fase = 1;
+            }
+          );
           this.ataqueDestino = ''
           this.ataqueOrigen = ''
           this.ataqueTropas = 0
@@ -406,7 +430,7 @@ export class PartidaComponent {
       return;
     }
 
-    this.numTropas -= numTroops;
+    //this.numTropas -= numTroops;
     this.tropasPuestas += numTroops;
 
     const terrainInfo = this.tropas.get(terrainId);

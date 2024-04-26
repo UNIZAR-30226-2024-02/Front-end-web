@@ -65,4 +65,13 @@ export class PartidaService {
 
     return this.http.put("http://localhost:4000/partida/colocarTropas", {idPartida, territorio, numTropas}, { headers });
   }
+
+  ResolverAtaque(idPartida: string, territorioAtacante: string, territorioDefensor: string, numTropas: number): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of(null);
+    }
+
+    return this.http.put("http://localhost:4000/partida/atacarTerritorio", {idPartida, territorioAtacante, territorioDefensor, numTropas}, { headers });
+  }
 }
