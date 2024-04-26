@@ -24,7 +24,7 @@ export class RegisterComponent {
   register() {
     if (this.esCorreo()) {
       if (this.esSegura()) {
-        const user = { idUsuario: this.idUsuario, password: this.password, correo: this.correo };
+        const user = { idUsuario: this.idUsuario, password: this.userService.encrypt(this.password), correo: this.correo };
         this.userService.register(user).subscribe(
           (data) => {
             this.userService.setToken(data.token);

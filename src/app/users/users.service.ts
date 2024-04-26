@@ -3,12 +3,17 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
 import { HttpHeaders } from '@angular/common/http';
+import * as CryptoJS from 'crypto-js'
 
 @Injectable({
   providedIn: "root",
 })
 export class UsersService {
   constructor(private http: HttpClient, private cookies: CookieService) {}
+
+  encrypt(password: string): string {
+    return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+  }
 
   login(user: any): Observable<any> {
     return this.http.post("http://localhost:4000/login", user);

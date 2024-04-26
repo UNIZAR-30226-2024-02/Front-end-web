@@ -19,7 +19,7 @@ export class LoginComponent {
   }
 
   login() {
-    const user = { id: this.id, password: this.password };
+    const user = { id: this.id, password: this.userService.encrypt(this.password) };
       this.userService.login(user).subscribe(
       (data) => {
         this.userService.setToken(data.token);
