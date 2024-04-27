@@ -79,6 +79,9 @@ export class PartidaComponent {
   myColor = '';
   texture : string | undefined = undefined;
   ocupado = false;
+  //
+  recolocacion = false; 
+
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
               private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService
@@ -126,8 +129,11 @@ export class PartidaComponent {
   // Obtiene la partida del back end, en su estado actual, e inicializa las variables
   inicializacionPartida(partida: Partida){
     this.partidaService.obtenerPartida(partida._id).subscribe(response => {
+      console.log('Previa',  this.partida)
+      console.log('nueva: ', response.partida)
       this.partida = response.partida; // cojo la partida 
       this.jugadores = response.partida.jugadores; // cojo sus jugadores, ya vienen con su color
+      
       // busco mi color
       for(let jugador of this.jugadores){
         if(jugador.usuario === this.whoami){
@@ -159,7 +165,7 @@ export class PartidaComponent {
   
         // If a player was found, get their color
         let color = jugador ? jugador.color : undefined;
-  
+        let auxFase
         if(color !== undefined) {
          //console.log(`The color of territory ${territorio.nombre} is ${color}`);
          let svgElement = this.svgDoc?.getElementById(territorio.nombre);
@@ -180,17 +186,22 @@ export class PartidaComponent {
               clientY: centerY,
             });
              // Dispatch the event on svgElement
+            auxFase = this.fase
+            this.fase = 0;
             svgElement.dispatchEvent(event);
             //console.log(event)
           }
         
          if(jugador && event && this.svgDoc){
+          console.log(territorio.tropas)
           this.colocarTropas(event, this.svgDoc, 50, 50, jugador.usuario, true, false, territorio.tropas)
+          this.fase = auxFase;
           //console.log(jugador.usuario)
           }
         }
       }
     }
+    this.recolocacion = false;
   }
 
   ngOnInit() {
@@ -254,7 +265,7 @@ export class PartidaComponent {
           clearInterval(checkInterval);
           resolve();
         }
-      }, 1000); // Check every second
+      }, 1);
     });
   }
 
@@ -263,12 +274,13 @@ export class PartidaComponent {
     console.log(`Clic en la región con ID: ${targetId}`)
     const imgWidth = 50
     const imgHeight = 50
+    if(this.recolocacion) return;
     if (this.turnoJugador !== this.whoami) {
       this.clickWrongTerrain(e, 'No es tu turno')
       console.log('No es tu turno')
       return
     } 
-    if(this.ocupado) return;
+    if(this.ocupado){ console.log("espere"); return};
     switch(this.fase){
       case 0: // colocación
         if (this.turnoJugador === this.whoami && !this.ocupado) {
@@ -285,16 +297,25 @@ export class PartidaComponent {
                 this.tropasPuestas = 0;
                 this.cdr.detectChanges();
                 this.ocupado = false;
-                this.numTropas -= this.tropasPuestas;
               },
               error => {
                 this.toastr.error('¡ERROR FATAL!');
                 this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, this.tropasPuestas);
                 this.ocupado = false
                 this.numTropas += this.tropasPuestas;
+                this.tropasPuestas = 0;
               }
-            );
-            console.log(this.partida._id, this.whoami, targetId, this.tropasPuestas)   
+            );  
+            setTimeout(() => { // si no recibo respuesta del back, está caído
+              console.log("entro")
+              if(this.ocupado){ 
+                console.log("fatal error")
+                this.toastr.error('¡ERROR FATAL!');
+                this.ocupado = false;
+                this.numTropas += this.tropasPuestas;
+              }
+            }, 2000);
+
           } else{
             console.log('Evento cancelado')
           }      
@@ -305,20 +326,25 @@ export class PartidaComponent {
       case 1: // ataque
         // antes de atacar, selecciono las tropas q quiero utilizar para atacar
         if (this.ataqueTropas === 0) {
+          console.log('Seleccionar tropas para atacar')
           this.ataqueTropas = 0;
           this.ataqueDestino = '';
           this.ataqueOrigen = '';
           const numTroops = await this.seleccionarTropas(e, svgDoc, this.whoami, true);
+          console.log(this.ataqueTropas, this.ataqueOrigen, this.ataqueDestino, numTroops)
           console.log(`Player has selected ${numTroops} troops`);
+          console.log(this.recolocacion)
+          this.tropasPuestas = 0;
           this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, -numTroops); // las quito del mapa
           this.numTropas -= numTroops; // tampoco las tengo colocables, las tengo seleccionadas así que las quito de ahí
           this.cdr.detectChanges()
+          
         } else {
+          
           // una vez seleccionadas las tropas me tocará elegir un territorio enemigo
           const enemyTerritoryId = await this.seleccionarTerritorioEnemigo(e, svgDoc, this.whoami)
           console.log(`Player has selected enemy territory ${enemyTerritoryId}`)
           this.ataqueDestino = enemyTerritoryId
-          // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
           console.log("Info:", this.partida._id, this.ataqueOrigen, this.ataqueDestino, this.tropasPuestas)
           this.partidaService.ResolverAtaque(this.partida._id, this.ataqueOrigen, this.ataqueDestino, -this.tropasPuestas).subscribe(
             async response => {
@@ -331,22 +357,55 @@ export class PartidaComponent {
               await new Promise(resolve => setTimeout(resolve, 1000))
               if(response.conquistado){
                 this.toastr.success('¡Territorio conquistado!');
-                //  TODO ACTUALIZAR EL MAPA COMO CORRESPONDA
+
               } else {
                 this.toastr.error('¡No has conquistado el territorio!');
+                
               }
-              this.fase = 0;
-              this.fase = 1;
+              this.inicializacionPartida(this.partida); // actualizo el estado de la partida
+              await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
+              if (this.svgDoc) {
+                // Limpio las imágenes y textos de las tropas
+                for(let contintente of this.mapa){
+                  for(let territorio of contintente.territorios){
+                      let terrainId = territorio.nombre; 
+                              
+                      let troopImages = this.svgDoc.querySelectorAll(`image[data-terrain-id='${terrainId}']`);
+                      let textElement = this.svgDoc.querySelector(`text[data-terrain-id='${terrainId}']`);
+                      if (textElement) {
+                        textElement.remove();
+                      } else {
+                        console.log(`Text element for terrain id ${terrainId} not found`);
+                      }
+                      troopImages.forEach(image => {
+                        image.remove();
+                      });
+                      this.recolocacion = true;
+                    }
+                  }
+                  
+              }
+              // Limpio la asignación
+              this.tropas.forEach(tropa => {
+                tropa.user = '';
+                tropa.numTropas = 0;
+              });
+              
+              //Pinto el mapa
+              this.distribuirPiezas();
+              this.ataqueDestino = ''
+              this.ataqueOrigen = ''
+              this.ataqueTropas = 0
             },
             error => {
               this.toastr.error('¡ERROR FATAL!');
               this.fase = 0;
               this.fase = 1;
+              this.ataqueDestino = ''
+              this.ataqueOrigen = ''
+              this.ataqueTropas = 0
             }
           );
-          this.ataqueDestino = ''
-          this.ataqueOrigen = ''
-          this.ataqueTropas = 0
         }
 
         break
@@ -397,23 +456,31 @@ export class PartidaComponent {
 
   colocarTropas(e: MouseEvent, svgDoc: Document, imgWidth: number, imgHeight: number, user: string, init : boolean, select : boolean, limite? : number) {
     // Ask the user for the number of troops
-
+    console.log(init)
+    console.log("Me llaman")
     let troops;
     //console.log(e.target)
     const terrainId = (e.target as SVGElement).id;
     let duenno = this.jugadores.find(jugador => jugador.usuario == user);
     //console.log("terreno: " + terrainId)
     //console.log("duenno: " + duenno?.territorios)
-    if(!(terrainId && duenno && duenno.territorios.includes(terrainId))){
-      this.toastr.error('No puedes poner tropas en territorios que no te pertenecen');
-      this.cdr.detectChanges();
-      this.eventoCancelado = true;
-      return;
+    if(!init && !this.recolocacion){
+      if(!(terrainId && duenno && duenno.territorios.includes(terrainId))){
+        this.toastr.error('No puedes poner tropas en territorios que no te pertenecen');
+        this.cdr.detectChanges();
+        this.eventoCancelado = true;
+        return;
+      }
     }
 
-    if(limite)
+
+    if(limite !== undefined){
       troops = limite.toString();
-    else 
+      console.log("Entro aqui")
+    } else if (this.recolocacion){
+      troops = "0";
+    }
+    else
      troops = window.prompt('Cuántas tropas deseas añadir?');
 
     // Check if the user clicked the Cancel button
@@ -423,8 +490,9 @@ export class PartidaComponent {
 
     let numTroops = parseInt(troops);
 
-    if (!init && (numTroops > this.numTropas)) {
+    if (!init && !this.recolocacion && !select && (numTroops > this.numTropas)) {
       this.toastr.error('¡No tienes suficientes tropas!');
+      console.log("Hola")
       this.eventoCancelado = true;
       this.cdr.detectChanges();
       return;
@@ -433,17 +501,18 @@ export class PartidaComponent {
     //this.numTropas -= numTroops;
     this.tropasPuestas += numTroops;
 
-    const terrainInfo = this.tropas.get(terrainId);
+    let terrainInfo = this.tropas.get(terrainId);
     if (terrainInfo) {
       terrainInfo.numTropas += numTroops;
       terrainInfo.user = user;
+      this.numTropas -= numTroops;
       numTroops = terrainInfo.numTropas;
     } else {
       this.tropas.set(terrainId, { numTropas: numTroops, user });
     }
 
     // Check if the input is a valid number
-    if (isNaN(numTroops) || (numTroops < 1 && !select)) {
+    if (isNaN(numTroops) || (numTroops < 1 && !select && !init && !this.recolocacion)) {
       alert('Please enter a valid number of troops.');
       this.eventoCancelado = true;
       this.cdr.detectChanges();
