@@ -11,7 +11,6 @@ import { InicioComponent } from './inicio/inicio.component';
 import { RegisterComponent } from './register/register.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { PerfilComponent } from './perfil/perfil.component';
-import { TuperfilComponent } from './tuperfil/tuperfil.component';
 import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
@@ -42,7 +41,6 @@ import { HistorialComponent } from './historial/historial.component';
     RegisterComponent,
     RankingComponent,
     PerfilComponent,
-    TuperfilComponent,
     SkinsperfilComponent,
     SocketTestComponent,
     FilterByTypePipe,

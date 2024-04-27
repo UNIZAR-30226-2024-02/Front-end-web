@@ -7,7 +7,6 @@ import { InicioComponent } from './inicio/inicio.component';
 import { RegisterComponent } from './register/register.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { PerfilComponent } from './perfil/perfil.component';
-import { TuperfilComponent } from './tuperfil/tuperfil.component';
 import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
 import { SocketTestComponent } from './socket-test/socket-test.component';
 import { PartidaComponent } from './partida/partida.component';
@@ -40,10 +39,6 @@ const appRoutes: Routes = [
   {
     path: 'perfil',
     component: PerfilComponent
-  },
-  {
-    path: 'tuperfil',
-    component: TuperfilComponent
   },
   {
     path: 'skinsperfil',

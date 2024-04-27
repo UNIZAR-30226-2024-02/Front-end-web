@@ -14,7 +14,6 @@ export class UsersService {
   encrypt(password: string): string {
     return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
   }
-
   login(user: any): Observable<any> {
     return this.http.post("http://localhost:4000/login", user);
   }
@@ -33,9 +32,13 @@ export class UsersService {
   getUsername(){
     return this.cookies.get("username");
   }
-
   getUserSkin(username: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `${this.getToken()}`);
     return this.http.get(`http://localhost:4000/misSkins/obtenerAvatar/${username}`, { headers });
+  }
+  getProfile(): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `${this.getToken()}`);
+    console.log(headers);
+    return this.http.get(`http://localhost:4000/perfil`, { headers });
   }
 }

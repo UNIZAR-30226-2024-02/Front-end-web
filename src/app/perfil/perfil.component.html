@@ -1,12 +1,13 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
 <div class="container">
-    <h1>Perfil del Usuario</h1>
+    <h1>Perfil de {{nombre}}</h1>
     <div class="button-container">
-        <button class="btn" routerLink="/tuperfil">Ver Perfil</button>
+        <img [src]="avatar.path" [alt]="avatar.idSkin" style="width: 420px; height: 420px;">
+        <p class="text-white"><i class="fas fa-dollar-sign"></i> Dinero: {{puntos}}</p>
+        <p class="text-white"><i class="fas fa-solid fa-trophy"></i> Elo: {{elo}}</p>
         <button class="btn" routerLink="/skinsperfil">Ver Skins</button>
         <button class="btn" routerLink="/historial">Historial</button>
         <button class="btn" routerLink="/amigos">Amigos</button>
         <button class="back-button" routerLink="/menu">Volver</button>
     </div>
 </div>
-
-
