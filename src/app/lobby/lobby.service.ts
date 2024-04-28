@@ -46,7 +46,7 @@ export class LobbyService {
         return of([]);
     }
 
-    return this.http.post<any>(`${this.apiUrl}partidas/salirPartida`, { partidaId }, { headers });
+    return this.http.put<any>(`${this.apiUrl}partida/salirPartida`, { idPartida: partidaId }, { headers });
   }
 
   invitar(user : string, partida_id : string) : Observable<any> {

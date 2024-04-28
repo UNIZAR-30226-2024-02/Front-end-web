@@ -83,15 +83,18 @@ export class LobbyComponent implements OnInit {
         this.router.navigate(['/partida'], { state: { partida: this.partida } });
       });
   }
-  //TODO HACERLA FUNCIONAL
+
+  confirmSalirPartida() {
+    if (window.confirm('¿Estás seguro de que deseas abandonar la partida?')) {
+      this.salirPartida();
+    }
+  }
+
   salirPartida() {
     this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
+      this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
       this.router.navigate(['/menu']);
-      this.toastr.success('Has salido de la partida');
     });
-    this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
-    this.router.navigate(['/menu']);
-    this.toastr.success('Has salido de la partida');
   }
 
   empezarPartida() {

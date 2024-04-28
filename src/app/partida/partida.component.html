@@ -33,7 +33,8 @@
 
 <div class="container">
     <div class="row">
-        <div id="color-display">Tu color: <span id="myColor">{{ myColor }}</span></div>
+        <div id="color-display">Tu color: <span id="myColor">{{ myColor }}</span>
+        </div>
         <!-- Columna para el SVG -->
         <div class="col-md-6 svg-column">
             <!-- Contenedor centrado para el SVG -->
@@ -87,6 +88,7 @@
                     <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
                     <button class="btn btn-primary mt-2" (click)="sendMessage(enviarMensaje.value); enviarMensaje.value=''">Enviar</button>
                 </div>
+                <button class="btn btn-danger" (click)="abandonarPartida()">Abandonar Partida</button>
             </div>
 
         </div>

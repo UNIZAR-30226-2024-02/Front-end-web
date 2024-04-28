@@ -1022,5 +1022,13 @@ export class PartidaComponent {
       });
     });
   }
+
+  abandonarPartida() {
+    if (window.confirm('¿Estás seguro que deseas abandonar la partida? Se considerará una rendición.')) {
+      this.partidaService.AbandonarPartida(this.partida._id).subscribe(() => {
+        this.router.navigate(['/home']);
+      });
+    }
+  }
   
 }
