@@ -806,24 +806,38 @@ export class PartidaComponent {
     });
   }
 
-  isFriendlyReachable(origen: Territorio, destino: string, duenno: Jugador): boolean {
-    const territorios = this.mapa.flatMap(continent => continent.territorios)
+  // Función que comprueba que un territorio es alcanzable desde el territorio de origen
+  isFriendlyReachable(mapa: Continente[], origen: Territorio, destino: string, jugador: Jugador): boolean {
+    if (!jugador.territorios.includes(destino)) {
+      console.log("El territorio destino no pertenece al jugador")
+      return false
+    }
+    const territorios = mapa.flatMap(continent => continent.territorios)
     const territoriosExplorados = new Set<Territorio>()
     const territoriosPorExplorar = new Set<Territorio>()
     territoriosPorExplorar.add(origen)
     while (territoriosPorExplorar.size > 0) {
-      const territorio = territoriosPorExplorar.values().next().value
-      territoriosPorExplorar.delete(territorio)
-      territoriosExplorados.add(territorio)
-      for (let nombre of territorio.frontera) {
+      const territorioActual = territoriosPorExplorar.values().next().value
+
+      const vecinosValidos = territorioActual.frontera.filter((vecino: string) =>               // Los vecinos válidos son los vecinos del territorio actual
+        vecino != territorioActual.nombre                                                       // sin el territorio actual
+        && !Array.from(territoriosExplorados).some(territorio => territorio.nombre === vecino)  // que no han sido ya explorados
+        && jugador.territorios.includes(vecino)                                                 // y pertenecen al jugador
+      )
+
+      territoriosPorExplorar.delete(territorioActual)
+      territoriosExplorados.add(territorioActual)
+      for (let nombre of vecinosValidos) {
         const territorio = territorios.find(territorio => territorio.nombre === nombre)
         if (territorio && territorio.nombre === destino) {
+          console.log("Ruta encontrada desde el territorio origen hasta el territorio destino")
           return true
-        } else if (territorio && duenno.territorios.includes(nombre) && !territoriosExplorados.has(territorio)) {
+        } else if (territorio) {
           territoriosPorExplorar.add(territorio)
         }
       }
     }
+    console.log("No se ha encontrado una ruta desde el territorio origen hasta el territorio destino")
     return false
   }
 
@@ -848,7 +862,7 @@ export class PartidaComponent {
       if (origenTropas && origenTropas.frontera) {
         if (duenno) {
           // Search borders until exhaustion
-          const ok = this.isFriendlyReachable(origenTropas, terrainId, duenno);
+          const ok = this.isFriendlyReachable(this.mapa, origenTropas, terrainId, duenno);
           // TODO comprobar que funcione
           console.log(ok)
           if (!ok) {
