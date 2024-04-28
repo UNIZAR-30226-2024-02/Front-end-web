@@ -23,6 +23,7 @@
     flex-direction: column; /* Cambio para acomodar los botones verticalmente */
     align-items: center; /* Alinea los botones al centro */
     gap: 20px; /* Ajusta el espacio entre los botones */
+    padding: 25px;
 }
 
 .btn {
