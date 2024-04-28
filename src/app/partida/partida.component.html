@@ -95,5 +95,15 @@
     </div>
 </div>
 
+<div id="winner-overlay" *ngIf="ganador">
+    <div id="winner-modal">
+        <h2>¡{{ ganador }} ha ganado la partida!</h2>
+        <img [src]="avatarAMostrar" alt="Winner" />
+        <p> Tu Elo ganado: {{ eloGanado}} </p>
+        <p> Tus monedas ganadas: {{ puntosGanados }} </p>
+        <button (click)="closeWinnerModal()">Cerrar</button>
+    </div>
+</div>
+
 </body>
 </html>

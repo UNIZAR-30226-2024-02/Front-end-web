@@ -81,6 +81,9 @@ export class PartidaComponent {
   ocupado = false;
   //
   recolocacion = false; 
+  //
+  eloGanado = 0;
+  puntosGanados = 0;
 
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
@@ -151,6 +154,11 @@ export class PartidaComponent {
       this.fase = response.partida.fase;
       //this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
       this.getAvatar(this.turnoJugador);
+
+      // Si tenemos ganador... avisar
+      if(this.ganador === null){
+        this.mostrarGanador();
+      }
 
     });
 
@@ -1026,9 +1034,18 @@ export class PartidaComponent {
   abandonarPartida() {
     if (window.confirm('¿Estás seguro que deseas abandonar la partida? Se considerará una rendición.')) {
       this.partidaService.AbandonarPartida(this.partida._id).subscribe(() => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/menu']);
       });
     }
   }
+
+  mostrarGanador(){
+    if(this.ganador) this.getAvatar(this.ganador);
+  }
+
+  closeWinnerModal() {
+    this.router.navigate(['/menu']);
+  }
+
   
 }
