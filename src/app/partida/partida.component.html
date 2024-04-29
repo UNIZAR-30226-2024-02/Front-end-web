@@ -105,5 +105,42 @@
     </div>
 </div>
 
+<!-- this.ataqueRecibido = { userOrigen, userDestino, dadosAtacante, dadosDefensor, 
+                              tropasPerdidasAtacante, tropasPerdidasDefensor, conquistado,
+                              territorioOrigen, territorioDestino } -->
+<div id="attack-overlay" *ngIf="ataqueRecibido">
+    <div id="attack-modal">
+        <h2>¡{{ ataqueRecibido.userOrigen }} te está atacando!</h2>
+        <h3> Territorio en disputa: {{ ataqueRecibido.territorioDestino }} </h3>
+        <img [src]="avatarAMostrar" alt="Usuario atacante" />
+        <h3> Resultado de la batalla </h3>
+        <p> Dados atacante: {{ ataqueRecibido.dadosAtacante[0] }} , {{ ataqueRecibido.dadosAtacante[1]}} </p>
+        <p> Dados defensor: {{ ataqueRecibido.dadosDefensor[0] }} , {{ ataqueRecibido.dadosDefensor[1]}} </p>
+        <p> Tropas perdidas atacante: {{ ataqueRecibido.tropasPerdidasAtacante }} </p>
+        <p> Tropas perdidas defensor: {{ ataqueRecibido.tropasPerdidasDefensor }} </p>
+        <h4>
+            {{ ataqueRecibido.conquistado ? 'Has perdido el territorio' : 'No has perdido el territorio' }}
+        </h4>
+        <button (click)="closeAttackModal()">Cerrar</button>
+    </div>
+</div>
+
+<div id="atacking-overlay" *ngIf="ataquePerpetrado">
+    <div id="atacking-modal">
+        <h2>¡Estás atacando a {{ ataquePerpetrado.userDestino }}!</h2>
+        <h3> Territorio en disputa: {{ ataquePerpetrado.territorioDestino }} </h3>
+        <img [src]="avatarAMostrar" alt="Usuario atacante" />
+        <h3> Resultado de la batalla </h3>
+        <p> Dados atacante: {{ ataquePerpetrado.dadosAtacante[0] }} , {{ ataquePerpetrado.dadosAtacante[1]}} </p>
+        <p> Dados defensor: {{ ataquePerpetrado.dadosDefensor[0] }} , {{ ataquePerpetrado.dadosDefensor[1]}} </p>
+        <p> Tropas perdidas atacante: {{ ataquePerpetrado.tropasPerdidasAtacante }} </p>
+        <p> Tropas perdidas defensor: {{ ataquePerpetrado.tropasPerdidasDefensor }} </p>
+        <h4>
+            {{ ataquePerpetrado.conquistado ? 'Has conquistado el territorio' : 'No has conquistado el territorio' }}
+        </h4>
+        <button (click)="closeAttackModal()">Cerrar</button>
+    </div>
+</div>
+
 </body>
 </html>

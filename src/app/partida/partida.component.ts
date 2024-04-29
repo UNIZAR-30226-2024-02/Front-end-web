@@ -84,6 +84,30 @@ export class PartidaComponent {
   //
   eloGanado = 0;
   puntosGanados = 0;
+  //
+ataqueRecibido: {
+  userOrigen: string;
+  userDestino: string;
+  dadosAtacante: number[];
+  dadosDefensor: number[];
+  tropasPerdidasAtacante: number;
+  tropasPerdidasDefensor: number;
+  conquistado: boolean;
+  territorioOrigen: string;
+  territorioDestino: string;
+} | null = null;
+
+ataquePerpetrado: {
+  userOrigen: string;
+  userDestino: string;
+  dadosAtacante: number[];
+  dadosDefensor: number[];
+  tropasPerdidasAtacante: number;
+  tropasPerdidasDefensor: number;
+  conquistado: boolean;
+  territorioOrigen: string;
+  territorioDestino: string;
+} | null = null; 
 
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
@@ -225,6 +249,34 @@ export class PartidaComponent {
          this.partida.chat.mensajes.push({ texto: mensaje, idUsuario: user, timestamp: timestamp});
        }
      }); 
+    this.socket.on('userDisconnected', (user: string) => {
+      console.log('userDisconnected', user);
+      this.toastr.info(user + ' ha abandonado la partida', 'Jugador desconectado');
+    });
+
+     // when the state changes (i.e a player places new troops or maniobrates)
+    this.socket.on('cambioEstado', async () => {
+      this.inicializacionPartida(this.partida); // actualizo el estado de la partida
+      await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
+          
+      this.limpiarTropas();
+          
+      //Pinto el mapa
+      this.distribuirPiezas();
+    });
+
+    //when a user attacks me, I get warned and notifyied with the result of the attack
+    this.socket.on('ataqueRecibido', async (userOrigen: string, userDestino: string, dadosAtacante: number[], dadosDefensor: number[], 
+                                            tropasPerdidasAtacante: number, tropasPerdidasDefensor: number, conquistado: boolean,
+                                            territorioOrigen: string, territorioDestino: string) => {
+      console.log('ataqueRecibido', userOrigen, userDestino, dadosAtacante, 
+                  dadosDefensor, tropasPerdidasAtacante, tropasPerdidasDefensor, 
+                  conquistado);
+      // update the fields in order to show the modal
+      this.ataqueRecibido = { userOrigen, userDestino, dadosAtacante, dadosDefensor, 
+                              tropasPerdidasAtacante, tropasPerdidasDefensor, conquistado,
+                              territorioOrigen, territorioDestino };                                    
+    });
   }
 
   onSVGLoad(event: any) {
@@ -305,6 +357,8 @@ export class PartidaComponent {
                 this.tropasPuestas = 0;
                 this.cdr.detectChanges();
                 this.ocupado = false;
+                // notify to back with a socket, the back will notify every client in the game
+                this.socket.emit('actualizarEstado', this.partida._id);
               },
               error => {
                 this.toastr.error('¡ERROR FATAL!');
@@ -354,6 +408,7 @@ export class PartidaComponent {
           console.log(`Player has selected enemy territory ${enemyTerritoryId}`)
           this.ataqueDestino = enemyTerritoryId
           console.log("Info:", this.partida._id, this.ataqueOrigen, this.ataqueDestino, this.tropasPuestas)
+          let usuarioObjetivo = this.jugadores.find(jugador => jugador.territorios.includes(enemyTerritoryId));
           this.partidaService.ResolverAtaque(this.partida._id, this.ataqueOrigen, this.ataqueDestino, -this.tropasPuestas).subscribe(
             async response => {
               console.log(response);
@@ -372,38 +427,30 @@ export class PartidaComponent {
               }
               this.inicializacionPartida(this.partida); // actualizo el estado de la partida
               await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
-              if (this.svgDoc) {
-                // Limpio las imágenes y textos de las tropas
-                for(let contintente of this.mapa){
-                  for(let territorio of contintente.territorios){
-                      let terrainId = territorio.nombre; 
-                              
-                      let troopImages = this.svgDoc.querySelectorAll(`image[data-terrain-id='${terrainId}']`);
-                      let textElement = this.svgDoc.querySelector(`text[data-terrain-id='${terrainId}']`);
-                      if (textElement) {
-                        textElement.remove();
-                      } else {
-                        console.log(`Text element for terrain id ${terrainId} not found`);
-                      }
-                      troopImages.forEach(image => {
-                        image.remove();
-                      });
-                      this.recolocacion = true;
-                    }
-                  }
-                  
-              }
-              // Limpio la asignación
-              this.tropas.forEach(tropa => {
-                tropa.user = '';
-                tropa.numTropas = 0;
-              });
+              
+              this.limpiarTropas();
               
               //Pinto el mapa
               this.distribuirPiezas();
               this.ataqueDestino = ''
               this.ataqueOrigen = ''
               this.ataqueTropas = 0
+              // update the state of every client
+              this.socket.emit('actualizarEstado', this.partida._id);
+              // and notify the defense player 
+              
+              this.socket.emit('ataco', {userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
+                               dadosAtacante: response.dadosAtacante, dadosDefensor: response.dadosDefensor, 
+                               tropasPerdidasAtacante: response.resultadoBatalla.tropasPerdidasAtacante,
+                               tropasPerdidasDefensor: response.resultadoBatalla.tropasPerdidasDefensor, 
+                               conquistado: response.conquistado, territorioOrigen: this.ataqueOrigen, 
+                               territorioDestino: enemyTerritoryId});
+              this.ataquePerpetrado = {userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
+                                      dadosAtacante: response.dadosAtacante, dadosDefensor: response.dadosDefensor, 
+                                      tropasPerdidasAtacante: response.resultadoBatalla.tropasPerdidasAtacante,
+                                      tropasPerdidasDefensor: response.resultadoBatalla.tropasPerdidasDefensor, 
+                                      conquistado: response.conquistado, territorioOrigen: this.ataqueOrigen, 
+                                      territorioDestino: enemyTerritoryId}
             },
             error => {
               this.toastr.error('¡ERROR FATAL!');
@@ -1034,6 +1081,7 @@ export class PartidaComponent {
   abandonarPartida() {
     if (window.confirm('¿Estás seguro que deseas abandonar la partida? Se considerará una rendición.')) {
       this.partidaService.AbandonarPartida(this.partida._id).subscribe(() => {
+        this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
         this.router.navigate(['/menu']);
       });
     }
@@ -1045,6 +1093,39 @@ export class PartidaComponent {
 
   closeWinnerModal() {
     this.router.navigate(['/menu']);
+  }
+
+  closeAttackModal(){
+    if(this.ataqueRecibido) this.ataqueRecibido = null;
+    if(this.ataquePerpetrado) this.ataquePerpetrado = null; 
+  }
+
+  limpiarTropas(){
+    if (this.svgDoc) {
+      // Limpio las imágenes y textos de las tropas
+      for(let contintente of this.mapa){
+        for(let territorio of contintente.territorios){
+          let terrainId = territorio.nombre; 
+                  
+          let troopImages = this.svgDoc.querySelectorAll(`image[data-terrain-id='${terrainId}']`);
+          let textElement = this.svgDoc.querySelector(`text[data-terrain-id='${terrainId}']`);
+          if (textElement) {
+            textElement.remove();
+          } else {
+            console.log(`Text element for terrain id ${terrainId} not found`);
+          }
+          troopImages.forEach(image => {
+            image.remove();
+          });
+          this.recolocacion = true;
+        }
+      }
+    }
+    // Limpio la asignación
+    this.tropas.forEach(tropa => {
+      tropa.user = '';
+      tropa.numTropas = 0;
+    });
   }
 
   
