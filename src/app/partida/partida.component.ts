@@ -79,6 +79,7 @@ export class PartidaComponent {
   myColor = '';
   texture : string | undefined = undefined;
   ocupado = false;
+  skinTropasMap: Map<string, string> = new Map<string, string>();
   //
   recolocacion = false; 
   //
@@ -161,11 +162,20 @@ ataquePerpetrado: {
       this.partida = response.partida; // cojo la partida 
       this.jugadores = response.partida.jugadores; // cojo sus jugadores, ya vienen con su color
       
-      // busco mi color
+      // busco mi color y de paso relleno las skins
       for(let jugador of this.jugadores){
         if(jugador.usuario === this.whoami){
           this.myColor = jugador.color;
         }
+        this.partidaService.ObtenerSetFichas(jugador.usuario).subscribe(response => {
+          console.log('response', response);
+          if(response.idSkin !== 'defaultFichas')
+            this.skinTropasMap.set(jugador.usuario, '_' + response.idSkin);
+          else 
+            this.skinTropasMap.set(jugador.usuario, '');
+          this.cdr.detectChanges();
+        });
+        console.log(this.skinTropasMap)
       }
       this.turno = response.partida.turno;
       this.cambiarTurno();
@@ -176,6 +186,7 @@ ataquePerpetrado: {
       this.descartes = response.partida.descartes;
       this.ganador = response.partida.ganador;
       this.fase = response.partida.fase;
+
       //this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
       this.getAvatar(this.turnoJugador);
 
@@ -183,7 +194,6 @@ ataquePerpetrado: {
       if(this.ganador === null){
         this.mostrarGanador();
       }
-
     });
 
   }
@@ -643,13 +653,13 @@ ataquePerpetrado: {
     let color = jugador.color;
     //console.log(color)
     for (let i = 0; i < numTanks; i++, index++) {
-      addImage(`/assets/tanque_${color}.png`, index);
+      addImage(`/assets/tanque${this.skinTropasMap.get(user)}_${color}.png`, index);
     }
     for (let i = 0; i < numHorses; i++, index++) {
-      addImage(`/assets/caballo_${color}.png`, index);
+      addImage(`/assets/caballo${this.skinTropasMap.get(user)}_${color}.png`, index);
     }
     for (let i = 0; i < remainingTroops; i++, index++) {
-      addImage(`/assets/infanteria_${color}.png`, index);
+      addImage(`/assets/infanteria${this.skinTropasMap.get(user)}_${color}.png`, index);
     }
     svgDoc.documentElement.appendChild(text);
   }

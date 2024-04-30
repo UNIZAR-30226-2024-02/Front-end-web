@@ -84,4 +84,13 @@ export class PartidaService {
     return this.http.put("http://localhost:4000/partida/salirPartida", {idPartida}, { headers });
   }
 
+  ObtenerSetFichas(idUsuario : string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of(null);
+    }
+
+    return this.http.get("http://localhost:4000/misSkins/obtenerSetFichas/" + idUsuario, { headers });
+  }
+
 }

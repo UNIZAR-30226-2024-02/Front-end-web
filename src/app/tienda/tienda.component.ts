@@ -77,6 +77,7 @@ export class TiendaComponent {
   loadOwnedSkins(): void {
     this.tiendaService.getOwnedSkins().subscribe(
       (skins) => {
+        console.log(skins)
         this.enPropiedad = skins;
       },
       (error) => {
@@ -86,6 +87,7 @@ export class TiendaComponent {
   }
 
   isOwned(skin: Skin) {
+      //console.log(skin)
       let bool = this.enPropiedad.some(s => s.idSkin === skin.idSkin);
       return bool;
   }

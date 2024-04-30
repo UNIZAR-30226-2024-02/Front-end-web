@@ -112,7 +112,6 @@
     <div id="attack-modal">
         <h2>¡{{ ataqueRecibido.userOrigen }} te está atacando!</h2>
         <h3> Territorio en disputa: {{ ataqueRecibido.territorioDestino }} </h3>
-        <img [src]="avatarAMostrar" alt="Usuario atacante" />
         <h3> Resultado de la batalla </h3>
         <p> Dados atacante: {{ ataqueRecibido.dadosAtacante[0] }} , {{ ataqueRecibido.dadosAtacante[1]}} </p>
         <p> Dados defensor: {{ ataqueRecibido.dadosDefensor[0] }} , {{ ataqueRecibido.dadosDefensor[1]}} </p>
@@ -129,7 +128,6 @@
     <div id="atacking-modal">
         <h2>¡Estás atacando a {{ ataquePerpetrado.userDestino }}!</h2>
         <h3> Territorio en disputa: {{ ataquePerpetrado.territorioDestino }} </h3>
-        <img [src]="avatarAMostrar" alt="Usuario atacante" />
         <h3> Resultado de la batalla </h3>
         <p> Dados atacante: {{ ataquePerpetrado.dadosAtacante[0] }} , {{ ataquePerpetrado.dadosAtacante[1]}} </p>
         <p> Dados defensor: {{ ataquePerpetrado.dadosDefensor[0] }} , {{ ataquePerpetrado.dadosDefensor[1]}} </p>

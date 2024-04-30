@@ -104,14 +104,9 @@
     padding: 15px;
     border-radius: 10px;
     text-align: center;
-    width: 50%; /* Adjust this value to change the width */
-    height: 75%; /* Adjust this value to change the height */
+    width: 25%; /* Adjust this value to change the width */
+    height: 50%; /* Adjust this value to change the height */
     box-sizing: border-box; /* This makes sure padding is included in the width/height */
-}
-
-#attack-modal img {
-    max-width: 50%;
-    max-height: 50%;
 }
 
 /* when I am the attacker */
@@ -133,12 +128,7 @@
     padding: 15px;
     border-radius: 10px;
     text-align: center;
-    width: 50%; /* Adjust this value to change the width */
-    height: 75%; /* Adjust this value to change the height */
+    width: 25%; /* Adjust this value to change the width */
+    height: 50%; /* Adjust this value to change the height */
     box-sizing: border-box; /* This makes sure padding is included in the width/height */
-}
-
-#atacking-modal img {
-    max-width: 50%;
-    max-height: 50%;
 }
