@@ -1,17 +1,25 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-<div class="container">
-    <div style="background-color: white; padding: 25px">
-        <h1 style="color:black; text-align: center">Perfil de {{nombre}}</h1>
-        <img [src]="avatar.path" [alt]="avatar.idSkin" style="width: 420px; height: 420px">
-        <div style="display:flex; justify-content: space-between">
-            <p><i class="fas fa-dollar-sign"></i> Dinero: {{puntos}}</p>
-            <p><i class="fas fa-solid fa-trophy"></i> Elo: {{elo}}</p>
+<div class="full-screen-background">
+    <div class="parent-container">
+        <div class="scrollable-container">
+            <div>
+                <h1 style="color:black; text-align: center">Perfil de {{nombre}}</h1>
+                <div class="center-container">
+                    <img [src]="avatar.path" [alt]="avatar.idSkin" class="responsive-image">
+                </div>
+                <div style="display:flex; justify-content: space-evenly">
+                    <p><i class="fas fa-dollar-sign"></i> Dinero: {{puntos}}</p>
+                    <p><i class="fas fa-solid fa-trophy"></i> Elo: {{elo}}</p>
+                </div>
+            </div>
+            <div class="button-container">
+                <button class="btn" routerLink="/skinsperfil">Ver Skins</button>
+                <button class="btn" routerLink="/historial">Historial</button>
+                <button class="btn" routerLink="/amigos">Amigos</button>
+            </div>
         </div>
-    </div>
-    <div class="button-container">
-        <button class="btn" routerLink="/skinsperfil">Ver Skins</button>
-        <button class="btn" routerLink="/historial">Historial</button>
-        <button class="btn" routerLink="/amigos">Amigos</button>
-        <button class="back-button" routerLink="/menu">Volver</button>
+        <div class="center-container">
+            <button class="back-button" style="margin-top: 10px" routerLink="/menu">Volver</button>
+        </div>
     </div>
 </div>

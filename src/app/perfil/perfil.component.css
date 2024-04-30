@@ -1,15 +1,46 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.full-screen-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
     height: 100vh;
-    background-color: #f0f0f0; /* Color de fondo de reserva */
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-image: url('/assets/taquilla.jpg'); /* Actualiza con la ruta correcta */
+    background-image: url('/assets/taquilla.jpg');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;  /* Ajusta la dirección del contenido a columna */
+}
+
+.parent-container {
+    width: 90%;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.scrollable-container {
+    height: 75vh;
+    overflow-y: auto;
+    z-index: 2;  /* Asegura que esté sobre el botón si es necesario */
+    position: relative;  /* Relativo para mantener centrado */
+}
+
+.center-container {
+    display: flex;
+    justify-content: center; /* Aligns horizontally in the middle */
+    align-items: center; /* Aligns vertically in the middle */
+}
+
+.responsive-image {
+    max-width: 69%;
+    height: auto;
+    min-width: 200px; /* Adjust as needed */
+    min-height: 200px; /* Adjust as needed */
 }
 
 .container h1 {
@@ -22,8 +53,8 @@
     display: flex;
     flex-direction: column; /* Cambio para acomodar los botones verticalmente */
     align-items: center; /* Alinea los botones al centro */
-    gap: 20px; /* Ajusta el espacio entre los botones */
-    padding: 25px;
+    gap: 10px; /* Ajusta el espacio entre los botones */
+    padding: 20px;
 }
 
 .btn {
@@ -39,7 +70,7 @@
     border-radius: 25px; /* Rounded corners */
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Adds a subtle shadow */
     transition: all 0.2s; /* Smooth transition for hover effects */
-    width: 80%; /* Ajusta el ancho de los botones */
+    width: 50%; /* Ajusta el ancho de los botones */
     min-width: 200px;
 }
 
