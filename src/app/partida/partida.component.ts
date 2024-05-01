@@ -268,9 +268,9 @@ ataquePerpetrado: {
     this.socket.on('cambioEstado', async () => {
       this.inicializacionPartida(this.partida); // actualizo el estado de la partida
       await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
-          
+
       this.limpiarTropas();
-          
+
       //Pinto el mapa
       this.distribuirPiezas();
     });
@@ -399,16 +399,16 @@ ataquePerpetrado: {
         // antes de atacar, selecciono las tropas q quiero utilizar para atacar
         if (this.ataqueTropas === 0) {
           console.log('Seleccionar tropas para atacar')
-          this.ataqueTropas = 0;
-          this.ataqueDestino = '';
-          this.ataqueOrigen = '';
-          const numTroops = await this.seleccionarTropas(e, svgDoc, this.whoami, true);
+          this.ataqueTropas = 0
+          this.ataqueDestino = ''
+          this.ataqueOrigen = ''
+          const numTroops = await this.seleccionarTropas(e, svgDoc, this.whoami, true)
           console.log(this.ataqueTropas, this.ataqueOrigen, this.ataqueDestino, numTroops)
           console.log(`Player has selected ${numTroops} troops`);
           console.log(this.recolocacion)
-          this.tropasPuestas = 0;
-          this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, -numTroops); // las quito del mapa
-          this.numTropas -= numTroops; // tampoco las tengo colocables, las tengo seleccionadas así que las quito de ahí
+          this.tropasPuestas = 0
+          this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, -numTroops) // las quito del mapa
+          this.numTropas -= numTroops // tampoco las tengo colocables, las tengo seleccionadas así que las quito de ahí
           this.cdr.detectChanges()
           
         } else {
@@ -418,35 +418,33 @@ ataquePerpetrado: {
           console.log(`Player has selected enemy territory ${enemyTerritoryId}`)
           this.ataqueDestino = enemyTerritoryId
           console.log("Info:", this.partida._id, this.ataqueOrigen, this.ataqueDestino, this.tropasPuestas)
-          let usuarioObjetivo = this.jugadores.find(jugador => jugador.territorios.includes(enemyTerritoryId));
+          let usuarioObjetivo = this.jugadores.find(jugador => jugador.territorios.includes(enemyTerritoryId))
           this.partidaService.ResolverAtaque(this.partida._id, this.ataqueOrigen, this.ataqueDestino, -this.tropasPuestas).subscribe(
             async response => {
-              console.log(response);
-              this.toastr.success('¡Ataque realizado con éxito!');
+              console.log(response)
+              this.toastr.success('¡Ataque realizado con éxito!')
               await new Promise(resolve => setTimeout(resolve, 1000)) 
-              this.toastr.info('Tus dados: ' + response.dadosAtacante + ' Dados defensor: ' + response.dadosDefensor);
-              await new Promise(resolve => setTimeout(resolve, 1000)) 
-              this.toastr.info('Tus bajas: ' + response.resultadoBatalla.tropasPerdidasAtacante + ' Bajas defensor: ' + response.resultadoBatalla.tropasPerdidasDefensor);
+              this.toastr.info('Tus dados: ' + response.dadosAtacante + ' Dados defensor: ' + response.dadosDefensor)
               await new Promise(resolve => setTimeout(resolve, 1000))
-              if(response.conquistado){
-                this.toastr.success('¡Territorio conquistado!');
-
+              this.toastr.info('Tus bajas: ' + response.resultadoBatalla.tropasPerdidasAtacante + ' Bajas defensor: ' + response.resultadoBatalla.tropasPerdidasDefensor)
+              await new Promise(resolve => setTimeout(resolve, 1000))
+              if (response.conquistado) {
+                this.toastr.success('¡Territorio conquistado!')
               } else {
-                this.toastr.error('¡No has conquistado el territorio!');
-                
+                this.toastr.error('¡No has conquistado el territorio!')
               }
-              this.inicializacionPartida(this.partida); // actualizo el estado de la partida
+              this.inicializacionPartida(this.partida) // actualizo el estado de la partida
               await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
-              
-              this.limpiarTropas();
-              
+
+              this.limpiarTropas()
+
               //Pinto el mapa
-              this.distribuirPiezas();
+              this.distribuirPiezas()
               this.ataqueDestino = ''
               this.ataqueOrigen = ''
               this.ataqueTropas = 0
               // update the state of every client
-              this.socket.emit('actualizarEstado', this.partida._id);
+              this.socket.emit('actualizarEstado', this.partida._id)
               // and notify the defense player 
               
               this.socket.emit('ataco', {userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
@@ -463,7 +461,7 @@ ataquePerpetrado: {
                                       territorioDestino: enemyTerritoryId}
             },
             error => {
-              this.toastr.error('¡ERROR FATAL!');
+              this.toastr.error('¡ERROR FATAL!')
               this.fase = 0;
               this.fase = 1;
               this.ataqueDestino = ''
@@ -489,23 +487,36 @@ ataquePerpetrado: {
           const enemyTerritoryId = await this.seleccionarTerritorioAmigo(e, svgDoc, this.whoami)
           console.log(`Player has selected friendly territory ${enemyTerritoryId}`)
           this.ataqueDestino = enemyTerritoryId
-          // TODO AVISAR AL BACK END, ESPERAR RESPUESTA Y ACTUALIZAR EL ESTADO DE LA PARTIDA
-          //this.partida._id, this.whoami, targetId, this.tropasPuestas
-          //atacarTerritorio(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
-          // esto recibe el back end
-          console.log(this.partida._id, this.whoami, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas)
-          // dependiendo del resultado de la llamada al back, se actualizará el estado de la partida y permitirá continuar
-          await new Promise(resolve => setTimeout(resolve, 5000)) // falseo llamada al back
-          const territorios = this.mapa.flatMap(continent => continent.territorios)
-          const destinoTropas = await territorios.find(territorio => territorio.nombre === this.ataqueDestino)
-          if (destinoTropas)
-            destinoTropas.tropas += this.ataqueTropas // seguramente esto te lo dé el back? tampoco está mal hacerlo localmente
-          this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, this.ataqueTropas) // las pongo
-          console.log(destinoTropas)
-          // TODO ACTUALIZAR ESTADO ETC -> de momento no lo hago, es trivial
-          this.ataqueDestino = ''
-          this.ataqueOrigen = ''
-          this.ataqueTropas = 0
+          console.log('espero que esto sea correcto ' + this.ataqueTropas + ' ' + this.ataqueOrigen + ' ' + this.ataqueDestino)
+          this.partidaService.RealizarManiobra(this.partida._id, this.ataqueOrigen, this.ataqueDestino, this.ataqueTropas).subscribe(
+            async response => {
+              console.log(response)
+              this.inicializacionPartida(this.partida) // actualizo el estado de la partida
+              await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
+              
+              this.limpiarTropas()
+              
+              //Pinto el mapa
+              this.distribuirPiezas()
+              this.ataqueDestino = ''
+              this.ataqueOrigen = ''
+              this.ataqueTropas = 0
+              // update the state of every client
+              this.socket.emit('actualizarEstado', this.partida._id)
+
+              this.ataqueDestino = ''
+              this.ataqueOrigen = ''
+              this.ataqueTropas = 0
+            },
+            error => {
+              this.toastr.error('¡ERROR FATAL!');
+              this.fase = 0;
+              this.fase = 1;
+              this.ataqueDestino = ''
+              this.ataqueOrigen = ''
+              this.ataqueTropas = 0
+            }
+          )
         }
         break
       case 3: // robo 

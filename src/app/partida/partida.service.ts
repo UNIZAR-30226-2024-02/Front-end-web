@@ -75,6 +75,15 @@ export class PartidaService {
     return this.http.put("http://localhost:4000/partida/atacarTerritorio", {idPartida, territorioAtacante, territorioDefensor, numTropas}, { headers });
   }
 
+  RealizarManiobra(idPartida: string, territorioOrigen: string, territorioDestino: string, numTropas: number): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of(null);
+    }
+
+    return this.http.put("http://localhost:4000/partida/realizarManiobra", {idPartida, territorioOrigen, territorioDestino, numTropas}, { headers });
+  }
+
   AbandonarPartida(idPartida: string): Observable<any> {
     const headers = this.getHeaders();
     if (!headers) {
