@@ -26,6 +26,7 @@
 .container {
     display: flex;
     justify-content: space-between;
+
 }
 
 .chat-bubble {
@@ -55,6 +56,11 @@
     right: -10px;
     border-width: 10px 0 10px 10px;
     border-color: transparent transparent transparent #a8e6cf;
+}
+
+.other-content {
+    margin-top: 75px; /* Adjust to desired margin */
+    height: calc(100vh - 50px); /* Adjust to desired height */
 }
 
 #winner-overlay {

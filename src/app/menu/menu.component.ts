@@ -57,6 +57,7 @@ export class MenuComponent {
     // TODO? QUEDA ALGUNA?
   }
 
+
   /*NuevaPartida() {
     const partida = { privacidad: true, num: this.num, nombre: this.nombre, password: this.password };
     this.partidaService.NuevaPartida(partida).subscribe(() => {

@@ -33,4 +33,9 @@ export class UsersService {
     const headers = new HttpHeaders().set('Authorization', `${this.getToken()}`);
     return this.http.get(`http://localhost:4000/misSkins/obtenerAvatar/${username}`, { headers });
   }
+
+  getUserPartidas(): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `${this.getToken()}`);
+    return this.http.get(`http://localhost:4000/partida/estoyEnPartida`, { headers });
+  }
 }

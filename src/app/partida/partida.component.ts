@@ -85,6 +85,7 @@ export class PartidaComponent {
   //
   eloGanado = 0;
   puntosGanados = 0;
+  intervalId: any;
   //
 ataqueRecibido: {
   userOrigen: string;
@@ -174,6 +175,10 @@ ataquePerpetrado: {
           else 
             this.skinTropasMap.set(jugador.usuario, '');
           this.cdr.detectChanges();
+          
+          this.limpiarTropas();
+
+          this.distribuirPiezas();
         });
         console.log(this.skinTropasMap)
       }
@@ -186,6 +191,9 @@ ataquePerpetrado: {
       this.descartes = response.partida.descartes;
       this.ganador = response.partida.ganador;
       this.fase = response.partida.fase;
+      if(this.jugadores[this.turno % this.numJugadores].usuario === this.whoami){
+        this.numTropas = response.partida.auxColocar;
+      }
 
       //this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
       this.getAvatar(this.turnoJugador);
@@ -287,6 +295,20 @@ ataquePerpetrado: {
                               tropasPerdidasAtacante, tropasPerdidasDefensor, conquistado,
                               territorioOrigen, territorioDestino };                                    
     });
+
+    this.intervalId = setInterval(() => {
+      if (this.fase === 0 && this.jugadores[this.turno % this.numJugadores].usuario === this.whoami && this.partida.auxColocar) {
+        this.numTropas = this.partida.auxColocar;
+      } else {
+        this.numTropas = 0;
+      }
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   onSVGLoad(event: any) {
@@ -364,10 +386,13 @@ ataquePerpetrado: {
             this.partidaService.ColocarTropas(this.partida._id, targetId, this.tropasPuestas).subscribe(
               response => {
                 console.log(response);
+                this.numTropas -= this.tropasPuestas;
+                if(this.partida.auxColocar) this.partida.auxColocar -= this.tropasPuestas;
                 this.tropasPuestas = 0;
                 this.cdr.detectChanges();
                 this.ocupado = false;
                 // notify to back with a socket, the back will notify every client in the game
+                
                 this.socket.emit('actualizarEstado', this.partida._id);
               },
               error => {
