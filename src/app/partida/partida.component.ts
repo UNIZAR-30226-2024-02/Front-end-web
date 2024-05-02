@@ -111,6 +111,7 @@ ataquePerpetrado: {
   territorioDestino: string;
 } | null = null; 
 
+eliminado : boolean | null = null;
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
               private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService
@@ -167,6 +168,13 @@ ataquePerpetrado: {
       for(let jugador of this.jugadores){
         if(jugador.usuario === this.whoami){
           this.myColor = jugador.color;
+          if(jugador.abandonado){
+            this.toastr.error('Has sido eliminado');
+            this.eliminado = true;
+            console.log(this.eliminado)
+            console.log("Has perdido")
+            //this.router.navigate(['/menu']);
+          }
         }
         this.partidaService.ObtenerSetFichas(jugador.usuario).subscribe(response => {
           console.log('response', response);
@@ -194,6 +202,7 @@ ataquePerpetrado: {
       if(this.jugadores[this.turno % this.numJugadores].usuario === this.whoami){
         this.numTropas = response.partida.auxColocar;
       }
+      
 
       //this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
       this.getAvatar(this.turnoJugador);

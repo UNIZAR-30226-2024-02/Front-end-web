@@ -124,8 +124,17 @@
     </div>
 </div>
 
-<div id="atacking-overlay" *ngIf="ataquePerpetrado">
-    <div id="atacking-modal">
+<div id="hasPerdido-overlay" *ngIf="eliminado">
+    <div id="hasPerdido-modal">
+        <h3> Has sido eliminado! </h3>
+        <p> Tu Elo ganado: {{ eloGanado}} </p>
+        <p> Tus monedas ganadas: {{ puntosGanados }} </p>
+        <button (click)="closeWinnerModal()">Cerrar</button>
+    </div>
+</div>
+
+<div id="attacking-overlay" *ngIf="ataquePerpetrado">
+    <div id="attacking-modal">
         <h2>¡Estás atacando a {{ ataquePerpetrado.userDestino }}!</h2>
         <h3> Territorio en disputa: {{ ataquePerpetrado.territorioDestino }} </h3>
         <h3> Resultado de la batalla </h3>
