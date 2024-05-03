@@ -570,6 +570,7 @@ eliminado : boolean | null = null;
         break
       case 4: // fin
         //this.final(e, svgDoc, imgWidth, imgHeight);
+        
         break
     }
     //this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami);
@@ -741,6 +742,8 @@ eliminado : boolean | null = null;
             this.turno = response.turno;
             console.log("Cambia el turno")
             this.cambiarTurno();
+            // y además aviso 
+            this.socket.emit('actualizarEstado', this.partida._id);
           }
           if(this.fase !== undefined && this.fase !== null){
             this.updateText(this.fase);
