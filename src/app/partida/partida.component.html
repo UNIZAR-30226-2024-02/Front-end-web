@@ -117,6 +117,8 @@
         <p> Dados defensor: {{ ataqueRecibido.dadosDefensor[0] }} , {{ ataqueRecibido.dadosDefensor[1]}} </p>
         <p> Tropas perdidas atacante: {{ ataqueRecibido.tropasPerdidasAtacante }} </p>
         <p> Tropas perdidas defensor: {{ ataqueRecibido.tropasPerdidasDefensor }} </p>
+        <p> Elo: {{ ataqueRecibido.eloDefensor }} </p>
+        <p> Monedas: {{ ataqueRecibido.dineroDefensor }} </p>
         <h4>
             {{ ataqueRecibido.conquistado ? 'Has perdido el territorio' : 'No has perdido el territorio' }}
         </h4>
@@ -133,8 +135,8 @@
     </div>
 </div>
 
-<div id="attacking-overlay" *ngIf="ataquePerpetrado">
-    <div id="attacking-modal">
+<div id="attack-overlay" *ngIf="ataquePerpetrado">
+    <div id="attack-modal">
         <h2>¡Estás atacando a {{ ataquePerpetrado.userDestino }}!</h2>
         <h3> Territorio en disputa: {{ ataquePerpetrado.territorioDestino }} </h3>
         <h3> Resultado de la batalla </h3>
@@ -142,6 +144,8 @@
         <p> Dados defensor: {{ ataquePerpetrado.dadosDefensor[0] }} , {{ ataquePerpetrado.dadosDefensor[1]}} </p>
         <p> Tropas perdidas atacante: {{ ataquePerpetrado.tropasPerdidasAtacante }} </p>
         <p> Tropas perdidas defensor: {{ ataquePerpetrado.tropasPerdidasDefensor }} </p>
+        <p> Elo: {{ ataquePerpetrado.eloAtacante }} </p>
+        <p> Monedas: {{ ataquePerpetrado.dineroAtacante }} </p>
         <h4>
             {{ ataquePerpetrado.conquistado ? 'Has conquistado el territorio' : 'No has conquistado el territorio' }}
         </h4>

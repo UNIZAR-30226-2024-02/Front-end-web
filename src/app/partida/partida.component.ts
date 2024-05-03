@@ -97,6 +97,10 @@ ataqueRecibido: {
   conquistado: boolean;
   territorioOrigen: string;
   territorioDestino: string;
+  eloAtacante: number;
+  eloDefensor: number;
+  dineroAtacante: number;
+  dineroDefensor: number;
 } | null = null;
 
 ataquePerpetrado: {
@@ -109,6 +113,8 @@ ataquePerpetrado: {
   conquistado: boolean;
   territorioOrigen: string;
   territorioDestino: string;
+  eloAtacante: number;
+  dineroAtacante: number;
 } | null = null; 
 
 eliminado : boolean | null = null;
@@ -295,14 +301,15 @@ eliminado : boolean | null = null;
     //when a user attacks me, I get warned and notifyied with the result of the attack
     this.socket.on('ataqueRecibido', async (userOrigen: string, userDestino: string, dadosAtacante: number[], dadosDefensor: number[], 
                                             tropasPerdidasAtacante: number, tropasPerdidasDefensor: number, conquistado: boolean,
-                                            territorioOrigen: string, territorioDestino: string) => {
-      console.log('ataqueRecibido', userOrigen, userDestino, dadosAtacante, 
-                  dadosDefensor, tropasPerdidasAtacante, tropasPerdidasDefensor, 
-                  conquistado);
+                                            territorioOrigen: string, territorioDestino: string, eloAtacante : number, 
+                                            eloDefensor: number, dineroAtacante: number, dineroDefensor: number) => {
+
       // update the fields in order to show the modal
+      console.log("Me atacan")
       this.ataqueRecibido = { userOrigen, userDestino, dadosAtacante, dadosDefensor, 
                               tropasPerdidasAtacante, tropasPerdidasDefensor, conquistado,
-                              territorioOrigen, territorioDestino };                                    
+                              territorioOrigen, territorioDestino, eloAtacante, eloDefensor,
+                              dineroAtacante, dineroDefensor};                                    
     });
 
     this.intervalId = setInterval(() => {
@@ -457,10 +464,10 @@ eliminado : boolean | null = null;
             async response => {
               console.log(response)
               this.toastr.success('¡Ataque realizado con éxito!')
-              await new Promise(resolve => setTimeout(resolve, 1000)) 
-              this.toastr.info('Tus dados: ' + response.dadosAtacante + ' Dados defensor: ' + response.dadosDefensor)
-              await new Promise(resolve => setTimeout(resolve, 1000))
-              this.toastr.info('Tus bajas: ' + response.resultadoBatalla.tropasPerdidasAtacante + ' Bajas defensor: ' + response.resultadoBatalla.tropasPerdidasDefensor)
+              //await new Promise(resolve => setTimeout(resolve, 1000)) 
+              //this.toastr.info('Tus dados: ' + response.dadosAtacante + ' Dados defensor: ' + response.dadosDefensor)
+              //await new Promise(resolve => setTimeout(resolve, 1000))
+              //this.toastr.info('Tus bajas: ' + response.resultadoBatalla.tropasPerdidasAtacante + ' Bajas defensor: ' + response.resultadoBatalla.tropasPerdidasDefensor)
               await new Promise(resolve => setTimeout(resolve, 1000))
               if (response.conquistado) {
                 this.toastr.success('¡Territorio conquistado!')
@@ -486,13 +493,18 @@ eliminado : boolean | null = null;
                                tropasPerdidasAtacante: response.resultadoBatalla.tropasPerdidasAtacante,
                                tropasPerdidasDefensor: response.resultadoBatalla.tropasPerdidasDefensor, 
                                conquistado: response.conquistado, territorioOrigen: this.ataqueOrigen, 
-                               territorioDestino: enemyTerritoryId});
+                               territorioDestino: enemyTerritoryId, eloAtacante: response.eloAtacante,
+                               eloDefensor: response.eloDefensor, dineroAtacante: response.dineroAtacante,
+                               dineroDefensor: response.dineroDefensor});
               this.ataquePerpetrado = {userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
                                       dadosAtacante: response.dadosAtacante, dadosDefensor: response.dadosDefensor, 
                                       tropasPerdidasAtacante: response.resultadoBatalla.tropasPerdidasAtacante,
                                       tropasPerdidasDefensor: response.resultadoBatalla.tropasPerdidasDefensor, 
                                       conquistado: response.conquistado, territorioOrigen: this.ataqueOrigen, 
-                                      territorioDestino: enemyTerritoryId}
+                                      territorioDestino: enemyTerritoryId, eloAtacante: response.eloAtacante,
+                                      dineroAtacante: response.dineroAtacante};
+              this.eloGanado = response.eloAtacante;
+              this.puntosGanados = response.dineroAtacante;
             },
             error => {
               this.toastr.error('¡ERROR FATAL!')
@@ -1147,6 +1159,7 @@ eliminado : boolean | null = null;
   }
 
   closeWinnerModal() {
+    this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
     this.router.navigate(['/menu']);
   }
 
