@@ -1,88 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="partidas.component.css">
+</head>
+<body>
 <div class="background-image full-screen">
-<div class="container mt-5 div-scrollable">
-    <div class="row">
-        <div class="col-md-6" style="background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;" *ngIf="partidas.length > 0; else noPartidas">
-            <h2 class="mb-4">Partidas Públicas</h2>
-            <div class="card mb-3" *ngFor="let partida of partidas">
-                <div class="card-header">
-                    <h3>{{ partida.nombre }}</h3>
+    <div class="container py-5 h-100 div-scrollable">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-4 bg-light rounded-3 shadow">
+                    <h2>Partidas Públicas</h2>
+                    <div class="public-games-list">
+                        <!-- Public games list dynamically inserted here -->
+                        <div class="card mb-3" *ngFor="let partida of partidas">
+                            <div class="card-header">{{ partida.nombre }}</div>
+                            <div class="card-body">
+                                <p>Max Jugadores: {{ partida.maxJugadores }}</p>
+                                <h5>Jugadores:</h5>
+                                <p>
+                                    <span *ngFor="let jugador of partida.jugadores; let isLast=last">
+                                        {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
+                                    </span>
+                                </p>
+                                <button class="btn btn-success" (click)="unirsePartida(partida)">Unirse</button>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #noPartidas>
+                        <div class="alert alert-info">No hay partidas públicas disponibles. Considera crear una.</div>
+                    </ng-template>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">Max Jugadores: {{ partida.maxJugadores }}</p>
-                    <h5 class="card-title">Jugadores:</h5>
-                    <p>
-                        <span *ngFor="let jugador of partida.jugadores; let isLast=last">
-                            {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
-                        </span>
-                    </p>
-                    <button class="btn btn-primary" (click)="unirsePartida(partida)">Unirse</button>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-4 bg-light rounded-3 shadow">
+                    <h2>Acciones</h2>
+                    <div class="actions">
+                        <div class="mb-4">
+                            <h3>Unirse a Partida</h3>
+                            <form (ngSubmit)="unirsePartida2(idPartida.value, passwordPartida.value)">
+                                <input type="text" id="idPartida" class="form-control my-2" placeholder="ID de Partida" #idPartida required>
+                                <input type="password" id="passwordPartida" class="form-control my-2" placeholder="Password" #passwordPartida>
+                                <button type="submit" class="btn btn-warning">Unirse a Partida</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h3>Crear Partida</h3>
+                            <form (ngSubmit)="crearPartida(nombre.value, password.value, +numJugadores.value)">
+                                <input type="text" id="nombre" class="form-control my-2" placeholder="Nombre de Partida" #nombre required>
+                                <input type="password" id="password" class="form-control my-2" placeholder="Password" #password>
+                                <input type="number" id="numJugadores" class="form-control my-2" placeholder="Número de Jugadores" #numJugadores required>
+                                <button type="submit" class="btn btn-primary">Crear Partida</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Invitations Block -->
+                <div *ngIf="invitaciones && invitaciones.length > 0" class="p-4 bg-light rounded-3 shadow mt-4">
+                    <h2>Invitaciones</h2>
+                    <div class="invitation-list" style="max-height: 450px; overflow-y: auto;">
+                        <!-- Invitations list dynamically inserted here -->
+                        <div class="card mb-3" *ngFor="let invitacion of invitaciones">
+                            <div class="card-header">{{ invitacion.nombre }}</div>
+                            <div class="card-body">
+                                <h5>Usuarios:</h5>
+                                <p>
+                                    <span *ngFor="let jugador of invitacion.jugadores; let isLast=last">
+                                        {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
+                                    </span>
+                                </p>
+                                <button class="btn btn-success" (click)="unirsePartida(invitacion)">Unirse</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-6" style="background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;">
-            <div class="col-md-6" style="background-color: white; border-radius: 10px;">
-                <h2 class="mb-4">Unirse a Partida</h2>
-                <form (ngSubmit)="unirsePartida2(idPartida.value, passwordPartida.value)">
-                    <div class="form-group">
-                        <label for="idPartida">ID de Partida</label>
-                        <input type="text" id="idPartida" class="form-control" #idPartida required>
-                    </div>
-                    <div class="form-group">
-                        <label for="passwordPartida">Password</label>
-                        <input type="password" id="passwordPartida" class="form-control" #passwordPartida>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Unirse a Partida</button>
-                </form>
-            </div>
-            <div class="col-md-6" style="background-color: white; border-radius: 10px;">
-                <h2 class="mb-4">Crear Partida</h2>
-                <form (ngSubmit)="crearPartida(nombre.value, password.value, +numJugadores.value)">
-                    <div class="form-group">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" class="form-control" #nombre required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" class="form-control" #password>
-                    </div>
-                    <div class="form-group">
-                        <label for="numJugadores">Número de Jugadores</label>
-                        <input type="number" id="numJugadores" class="form-control" #numJugadores required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Crear Partida</button>
-                </form>
-            </div>
-
-        <div class="col-md-6">
-            <h2 class="mb-4">Invitaciones</h2>
-            <div class="card mb-3" *ngFor="let invitacion of invitaciones">
-                <div class="card-header">
-                    <h3>{{ invitacion.nombre }}</h3>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Usuarios:</h5>
-                    <p>
-                        <span *ngFor="let jugador of invitacion.jugadores; let isLast=last">
-                            {{ jugador.usuario }}<ng-container *ngIf="!isLast">, </ng-container>
-                        </span>
-                        <button class="btn btn-primary" (click)="unirsePartida(invitacion)">Unirse</button>
-                    </p>
-                </div>
-            </div>
-        </div>
-        
+        <button class="btn btn-secondary mt-4" routerLink="/menu">Atrás</button>
     </div>
-    <button class="btn btn-primary mb-3" routerLink="/menu">Atrás</button>
 </div>
-
-<ng-template #noPartidas>
-    <div class="col-md-6" style="background-color: rgba(255, 255, 255, 0.8); border-radius: 10px;">
-        <button class="btn btn-primary mb-3" routerLink="/menu">Atrás</button>
-        <p class="text-center">Actualmente no hay partidas públicas a las que te puedas unir.
-            Puedes probar a crear una partida si lo deseas.
-        </p>
-    </div>
-</ng-template>
-<button class="btn btn-primary mb-3" routerLink="/menu">Atrás</button>
-</div>
+</body>
+</html>
