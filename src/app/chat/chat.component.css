@@ -1,94 +1,137 @@
-h1 {
-    color: #333;
-    font-size: 2em;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+html, body {
+    height: 100%; /* Ensure the html and body take up full viewport height */
+    margin: 0;
+    padding: 0;
+    background-image: url('/assets/guerra.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Ensure full viewport width */
+}
+
+.chat-app-container {
+    width: 95%;
+    max-width: 1200px;
+    height: auto; /* Default to auto to adjust based on content */
+    min-height: 95%; /* Minimum height to fill the screen */
+    margin: 2.5vh auto; /* Center vertically with some margin from top and bottom */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+header, footer {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
     text-align: center;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+input.input-field, button {
+    margin: 10px 5px;
+    padding: 8px;
+    width: calc(50% - 20px); /* Adjust if necessary for the button */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-li {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    padding: 15px;
-    font-size: 1.2em;
+button {
+    padding: 8px 16px;
+    background-color: #5cb85c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin-left: 5px; /* Ensure buttons align with input fields */
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+aside, .chat-window {
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    overflow: hidden;
 }
 
 .chat-window {
-    width: 300px;
-    height: 400px;
-    border: 1px solid #ccc;
-    background-color: #fff;
     display: flex;
     flex-direction: column;
-    margin-right: 20px;
-    flex: 0 0 auto;
+    margin: 10px;
+    flex-grow: 1; /* Allows chat window to expand and fill available space */
 }
 
-
-.chat-participants {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    max-height: 20%;
-    overflow: auto;
-    border-bottom: 1px solid #ccc;
-    background-color: #f9f9f9;
-    flex-shrink: 0;
-}
-
-.chat-participants ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-}
-
-.chat-participants li {
-    margin-right: 0;
-    font-size: 0.8em;
-}
-.chat-messages {
-    overflow-y: auto;
-    flex-grow: 1;
-    border-top: 1px solid #ccc;
-    background-color: #fff;
-}
-
-
-.message-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8em;
-    color: #888;
-}
-
-.message-text {
-    margin: 0;
-}
-
-.chat-input {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    flex-shrink: 0;
-}
-
-.chat-container {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+.chat-participants, .chat-messages, .chat-input {
+    padding: 10px;
 }
 
 .my-message {
-    background-color: lightgreen;
+    background-color: #dff0d8;
     text-align: right;
+}
+
+.close-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.close-button:hover {
+    background-color: #c82333;
+}
+
+.return-button {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.return-button:hover {
+    background-color: #5a6268;
+}
+
+/* Additional Styles for Chat List Layout */
+.chat-list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.chat-details {
+    width: 100%;
+}
+
+.chat-name {
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.chat-buttons {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    width: 100%;
+}
+
+button {
+    width: 80%; /* Adjust width to fit under the chat name */
+    margin: 5px auto; /* Center buttons vertically */
 }
