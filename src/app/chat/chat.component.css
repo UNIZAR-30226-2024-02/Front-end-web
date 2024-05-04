@@ -1,137 +1,229 @@
+/* Basic Resets */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html, body {
-    height: 100%; /* Ensure the html and body take up full viewport height */
-    margin: 0;
-    padding: 0;
-    background-image: url('/assets/guerra.jpg');
-    background-size: cover;
-    background-attachment: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%; /* Ensure full viewport width */
+body, html {
+    width: 100%;
+    height: 100%;
+    background: #f4f7f6;
+    overflow: hidden; /* Ensures no overall page scrolling */
+    
 }
 
+/* Main Container */
 .chat-app-container {
-    width: 95%;
-    max-width: 1200px;
-    height: auto; /* Default to auto to adjust based on content */
-    min-height: 95%; /* Minimum height to fill the screen */
-    margin: 2.5vh auto; /* Center vertically with some margin from top and bottom */
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    height: 100%;
 }
 
-header, footer {
-    padding: 10px 20px;
-    background-color: #333;
+header {
+    background: #4CAF50; /* Changed to green */
     color: #fff;
+    padding: 10px 20px;
     text-align: center;
+    font-size: 1.5em;
 }
 
-input.input-field, button {
-    margin: 10px 5px;
+/* Chat Setup Styling */
+.chat-setup {
+    background: white;
+    padding: 20px;
+    border-bottom: 2px solid #e2e2e2;
+}
+
+.input-field {
+    width: calc(50% - 10px);
     padding: 8px;
-    width: calc(50% - 20px); /* Adjust if necessary for the button */
+    margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer;
 }
 
+/* Button Styling */
 button {
-    padding: 8px 16px;
-    background-color: #5cb85c;
-    color: #fff;
+    padding: 10px 20px;
     border: none;
+    background-color: #4CAF50; /* Changed to green */
+    color: white;
+    cursor: pointer;
     border-radius: 4px;
-    margin-left: 5px; /* Ensure buttons align with input fields */
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #4cae4c;
+    background-color: #388E3C; /* Changed to a darker green */
 }
 
-aside, .chat-window {
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #ccc;
-    overflow: hidden;
-}
-
-.chat-window {
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-    flex-grow: 1; /* Allows chat window to expand and fill available space */
-}
-
-.chat-participants, .chat-messages, .chat-input {
-    padding: 10px;
-}
-
-.my-message {
-    background-color: #dff0d8;
-    text-align: right;
-}
-
+/* Close Button Styling */
 .close-button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
+    background-color: #D32F2F; /* Red color */
+    color: white; /* Ensuring text is white for better visibility */
+    border: none; /* Removes default browser styling */
+    padding: 10px 20px;
+    border-radius: 4px; /* Rounded corners for a better look */
+    cursor: pointer; /* Cursor changes to pointer to indicate it's clickable */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
 .close-button:hover {
-    background-color: #c82333;
+    background-color: #B71C1C; /* Darker red on hover for feedback */
 }
 
 .return-button {
-    background-color: #6c757d;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    background-color: #9E9E9E; /* Gray color */
+    color: white; /* Ensuring text is white for better visibility */
+    border: none; /* Removes default browser styling */
+    padding: 10px 20px;
+    border-radius: 4px; /* Rounded corners for a better look */
+    cursor: pointer; /* Cursor changes to pointer to indicate it's clickable */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    margin-top: 10px;
 }
 
 .return-button:hover {
-    background-color: #5a6268;
+    background-color: #757575; /* Darker gray on hover for feedback */
 }
 
-/* Additional Styles for Chat List Layout */
+/* Users List */
+.user-list {
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px solid #e2e2e2;
+}
+
+/* Main content area */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Chat List Styling */
+.chat-list {
+    width: 250px;
+    background-color: #fff;
+    overflow-y: auto; /* Scroll only the chat list */
+    border-right: 1px solid #e2e2e2;
+}
+
+.chat-list h2 {
+    padding: 10px;
+    border-bottom: 1px solid #e2e2e2;
+    background: #f9f9f9;
+}
+
 .chat-list-item {
+    padding: 10px;
+    border-bottom: 1px solid #e2e2e2;
+    cursor: pointer;
+}
+
+.chat-list-item:hover {
+    background: #f0f0f0;
+}
+
+/* Chat Container & Chat Window Styling */
+.chat-container {
+    flex-grow: 1;
+    overflow-y: auto; /* Scroll only the chat container */
+}
+
+.chat-window {
+    background: white;
+    margin: 20px;
+    box-shadow: 0 0 5px #ccc;
+    border-radius: 5px;
+    overflow: hidden; /* Keep all content within bounds */
     display: flex;
     flex-direction: column;
-    align-items: center;
+    height: calc(100vh - 200px); /* Adjust height as needed */
+}
+
+.chat-participants, .chat-messages {
     padding: 10px;
 }
 
-.chat-details {
-    width: 100%;
+.chat-messages {
+    overflow-y: auto; /* Enables scrolling for messages */
+    flex-grow: 1; /* Allows this section to take up available space */
 }
 
-.chat-name {
-    font-size: 1.2em;
+/* Ensure the chat input stays at the bottom */
+.chat-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #e2e2e2;
+}
+
+.chat-participants ul, .chat-messages ul {
+    list-style: none;
+}
+
+.chat-setup button:nth-of-type(2) {
+    margin-left: 10px; /* Añade espacio a la izquierda del segundo botón */
+}
+
+/* Espacio entre los botones Open y Exit */
+.chat-details .chat-buttons button:nth-of-type(2) {
+    margin-left: 10px; /* Añade espacio a la izquierda del botón Exit */
+}
+
+
+/* Message Styling */
+.message-info {
+    font-size: 0.85em;
+    color: #666;
+}
+
+.message-text {
+    margin-top: 5px;
+    font-size: 1em;
+}
+
+.my-message {
+    background: #e3f2fd; /* You may want to change this if it was meant to be blue */
+}
+
+.input-message {
+    flex: 1;
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Footer Styling */
+footer {
+    display: flex;
+    justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
+    padding: 10px 20px;
+    background: #f0f0f0;
     text-align: center;
 }
 
-.chat-buttons {
-    display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    width: 100%;
-}
 
-button {
-    width: 80%; /* Adjust width to fit under the chat name */
-    margin: 5px auto; /* Center buttons vertically */
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        display: flex;
+        flex: 1; /* Takes up all available space */
+        overflow: hidden; /* Prevents scrolling outside */
+    }
+    
+    .chat-list {
+        width: 100%; /* Ensure full width in small screens */
+        overflow-y: auto; /* Allows scrolling within the chat list */
+        border-right: none; /* Remove separation on small screens */
+    }
+    
+    .chat-container {
+        flex-grow: 1; /* Takes up remaining space */
+        overflow-y: auto; /* Allows scrolling within the chat area */
+    }
 }

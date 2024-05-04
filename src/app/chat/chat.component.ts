@@ -136,22 +136,33 @@ export class ChatComponent implements OnInit {
     const index = this.selectedChats.findIndex(selectedChat => selectedChat.oid === chat.oid);
 
     if (index === -1) {
-      // The chat is not currently selected, so add it to the array
-      this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
-        chat.messages = messages;
-      });
-      this.chatService.obtenerParticipantes(chat.oid).subscribe(participants => {
-        chat.participants = participants;
-      });
-      this.selectedChats.push(chat);
-      this.socket.emit('joinChat', chat.oid); // cada vez que abro el chat me uno a él
-      console.log(this.selectedChats);
+        // Si el chat no está seleccionado actualmente, lo abrimos y cerramos cualquier otro chat abierto
+        this.selectedChats.forEach(selectedChat => {
+            this.socket.emit('exitChat', selectedChat.oid); // Salimos de cualquier chat abierto
+        });
+
+        // Limpiamos el array de chats seleccionados y agregamos el chat nuevo
+        this.selectedChats = [chat];
+
+        // Obtenemos los mensajes y participantes del nuevo chat seleccionado
+        this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
+            chat.messages = messages;
+        });
+        this.chatService.obtenerParticipantes(chat.oid).subscribe(participants => {
+            chat.participants = participants;
+        });
+
+        // Emitimos el evento para unirnos al nuevo chat
+        this.socket.emit('joinChat', chat.oid);
     } else {
-        // The chat is currently selected, so remove it from the array
-        this.socket.emit('exitChat', chat.oid); // cada vez que cierro el chat me salgo de él
+        // Si el chat está seleccionado actualmente, lo cerramos
+        this.socket.emit('exitChat', chat.oid); // Salimos del chat
+
+        // Removemos el chat del array de chats seleccionados
         this.selectedChats.splice(index, 1);
     }
-  }
+}
+
 
 
 }
