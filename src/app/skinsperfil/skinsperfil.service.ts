@@ -5,6 +5,7 @@ import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: "root",
@@ -12,7 +13,7 @@ import { HttpResponse } from '@angular/common/http';
 
 export class SkinsperfilService {
   constructor(private http: HttpClient, private usersService: UsersService, private route: Router) {}
-  private baseURL = 'http://localhost:4000/misSkins';
+  private baseURL = 'http://'+environment.backendUrl+':4000/misSkins';
   private getHeaders(): HttpHeaders | null {
     const token = this.usersService.getToken();
     if (!token) {

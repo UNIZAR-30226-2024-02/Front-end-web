@@ -3,12 +3,13 @@ import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, of } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TiendaService {
-  private baseURL = 'http://localhost:4000/tienda/';
+  private baseURL = 'http://'+environment.backendUrl+':4000/tienda/';
 
   constructor(
     private http: HttpClient,
@@ -44,7 +45,7 @@ export class TiendaService {
       return of([]);
     }
 
-    return this.http.get<any[]>("http://localhost:4000/misSkins/" + '/enPropiedad', { headers });
+    return this.http.get<any[]>("http://"+environment.backendUrl+":4000/misSkins/" + '/enPropiedad', { headers });
   }
 
   getMoney(): Observable<any> {

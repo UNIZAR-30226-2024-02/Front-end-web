@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { UsersService } from "../users/users.service";
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.put("http://localhost:4000/partida/getPartida", {user: this.usersService.getUsername(), idPartida: id}, { headers });
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/getPartida", {user: this.usersService.getUsername(), idPartida: id}, { headers });
   }
 
   ObtenerTerreno(jugador: string): Observable<any> {
@@ -44,7 +45,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.get("http://localhost:4000/misSkins/obtenerTerreno/" + jugador, { headers });
+    return this.http.get("http://"+environment.backendUrl+":4000/misSkins/obtenerTerreno/" + jugador, { headers });
   }
 
   // Cambia de fase en la partida
@@ -54,7 +55,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.put("http://localhost:4000/partida/siguienteFase", {idPartida}, { headers });
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/siguienteFase", {idPartida}, { headers });
   }
 
   ColocarTropas(idPartida: string, territorio: string, numTropas: number): Observable<any> {
@@ -63,7 +64,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.put("http://localhost:4000/partida/colocarTropas", {idPartida, territorio, numTropas}, { headers });
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/colocarTropas", {idPartida, territorio, numTropas}, { headers });
   }
 
   ResolverAtaque(idPartida: string, territorioAtacante: string, territorioDefensor: string, numTropas: number): Observable<any> {
@@ -72,7 +73,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.put("http://localhost:4000/partida/atacarTerritorio", {idPartida, territorioAtacante, territorioDefensor, numTropas}, { headers });
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/atacarTerritorio", {idPartida, territorioAtacante, territorioDefensor, numTropas}, { headers });
   }
 
   RealizarManiobra(idPartida: string, territorioOrigen: string, territorioDestino: string, numTropas: number): Observable<any> {
@@ -81,7 +82,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.put("http://localhost:4000/partida/realizarManiobra", {idPartida, territorioOrigen, territorioDestino, numTropas}, { headers });
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/realizarManiobra", {idPartida, territorioOrigen, territorioDestino, numTropas}, { headers });
   }
 
   AbandonarPartida(idPartida: string): Observable<any> {
@@ -90,7 +91,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.put("http://localhost:4000/partida/salirPartida", {idPartida}, { headers });
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/salirPartida", {idPartida}, { headers });
   }
 
   ObtenerSetFichas(idUsuario : string): Observable<any> {
@@ -99,7 +100,7 @@ export class PartidaService {
         return of(null);
     }
 
-    return this.http.get("http://localhost:4000/misSkins/obtenerSetFichas/" + idUsuario, { headers });
+    return this.http.get("http://"+environment.backendUrl+":4000/misSkins/obtenerSetFichas/" + idUsuario, { headers });
   }
 
 }

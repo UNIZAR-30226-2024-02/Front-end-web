@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, of } from "rxjs";
 import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
+import {environment} from '../../environment/environment';
 
 @Injectable({  providedIn: 'root'})
 
@@ -29,7 +30,7 @@ export class HistorialService {
     if (!headers) {
       return of([]);
     }
-    return this.http.get<any[]>("http://localhost:4000/partidas/historico", { headers })
+    return this.http.get<any[]>("http://" + environment.backendUrl + ":4000/partidas/historico", { headers })
   }
 
 }

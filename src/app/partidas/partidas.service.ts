@@ -5,12 +5,13 @@ import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PartidasService {
-  private apiUrl = 'http://localhost:4000/'; 
+  private apiUrl = 'http://'+environment.backendUrl+':4000/'; 
 
   constructor(private http: HttpClient, private usersService: UsersService, public router: Router) { }
 
