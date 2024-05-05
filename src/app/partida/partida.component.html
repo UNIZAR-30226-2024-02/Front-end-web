@@ -76,7 +76,7 @@
                 <div class="card-header">
                     <h2 class="card-title text-center">Chat de la partida</h2>
                 </div>
-                <div class="card-body" style="height: 300px; overflow-y: auto;">
+                <div class="card-body" style="height: 300px; overflow-y: auto;" #chatContainer>
                     <div class="message" *ngFor="let mensaje of partida.chat.mensajes">
                         <div class="chat-bubble" [ngClass]="{'my-message': mensaje.idUsuario == whoami}">
                             <p><strong>{{mensaje.idUsuario}}:</strong></p>

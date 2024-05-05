@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { LobbyService } from './lobby.service'; 
 import {Partida} from '../partidas/partidas.component';
 import { Router } from '@angular/router';
@@ -23,6 +23,7 @@ export class LobbyComponent implements OnInit {
   myUser = this.userService.getUsername();
   users: { [key: string]: any } = {};
   nombreJugador : string = '';
+  @ViewChild('chatContainer', { static: false }) private chatContainer!: ElementRef;
 
   constructor(private router: Router, private lobbyService: LobbyService, private toastr: ToastrService, 
       private chatService: ChatService, private userService: UsersService, private socket: Socket)
@@ -82,6 +83,10 @@ export class LobbyComponent implements OnInit {
         console.log('gameStarted', gameId);
         this.router.navigate(['/partida'], { state: { partida: this.partida } });
       });
+  }
+
+  ngAfterViewChecked() {
+    this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
   }
 
   confirmSalirPartida() {

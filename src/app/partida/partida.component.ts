@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import {Partida} from '../partidas/partidas.component';
@@ -40,6 +40,7 @@ export interface Jugador{
   styleUrl: './partida.component.css'
 })
 export class PartidaComponent {
+  @ViewChild('chatContainer', { static: false }) private chatContainer!: ElementRef;
   // Atributos generales
   nombrePartida: string = '';
   ganador?: string | null = null;
@@ -325,6 +326,10 @@ eliminado : boolean | null = null;
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
+  }
+
+  ngAfterViewChecked() {
+    this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
   }
 
   onSVGLoad(event: any) {
