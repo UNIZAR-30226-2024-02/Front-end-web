@@ -1199,5 +1199,15 @@ eliminado : boolean | null = null;
     });
   }
 
+  cancelarManiobra(){
+    this.ataqueOrigen = '';
+    this.ataqueDestino = '';
+    this.ataqueTropas = 0;
+    this.recolocacion = false;
+    this.inicializacionPartida(this.partida);
+    this.limpiarTropas();
+    this.distribuirPiezas();
+  }
+
   
 }
