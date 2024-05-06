@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { ChatService } from './chat.service';
 import { ToastrService } from 'ngx-toastr';
 import e from 'express';
@@ -33,6 +33,7 @@ export class ChatComponent implements OnInit {
   nuevoUsuario: string = '';
   selectedChats: Chat[] = [];
   myName: string = '';
+  @ViewChild('chatContainer', { static: false }) private chatContainer!: ElementRef;
 
   constructor(private chatService: ChatService, private toastr: ToastrService,
               private socket: Socket, private usersService: UsersService) { }
@@ -50,6 +51,10 @@ export class ChatComponent implements OnInit {
           chat.messages.push({ texto: mensaje, idUsuario: user, timestamp: timestamp, _id: '' });
         }
       }); 
+  }
+
+  ngAfterViewChecked() {
+    this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
   }
 
   getChats(): void {

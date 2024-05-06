@@ -7,10 +7,8 @@
     <link rel="stylesheet" href="chat.component.css">
 </head>
 <body>
+    <div class= "background-image">
     <div class="chat-app-container">
-        <header>
-            <h1>Chats</h1>
-        </header>
 
         <div class="chat-setup">
             <input [(ngModel)]="nombreChat" placeholder="Chat Name" class="input-field">
@@ -52,21 +50,27 @@
                             </li>
                         </ul>
                     </div>
-                    <div *ngIf="chat.messages as messages" class="chat-messages">
+                    <div *ngIf="chat.messages as messages" class="chat-messages" #chatContainer>
                         <h2>Messages</h2>
-                        <ul>
+                        <ul class="list-unstyled">
                             <li *ngFor="let message of messages" [ngClass]="{'my-message': message.idUsuario === myName}">
-                                <div class="message-info">
-                                    <span class="message-user">{{ message.idUsuario }}</span>
-                                    <span class="message-timestamp">{{ message.timestamp | date:'short' }}</span>
+                                <div class="chat-bubble">
+                                    <div class="message-info">
+                                        <span class="message-user">{{ message.idUsuario }}</span>
+                                        <span class="message-timestamp">{{ message.timestamp | date:'short' }}</span>
+                                    </div>
+                                    <p class="message-text">{{ message.texto }}</p>
                                 </div>
-                                <p class="message-text">{{ message.texto }}</p>
                             </li>
                         </ul>
                     </div>
                     <div class="chat-input">
-                        <input #messageInput placeholder="Type a message">
-                        <button (click)="sendMessage(chat, messageInput.value); messageInput.value=''">Send</button>
+                        <form (submit)="sendMessage(chat, messageInput.value); messageInput.value=''; $event.preventDefault()" class="input-group">
+                            <input #messageInput placeholder="Escribir" class="form-control">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </main>
@@ -75,6 +79,7 @@
         <footer>
             <button routerLink="/menu" class="return-button">Volver</button>
         </footer>
+    </div>
     </div>
 </body>
 </html>

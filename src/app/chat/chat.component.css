@@ -7,11 +7,12 @@
 }
 
 body, html {
-    width: 100%;
-    height: 100%;
-    background: #f4f7f6;
     overflow: hidden; /* Ensures no overall page scrolling */
-    
+    background-image: url('/assets/img-wlLMJNw7DFsTAnVmTr6bh.jpeg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100%;
 }
 
 /* Main Container */
@@ -31,7 +32,7 @@ header {
 
 /* Chat Setup Styling */
 .chat-setup {
-    background: white;
+    background: rgba(255, 255, 255, 0.75); /* white with 50% opacity */
     padding: 20px;
     border-bottom: 2px solid #e2e2e2;
 }
@@ -94,6 +95,7 @@ button:hover {
     margin-top: 10px;
     padding-top: 5px;
     border-top: 1px solid #e2e2e2;
+    background: rgba(255, 255, 255, 0.5); /* white with 50% opacity */
 }
 
 /* Main content area */
@@ -101,14 +103,16 @@ button:hover {
     display: flex;
     flex: 1;
     overflow: hidden;
+    height: calc(100vh - 250px); /* Adjust height as needed */
 }
 
 /* Chat List Styling */
 .chat-list {
     width: 250px;
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.75); /* white with 50% opacity */
     overflow-y: auto; /* Scroll only the chat list */
     border-right: 1px solid #e2e2e2;
+    height: calc(100vh - 250px); /* Adjust height as needed */
 }
 
 .chat-list h2 {
@@ -134,14 +138,14 @@ button:hover {
 }
 
 .chat-window {
-    background: white;
+    background: rgba(255, 255, 255, 0.8); /* white with 50% opacity */
     margin: 20px;
     box-shadow: 0 0 5px #ccc;
     border-radius: 5px;
     overflow: hidden; /* Keep all content within bounds */
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 200px); /* Adjust height as needed */
+    height: calc(100vh - 250px); /* Adjust height as needed */
 }
 
 .chat-participants, .chat-messages {
@@ -185,8 +189,43 @@ button:hover {
     font-size: 1em;
 }
 
-.my-message {
-    background: #e3f2fd; /* You may want to change this if it was meant to be blue */
+.chat-bubble {
+    position: relative;
+    background: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.chat-bubble:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-right-color: #f0f0f0;
+    border-left: 0;
+    border-right: 10px solid #f0f0f0;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+.my-message .chat-bubble {
+    background: #a8e6cf;
+    color: black;
+    align-self: flex-end;
+}
+
+.my-message .chat-bubble:after {
+    left: auto;
+    right: 0;
+    border-left-color: #a8e6cf;;
+    border-right: 0;
+    border-left: 10px solid #a8e6cf;;
+    margin-left: 0;
+    margin-right: -10px;
 }
 
 .input-message {
