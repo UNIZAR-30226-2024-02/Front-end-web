@@ -31,6 +31,8 @@ import { PartidasComponent } from './partidas/partidas.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { HistorialComponent } from './historial/historial.component';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,7 +65,8 @@ import { HistorialComponent } from './historial/historial.component';
   ],
   providers: [
     provideClientHydration(),
-    CookieService
+    CookieService,
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })
