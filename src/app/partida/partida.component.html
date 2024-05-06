@@ -17,15 +17,32 @@
             position: relative; /* Establece la posición relativa para contener los elementos internos */
         }
         .svg-container {
-            width: 80vw;
-            height: 80vh;
+            width: 90vw;
+            height: 90vh;
+            margin-right: 5vw;
+            margin-left: -20vw;
         }
         .other-content {
             position: absolute; /* Establece la posición absoluta para evitar superposiciones */
             top: 45%; /* Alinea desde la mitad superior */
             transform: translateY(-50%); /* Centra verticalmente */
-            left: calc(72vw + 30px); /* Coloca a la derecha del SVG con un pequeño espacio */
-            width: calc(20vw - 30px); /* Define el ancho */
+            left: calc(72vw + 15px); /* Coloca a la derecha del SVG con un pequeño espacio */
+            width: calc(20vw - 50px); /* Define el ancho */
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .svg-container {
+                width: 100vw;
+                height: 50vh;
+            }
+            .other-content {
+                position: relative;
+                top: 0;
+                transform: none;
+                left: 0;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -66,7 +83,7 @@
                 <button (click)="cambiarTurno()" class="btn btn-primary">Cambiar Turno</button>
             </div>
             <div class="mb-3">{{ text }}</div>
-            <div *ngIf="fase == 1 || fase == 2" class="mb-3" style="font-size: 1.5em; border: 1px solid black; padding: 10px;">
+            <div *ngIf="(fase == 1 || fase == 2) && turnoJugador == whoami" class="mb-3" style="font-size: 1.5em; border: 1px solid black; padding: 10px;">
                 Tropas seleccionadas: {{ ataqueTropas }}
                 <button (click)="cancelarManiobra()" class="btn btn-warning ml-2">Cancelar Maniobra</button>
             </div>
@@ -86,8 +103,10 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
-                    <button class="btn btn-primary mt-2" (click)="sendMessage(enviarMensaje.value); enviarMensaje.value=''">Enviar</button>
+                    <form (submit)="sendMessage(enviarMensaje.value); enviarMensaje.value=''; $event.preventDefault()">
+                        <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
+                        <button class="btn btn-primary mt-2" type="submit">Enviar</button>
+                    </form>
                 </div>
                 <button class="btn btn-danger" (click)="abandonarPartida()">Abandonar Partida</button>
             </div>

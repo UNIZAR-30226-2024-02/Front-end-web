@@ -172,10 +172,11 @@ eliminado : boolean | null = null;
       this.jugadores = response.partida.jugadores; // cojo sus jugadores, ya vienen con su color
       
       // busco mi color y de paso relleno las skins
-      for(let jugador of this.jugadores){
+      for(let jugador of response.partida.jugadores){
         if(jugador.usuario === this.whoami){
           this.myColor = jugador.color;
           if(jugador.abandonado){
+            console.log(response.partida._id)
             this.toastr.error('Has sido eliminado');
             this.eliminado = true;
             console.log(this.eliminado)

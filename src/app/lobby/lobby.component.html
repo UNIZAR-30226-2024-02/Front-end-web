@@ -54,8 +54,10 @@
           </div>
         </div>
         <div class="card-footer">
-          <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
-          <button class="btn btn-primary mt-2" (click)="sendMessage(enviarMensaje.value); enviarMensaje.value=''">Enviar</button>
+          <form (submit)="sendMessage(enviarMensaje.value); enviarMensaje.value=''; $event.preventDefault()">
+            <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
+            <button class="btn btn-primary mt-2" type="submit">Enviar</button>
+          </form>
         </div>
       </div>
     </div>
