@@ -32,7 +32,9 @@ export class AmigosComponent {
     this.amigosService.addAmigos(user).subscribe(
       (response) => {
         console.log("Amigo añadido con éxito");
-        this.toastr.success("Amigo añadido con éxito.");
+        this.toastr.success("Solicitud enviada.");
+        this.getAmigos();
+        this.getSol();
       },
       (error) => {
         console.error('Error al añadir amigo:', error);
@@ -45,6 +47,8 @@ export class AmigosComponent {
       (response) => {
         console.log("Amigo eliminado con éxito");
         this.toastr.success("Amigo eliminado con éxito.");
+        this.getAmigos();
+        this.getSol();
       },
       (error) => {
         console.error('Error al eliminar amigo:', error);
@@ -63,6 +67,8 @@ export class AmigosComponent {
       (response) => {
         console.log("Solicitud aceptada con éxito.");
         this.toastr.success("Solicitud aceptada con éxito.");
+        this.getAmigos();
+        this.getSol();
       },
       (error) => {
         console.error('Error al aceptar la solicitud:', error);
