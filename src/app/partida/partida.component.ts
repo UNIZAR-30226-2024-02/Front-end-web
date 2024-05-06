@@ -123,6 +123,8 @@ eliminado : boolean | null = null;
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
               private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService
   ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as {partida: any};
     this.texture = undefined;
     this.whoami = this.userService.getUsername();
     // TODO OBTENER SKIN DEL TERRENO
@@ -151,15 +153,17 @@ eliminado : boolean | null = null;
     });
     this.tropas = new Map<string, { numTropas: number, user: string }>();
     this.colorMap = new Map<string, string>();
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as {partida: any};
+    console.log('Estado ', state)
     // TODO DE MOMENTO ASÍ PERO LUEGO TENDRÉ QUE COGER LA INFO DEL BACKEND
     if (!state || !state.partida) {
       console.error('Error: No partida found');
      // this.router.navigate(['/menu']);
     } else {
-      this.inicializacionPartida(state.partida);
       this.partida = state.partida;
+      console.log('Partida1', this.partida)
+      console.log('Partida1', this.partida._id)
+      this.inicializacionPartida(state.partida);
+      
     }
   }
 
@@ -176,7 +180,11 @@ eliminado : boolean | null = null;
         if(jugador.usuario === this.whoami){
           this.myColor = jugador.color;
           if(jugador.abandonado){
-            console.log(response.partida._id)
+            console.log("Jugadores partida", this.jugadores)
+            console.log("Jugadores respuesta", response.partida.jugadores)
+            console.log("IDPartida", partida._id)
+            console.log("IDPartida2", response.partida._id)
+            console.log("IDPartida3", this.partida._id)
             this.toastr.error('Has sido eliminado');
             this.eliminado = true;
             console.log(this.eliminado)
@@ -288,9 +296,18 @@ eliminado : boolean | null = null;
       console.log('userDisconnected', user);
       this.toastr.info(user + ' ha abandonado la partida', 'Jugador desconectado');
     });
+    this.socket.on('gameOver',(posibleGanador : string) => {
+        if(posibleGanador === this.whoami){
+          this.toastr.success('¡Has ganado la partida!');
+          this.eloGanado+=200; this.puntosGanados+=200;
+        }
+        this.ganador = posibleGanador;
+        this.mostrarGanador();
+    });
 
      // when the state changes (i.e a player places new troops or maniobrates)
     this.socket.on('cambioEstado', async () => {
+      console.log('Partida1', this.partida)
       this.inicializacionPartida(this.partida); // actualizo el estado de la partida
       await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
 
@@ -414,7 +431,7 @@ eliminado : boolean | null = null;
                 this.cdr.detectChanges();
                 this.ocupado = false;
                 // notify to back with a socket, the back will notify every client in the game
-                
+                console.log("EstadoCambiado:", this.partida._id)
                 this.socket.emit('actualizarEstado', this.partida._id);
               },
               error => {
@@ -490,8 +507,6 @@ eliminado : boolean | null = null;
               this.ataqueDestino = ''
               this.ataqueOrigen = ''
               this.ataqueTropas = 0
-              // update the state of every client
-              this.socket.emit('actualizarEstado', this.partida._id)
               // and notify the defense player 
               
               this.socket.emit('ataco', {userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
@@ -511,6 +526,8 @@ eliminado : boolean | null = null;
                                       dineroAtacante: response.dineroAtacante};
               this.eloGanado = response.eloAtacante;
               this.puntosGanados = response.dineroAtacante;
+               // update the state of every client
+              this.socket.emit('actualizarEstado', this.partida._id)
             },
             error => {
               this.toastr.error('¡ERROR FATAL!')
@@ -1156,9 +1173,16 @@ eliminado : boolean | null = null;
 
   abandonarPartida() {
     if (window.confirm('¿Estás seguro que deseas abandonar la partida? Se considerará una rendición.')) {
+      this.socket.off('chatMessage');
+      this.socket.off('userDisconnected');
+      this.socket.off('gameOver');
+      this.socket.off('cambioEstado');
+      this.socket.off('ataqueRecibido');
       this.partidaService.AbandonarPartida(this.partida._id).subscribe(() => {
         this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
-        this.router.navigate(['/menu']);
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/menu']);
+        });
       });
     }
   }
@@ -1168,6 +1192,11 @@ eliminado : boolean | null = null;
   }
 
   closeWinnerModal() {
+    this.socket.off('chatMessage');
+    this.socket.off('userDisconnected');
+    this.socket.off('gameOver');
+    this.socket.off('cambioEstado');
+    this.socket.off('ataqueRecibido');
     this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
     this.router.navigate(['/menu']);
   }
