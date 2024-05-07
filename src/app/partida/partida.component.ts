@@ -509,6 +509,9 @@ eliminado : boolean | null = null;
               this.ataqueTropas = 0
               // and notify the defense player 
               
+              // update the state of every client
+              this.socket.emit('actualizarEstado', this.partida._id)
+              
               this.socket.emit('ataco', {userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
                                dadosAtacante: response.dadosAtacante, dadosDefensor: response.dadosDefensor, 
                                tropasPerdidasAtacante: response.resultadoBatalla.tropasPerdidasAtacante,
@@ -526,8 +529,6 @@ eliminado : boolean | null = null;
                                       dineroAtacante: response.dineroAtacante};
               this.eloGanado = response.eloAtacante;
               this.puntosGanados = response.dineroAtacante;
-               // update the state of every client
-              this.socket.emit('actualizarEstado', this.partida._id)
             },
             error => {
               this.toastr.error('¡ERROR FATAL!')
