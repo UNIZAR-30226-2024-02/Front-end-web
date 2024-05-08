@@ -78,6 +78,7 @@
 
 #winner-modal {
     background-color: white;
+    overflow: auto;
     padding: 15px;
     border-radius: 10px;
     text-align: center;
@@ -107,6 +108,7 @@
 
 #attack-modal {
     background-color: white;
+    overflow: auto;
     padding: 15px;
     border-radius: 10px;
     text-align: center;
@@ -130,6 +132,7 @@
 }
 
 #atacking-modal {
+    overflow: auto;
     background-color: white;
     padding: 15px;
     border-radius: 10px;
@@ -156,10 +159,22 @@
 
 #hasPerdido-modal {
     background-color: white;
+    overflow: auto;
     padding: 15px;
     border-radius: 10px;
     text-align: center;
     width: 25%; /* Adjust this value to change the width */
     height: 50%; /* Adjust this value to change the height */
     box-sizing: border-box; /* This makes sure padding is included in the width/height */
+}
+
+/*******/
+.troop-icon {
+    width: 50px;
+    height: auto;
+}
+
+/******/
+.flex-container {
+    display: flex;
 }

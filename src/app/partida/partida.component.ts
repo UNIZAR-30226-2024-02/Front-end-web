@@ -88,6 +88,8 @@ export class PartidaComponent {
   puntosGanados = 0;
   intervalId: any;
   //
+  paused = false;
+  //
 ataqueRecibido: {
   userOrigen: string;
   userDestino: string;
@@ -218,6 +220,7 @@ eliminado : boolean | null = null;
       if(this.jugadores[this.turno % this.numJugadores].usuario === this.whoami){
         this.numTropas = response.partida.auxColocar;
       }
+      this.paused = response.partida.paused;
       
 
       //this.turnoJugador = partida.jugadores[partida.turno % this.numJugadores].usuario;
@@ -589,7 +592,7 @@ eliminado : boolean | null = null;
           )
         }
         break
-      case 3: // robo 
+      case 3: // uso de cartas
         //this.final(e, svgDoc, imgWidth, imgHeight);
         break
       case 4: // fin
@@ -1243,6 +1246,20 @@ eliminado : boolean | null = null;
     this.inicializacionPartida(this.partida);
     this.limpiarTropas();
     this.distribuirPiezas();
+  }
+
+  pausarPartida(){
+    this.partidaService.PausarPartida(this.partida._id).subscribe(() => {
+      if(!this.paused){
+        this.toastr.success('Partida pausada');
+        this.paused = true;
+        this.cdr.detectChanges();
+      } else {
+        this.toastr.success('Partida reanudada');
+        this.paused = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   

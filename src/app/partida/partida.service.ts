@@ -103,4 +103,14 @@ export class PartidaService {
     return this.http.get("http://"+environment.backendUrl+":4000/misSkins/obtenerSetFichas/" + idUsuario, { headers });
   }
 
+  PausarPartida(idPartida: string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of(null);
+    }
+
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/pausarPartida", {idPartida}, { headers });
+  }
+  
+
 }

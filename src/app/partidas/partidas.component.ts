@@ -24,6 +24,7 @@ export interface Partida {
   __v: number;
   auxColocar? : number;
   auxRobar?: boolean;
+  paused?: boolean;
 }
 
 export interface Jugador {
