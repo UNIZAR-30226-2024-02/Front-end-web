@@ -208,8 +208,13 @@ eliminado : boolean | null = null;
         });
         console.log(this.skinTropasMap)
       }
+      let auxTurno = false
+      if(this.turno !== response.partida.turno)
+        auxTurno = true
       this.turno = response.partida.turno;
       this.cambiarTurno();
+      this.turnoJugador = response.partida.jugadores[response.partida.turno % this.numJugadores].usuario;
+      console.log('Turno jugador:', this.turnoJugador)
       this.nombrePartida = response.partida.nombre;
       this.numJugadores = response.partida.jugadores.length;
       this.mapa = response.partida.mapa;
@@ -219,6 +224,7 @@ eliminado : boolean | null = null;
       this.fase = response.partida.fase;
       if(this.jugadores[this.turno % this.numJugadores].usuario === this.whoami){
         this.numTropas = response.partida.auxColocar;
+        if(auxTurno) this.toastr.info('¡Es tu turno!');
       }
       this.paused = response.partida.paused;
       
@@ -230,6 +236,8 @@ eliminado : boolean | null = null;
       if(this.ganador === null){
         this.mostrarGanador();
       }
+      if(this.fase !== undefined) this.updateText(this.fase);
+
     });
 
   }
@@ -319,6 +327,11 @@ eliminado : boolean | null = null;
       //Pinto el mapa
       this.distribuirPiezas();
     });
+    this.socket.on('partidaPausada', async () => {
+      let aux = this.paused;
+      this.paused = !aux;
+      this.toastr.info('La partida ha sido pausada');
+    })
 
     //when a user attacks me, I get warned and notifyied with the result of the attack
     this.socket.on('ataqueRecibido', async (userOrigen: string, userDestino: string, dadosAtacante: number[], dadosDefensor: number[], 
@@ -413,6 +426,10 @@ eliminado : boolean | null = null;
       this.clickWrongTerrain(e, 'No es tu turno')
       console.log('No es tu turno')
       return
+    }
+    if(this.paused){
+      this.toastr.error('La partida está pausada');
+      return;
     } 
     if(this.ocupado){ console.log("espere"); return};
     switch(this.fase){
@@ -760,6 +777,10 @@ eliminado : boolean | null = null;
   }
 
   updateFase(){
+    if(this.paused){
+      this.toastr.error('La partida está pausada');
+      return;
+    }
    if(this.turnoJugador === this.whoami){
       this.partidaService.SiguienteFase(this.partida._id).subscribe(
         response => {
@@ -780,7 +801,8 @@ eliminado : boolean | null = null;
         },
         error => {
           // This will be executed when the HTTP request fails
-          this.toastr.error(error.error.message, 'Atención');
+          console.log(error)
+          this.toastr.error(error.error.error, 'Atención');
         }
       );
     } else{
@@ -798,8 +820,6 @@ eliminado : boolean | null = null;
             this.numTropas = this.partida.auxColocar || 0 ;
             console.log(this.numTropas)
           }
-          else 
-            this.text = 'Espera tu turno'
           break;
         case 1:
           this.text = 'Fase ataque: Mueve las tropas de un país tuyo a uno enemigo contiguo'
@@ -1259,6 +1279,7 @@ eliminado : boolean | null = null;
         this.paused = false;
         this.cdr.detectChanges();
       }
+      this.socket.emit('pausoPartida', this.partida._id);
     });
   }
 

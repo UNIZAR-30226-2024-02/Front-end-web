@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, HostListener } from '@angular/core';
 import { LobbyService } from './lobby.service'; 
 import {Partida} from '../partidas/partidas.component';
 import { Router } from '@angular/router';
@@ -24,7 +24,18 @@ export class LobbyComponent implements OnInit {
   users: { [key: string]: any } = {};
   nombreJugador : string = '';
   @ViewChild('chatContainer', { static: false }) private chatContainer!: ElementRef;
-
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event: Event) {
+    this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
+      this.router.navigate(['/menu']);
+    });
+    this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
+    this.socket.off('chatMessage');
+    this.socket.off('userJoined');
+    this.socket.off('userDisconnected');
+    this.socket.off('gameStarted');
+    //this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
+  }
   constructor(private router: Router, private lobbyService: LobbyService, private toastr: ToastrService, 
       private chatService: ChatService, private userService: UsersService, private socket: Socket)
     {
@@ -98,6 +109,10 @@ export class LobbyComponent implements OnInit {
   salirPartida() {
     this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
       this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
+      this.socket.off('chatMessage');
+      this.socket.off('userJoined');
+      this.socket.off('userDisconnected');
+      this.socket.off('gameStarted');
       this.router.navigate(['/menu']);
     });
   }
@@ -134,6 +149,17 @@ export class LobbyComponent implements OnInit {
         this.toastr.error('Error al enviar la invitación', error);
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
+      this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
+      this.socket.off('chatMessage');
+      this.socket.off('userJoined');
+      this.socket.off('userDisconnected');
+      this.socket.off('gameStarted');
+      this.router.navigate(['/menu']);
+    });
   }
 
   
