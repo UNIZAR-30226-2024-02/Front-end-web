@@ -7,6 +7,7 @@ import { Socket } from 'ngx-socket-io';
 import { ChangeDetectorRef } from '@angular/core';
 import { ChatService } from '../chat/chat.service';
 import { PartidaService } from '../partida/partida.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 export interface Territorio{
   nombre: string;
@@ -78,7 +79,7 @@ export class PartidaComponent {
   avatarAMostrar = '';
   firefox = false;
   myColor = '';
-  texture : string | undefined = undefined;
+  texture : string | undefined = 'assets/Risk_game_board.svg';
   ocupado = false;
   skinTropasMap: Map<string, string> = new Map<string, string>();
   //
@@ -90,6 +91,7 @@ export class PartidaComponent {
   //
   paused = false;
   //
+  svgURL: SafeResourceUrl = '';
 ataqueRecibido: {
   userOrigen: string;
   userDestino: string;
@@ -123,7 +125,8 @@ ataquePerpetrado: {
 eliminado : boolean | null = null;
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
-              private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService
+              private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService, 
+              private sanitizer: DomSanitizer
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as {partida: any};
@@ -150,6 +153,8 @@ eliminado : boolean | null = null;
           this.texture = 'assets/Risk_game_board.svg';
           break;
       }
+      //
+      this.texture = 'assets/Risk_game_board.svg';
       this.cdr.detectChanges();
 
     });
@@ -182,17 +187,14 @@ eliminado : boolean | null = null;
         if(jugador.usuario === this.whoami){
           this.myColor = jugador.color;
           if(jugador.abandonado){
-            console.log("Jugadores partida", this.jugadores)
-            console.log("Jugadores respuesta", response.partida.jugadores)
-            console.log("IDPartida", partida._id)
-            console.log("IDPartida2", response.partida._id)
-            console.log("IDPartida3", this.partida._id)
             this.toastr.error('Has sido eliminado');
             this.eliminado = true;
             console.log(this.eliminado)
             console.log("Has perdido")
             //this.router.navigate(['/menu']);
           }
+          this.eloGanado = jugador.eloGanado;
+          this.puntosGanados = jugador.dineroGanado;
         }
         this.partidaService.ObtenerSetFichas(jugador.usuario).subscribe(response => {
           console.log('response', response);

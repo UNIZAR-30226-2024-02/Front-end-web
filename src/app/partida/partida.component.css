@@ -4,6 +4,8 @@
     100% { background-color: red; }
 }
 
+
+
 .war {
     animation: war 1s infinite;
     position: absolute;

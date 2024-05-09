@@ -151,16 +151,6 @@ export class LobbyComponent implements OnInit {
     );
   }
 
-  ngOnDestroy() {
-    this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
-      this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
-      this.socket.off('chatMessage');
-      this.socket.off('userJoined');
-      this.socket.off('userDisconnected');
-      this.socket.off('gameStarted');
-      this.router.navigate(['/menu']);
-    });
-  }
 
   
 
