@@ -447,8 +447,6 @@ usoCartas: {
           this.colocarTropas(e, svgDoc, imgWidth, imgHeight, this.whoami, false, false)
           await this.waitForTropasPuestas()
           if(!this.eventoCancelado){
-            console.log('Popup Cartas')
-            this.usoCartas = {numCartas: 0, cartasUsadas: []}
             console.log(this.numTropas)
             this.ocupado = true
             this.partidaService.ColocarTropas(this.partida._id, targetId, this.tropasPuestas).subscribe(
@@ -492,7 +490,7 @@ usoCartas: {
         // antes de atacar, selecciono las tropas q quiero utilizar para atacar
         if (this.ataqueTropas === 0) {
           console.log('Elegir y mostrar cartas')
-          this.usoCartas = {numCartas: 0, cartasUsadas: []}
+         //this.usoCartas = {numCartas: 0, cartasUsadas: []}
           
           console.log('Seleccionar tropas para atacar')
           this.ataqueTropas = 0
@@ -831,6 +829,7 @@ usoCartas: {
             console.log(this.partida.auxColocar)
             this.numTropas = this.partida.auxColocar || 0 ;
             console.log(this.numTropas)
+            // this.openCartasModal() // DESCOMENTAR ESTA LÍNEA SI SE DESEA QUE LAS CARTAS SE MUESTREN AL INICIAR EL TURNO 0
           }
           break;
         case 1:
@@ -1296,6 +1295,8 @@ usoCartas: {
   }
 
   usarCarta(cartaUsada: Carta){
+    // Esto no está funcionando, creo que hay q comprobar que usocartas !== null
+    // y ahí ir llamando al back end
     if (this.usoCartas?.numCartas) {
       if (this.usoCartas?.numCartas < 3) {
         this.usoCartas?.cartasUsadas.push(cartaUsada);
@@ -1307,10 +1308,16 @@ usoCartas: {
       }
     }
     else {
+      console.log(this.usoCartas)
       this.toastr.error('No se puede usar cartas en este momento')
     }
   }
   
+  openCartasModal(){
+    console.log('Popup Cartas')
+    this.usoCartas = {numCartas: 0, cartasUsadas: []}
+  }
+
   closeCartasModal(){
     if (this.usoCartas) {
       // this.partidaService.UsarCartas(this.partida._id, this.usoCartas.cartasUsadas[0], this.usoCartas.cartasUsadas[1], this.usoCartas.cartasUsadas[2])

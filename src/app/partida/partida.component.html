@@ -88,8 +88,9 @@
                 </div>
                 <div class="user-name">{{turnoJugador}}</div>
             </div>
-            <div class="mb-3">
-                <button (click)="updateFase()" class="btn btn-primary mr-2">Siguiente fase</button>
+            <div class="d-flex mb-3">
+                <button (click)="updateFase()" class="btn btn-primary mr-1">Siguiente fase</button>
+                <button (click)="openCartasModal()" *ngIf="fase==0 && turnoJugador==whoami" class="btn btn-primary mr-1">Mis cartas</button>
             </div>
             <div class="mb-3">{{ text }}</div>
             <div *ngIf="(fase == 1 || fase == 2) && turnoJugador == whoami" class="mb-3" style="font-size: 1.5em; border: 1px solid black; padding: 10px;">
