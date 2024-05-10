@@ -4,6 +4,7 @@ import { Observable, of } from "rxjs";
 import { Ranking } from './ranking'
 import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
+import {environment} from '../../environment/environment';
 
 @Injectable({  providedIn: 'root'})
 
@@ -30,7 +31,7 @@ export class RankingService {
     if (!headers) {
       return of([]);
     }
-    return this.http.get<Ranking[]>("http://localhost:4000/ranking", { headers })
+    return this.http.get<Ranking[]>("http://"+environment.backendUrl+":4000/ranking", { headers })
   }
 
 }

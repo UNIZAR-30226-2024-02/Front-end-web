@@ -4,19 +4,21 @@ import { ToastrService } from 'ngx-toastr';
 import e from 'express';
 import { Socket } from 'ngx-socket-io';
 import { UsersService } from '../users/users.service';
+import { interval } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 
 export interface Chat {
-  nombre: string;
-  oid: string;
-  participants?: string[];
-  messages?: Message[];
+  nombreChat : string;
+  usuarios: string[];
+  _id : string;
+  mensajes : Mensaje[];
 }
 
-export interface Message {
+export interface Mensaje{
   texto: string;
   idUsuario: string;
   timestamp: string;
-  _id: string;
 }
 
 @Component({
@@ -38,28 +40,44 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService, private toastr: ToastrService,
               private socket: Socket, private usersService: UsersService) { }
 
-  ngOnInit(): void {
-    this.myName = this.usersService.getUsername();
-    this.getChats();
-      this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
-       // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
-       const chat = this.selectedChats.find(chat => chat.oid === chatId);
-       if (chat) {
-          if (!chat.messages) {
-            chat.messages = [];
-          }
-          chat.messages.push({ texto: mensaje, idUsuario: user, timestamp: timestamp, _id: '' });
+fetchNewMessages(chat: Chat) {
+    this.chatService.obtenerMensajes(chat._id).subscribe(messages => {
+        // Asegúrate de actualizar solo si hay nuevos mensajes
+        if (!chat.mensajes || messages.length !== chat.mensajes.length) {
+            chat.mensajes = messages;
         }
-      }); 
+    });
+}
+
+
+ngOnInit(): void {
+      this.myName = this.usersService.getUsername();
+      this.getChats();
+      this.setupMessagePolling();
   }
+  
+setupMessagePolling() {
+      interval(1000).pipe(
+          switchMap(() => this.selectedChats.map(chat => this.fetchNewMessages(chat)))
+      ).subscribe();
+  }
+          
 
   ngAfterViewChecked() {
     this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
   }
 
   getChats(): void {
-    this.chatService.listarChats().subscribe(chats => {
-      this.chats = chats;
+      this.chatService.listarChats().subscribe(chats => {
+      console.log(chats);
+      this.chats = chats.map(chat => {
+        return {
+          _id: chat.oid,
+          nombreChat: chat.nombre,
+          mensajes: [],
+          usuarios: []
+        };
+      });
     });
   }
 
@@ -73,13 +91,13 @@ export class ChatComponent implements OnInit {
     if (!message.trim()) {
       return;
     }
-    this.chatService.enviarMensaje(chat.oid, message).subscribe(response => {
+    this.chatService.enviarMensaje(chat._id, message).subscribe(response => {
       // handle response
       this.newMessage = '';
-      this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
-        chat.messages = messages;
+      this.chatService.obtenerMensajes(chat._id).subscribe(messages => {
+        chat.mensajes = messages;
       });
-      this.socket.emit('sendChatMessage', { chatId: chat.oid, message: message, user: this.myName, timestamp: new Date().toISOString()});
+      this.socket.emit('sendChatMessage', { chatId: chat._id, message: message, user: this.myName, timestamp: new Date().toISOString()});
     });
   }
 
@@ -89,8 +107,10 @@ export class ChatComponent implements OnInit {
         this.chatService.crearChat(nombreChat, usuarios).subscribe(
           response => {
               const newChat: Chat = {
-                  nombre: response.chat.nombreChat,
-                  oid: response.chat._id
+                  nombreChat: response.chat.nombreChat,
+                  _id: response.chat._id,
+                  usuarios: response.chat.usuarios, 
+                  mensajes: []
               };
               this.chats.push(newChat);
               this.usuarios = [];
@@ -138,30 +158,30 @@ export class ChatComponent implements OnInit {
   }
 
   toggleChatSelection(chat: Chat): void {
-    const index = this.selectedChats.findIndex(selectedChat => selectedChat.oid === chat.oid);
+    const index = this.selectedChats.findIndex(selectedChat => selectedChat._id === chat._id);
 
     if (index === -1) {
         // Si el chat no está seleccionado actualmente, lo abrimos y cerramos cualquier otro chat abierto
         this.selectedChats.forEach(selectedChat => {
-            this.socket.emit('exitChat', selectedChat.oid); // Salimos de cualquier chat abierto
+            this.socket.emit('exitChat', selectedChat._id); // Salimos de cualquier chat abierto
         });
 
         // Limpiamos el array de chats seleccionados y agregamos el chat nuevo
         this.selectedChats = [chat];
 
         // Obtenemos los mensajes y participantes del nuevo chat seleccionado
-        this.chatService.obtenerMensajes(chat.oid).subscribe(messages => {
-            chat.messages = messages;
+        this.chatService.obtenerMensajes(chat._id).subscribe(messages => {
+            chat.mensajes = messages;
         });
-        this.chatService.obtenerParticipantes(chat.oid).subscribe(participants => {
-            chat.participants = participants;
+        this.chatService.obtenerParticipantes(chat._id).subscribe(participants => {
+            chat.usuarios = participants;
         });
 
         // Emitimos el evento para unirnos al nuevo chat
-        this.socket.emit('joinChat', chat.oid);
+        this.socket.emit('joinChat', chat._id);
     } else {
         // Si el chat está seleccionado actualmente, lo cerramos
-        this.socket.emit('exitChat', chat.oid); // Salimos del chat
+        this.socket.emit('exitChat', chat._id); // Salimos del chat
 
         // Removemos el chat del array de chats seleccionados
         this.selectedChats.splice(index, 1);

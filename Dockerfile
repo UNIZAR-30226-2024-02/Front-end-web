@@ -1,5 +1,5 @@
 # Stage 1: Build the Angular app
-FROM node:16
+FROM node:latest
 
 WORKDIR /app
 
@@ -13,4 +13,3 @@ COPY . .
 EXPOSE 4200
 
 CMD ["ng", "serve", "--host", "0.0.0.0"]
-

@@ -20,7 +20,11 @@ export interface Partida {
   descartes: any[];
   mapa: any[];
   chat: Chat;
+  fase?: number;
   __v: number;
+  auxColocar? : number;
+  auxRobar?: boolean;
+  paused?: boolean;
 }
 
 export interface Jugador {
@@ -28,6 +32,8 @@ export interface Jugador {
   territorios: any[];
   cartas: any[];
   abandonado: boolean;
+  skinFichas: string;
+  color: string;
   _id: string;
 }
 
@@ -58,7 +64,7 @@ export class PartidasComponent {
           this.toastr.error('Error al obtener la información de la partida', error);
         }
       );
-      });
+    });
   }
 
   getPartidas(): void {

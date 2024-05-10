@@ -28,10 +28,10 @@
                 <ul>
                     <li *ngFor="let chat of chats" class="chat-list-item">
                         <div class="chat-details">
-                            <span class="chat-name">{{ chat.nombre }}</span>
+                            <span class="chat-name">{{ chat.nombreChat }}</span>
                             <div class="chat-buttons">
                                 <button (click)="toggleChatSelection(chat)">Abrir</button>
-                                <button (click)="exitChat(chat.oid)">Salir</button>
+                                <button (click)="exitChat(chat._id)">Salir</button>
                             </div>
                         </div>
                     </li>
@@ -41,8 +41,8 @@
             <main class="chat-container">
                 <div *ngFor="let chat of selectedChats" class="chat-window">
                     <button class="close-button" (click)="toggleChatSelection(chat)">Cerrar</button>
-                    <h1>{{ chat.nombre }}</h1>
-                    <div *ngIf="chat.participants as participants" class="chat-participants">
+                    <h1>{{ chat.nombreChat }}</h1>
+                    <div *ngIf="chat.usuarios as participants" class="chat-participants">
                         <h2>Users</h2>
                         <ul>
                             <li *ngFor="let participant of participants; let isLast=last">
@@ -50,7 +50,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div *ngIf="chat.messages as messages" class="chat-messages" #chatContainer>
+                    <div *ngIf="chat.mensajes as messages" class="chat-messages" #chatContainer>
                         <h2>Messages</h2>
                         <ul class="list-unstyled">
                             <li *ngFor="let message of messages" [ngClass]="{'my-message': message.idUsuario === myName}">

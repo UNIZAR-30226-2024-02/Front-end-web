@@ -9,4 +9,11 @@
       <button class="button" routerLink="/partidas">Partidas</button>
     </div>
   </div>
+  <!-- New button for notifications -->
+  <button class="button notif-button" (click)="showNotif = !showNotif">Notificaciones</button>
+  <!-- Notification box -->
+  <div class="notif-box" *ngIf="showNotif">
+    <button class="button close-button" (click)="showNotif = false">Close</button>
+    <p *ngFor="let notif of notifications">{{notif}}</p>
+  </div>
 </div>

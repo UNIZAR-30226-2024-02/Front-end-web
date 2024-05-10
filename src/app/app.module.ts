@@ -21,8 +21,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { SocketTestComponent } from './socket-test/socket-test.component';
 import { FilterByTypePipe } from './pipes/filter-by-type.pipe';
+import { environment } from '../environment/environment';
 
-const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
+const config: SocketIoConfig = { url: 'http://'+ environment.backendUrl + ':4000', options: {} };
 
 import { PartidaComponent } from './partida/partida.component';
 import { ChatComponent } from './chat/chat.component';

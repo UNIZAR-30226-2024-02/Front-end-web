@@ -1,1 +1,202 @@
-<p>partida works!</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Interface</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+
+        
+        .container {
+            padding-top: 25px; /* Añade espacio sobre el SVG */
+        }
+        .row {
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .svg-column {
+            position: relative; /* Establece la posición relativa para contener los elementos internos */
+        }
+        .svg-container {
+            width: 90vw;
+            height: 90vh;
+            margin-right: 5vw;
+            margin-left: -20vw;
+            
+        }
+        .other-content {
+            position: absolute; /* Establece la posición absoluta para evitar superposiciones */
+            top: 45%; /* Alinea desde la mitad superior */
+            transform: translateY(-50%); /* Centra verticalmente */
+            left: calc(72vw + 15px); /* Coloca a la derecha del SVG con un pequeño espacio */
+            width: calc(20vw - 50px); /* Define el ancho */
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .svg-container {
+                width: 100vw;
+                height: 50vh;
+            }
+            .other-content {
+                position: relative;
+                top: 0;
+                transform: none;
+                left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div id = "color-display">
+            <button (click)="pausarPartida()" class="btn btn-primary">
+                <i *ngIf="!paused" class="fas fa-pause"></i>
+                <i *ngIf="paused" class="fas fa-play"></i>
+            </button></div>
+        <div id="color-display">Tu color: <span id="myColor">{{ myColor }}</span>
+            <img [src]="'assets/infanteria' + skinTropasMap.get(whoami) + '_' + myColor + '.png'" alt="Infantry Image" class="troop-icon">
+        </div>
+        
+        <!-- Columna para el SVG -->
+        <div class="col-md-6 svg-column">
+            <!-- Contenedor centrado para el SVG -->
+            <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+                <iframe 
+                    src="assets/Risk_game_board.svg" 
+                    class="svg-container" 
+                    (load)="onSVGLoad($event)">
+                    Tu navegador no soporta SVG
+                </iframe>
+            </div>
+        </div>
+        
+        <!-- Columna para el resto del contenido -->
+        <div class="col-md-6 other-content">
+            <!-- Contenedor para el chat y otros elementos -->
+
+            <!-- Contenido anterior -->
+            <div class="mb-3">Tropas: {{ numTropas }}</div>
+            <div class="mb-3 user-container">
+                <div class="mb-2">Turno Jugador: </div>
+                <div class="image-box">
+                    <img class="user-img" [src]="avatarAMostrar" alt="User skin">
+                </div>
+                <div class="user-name">{{turnoJugador}}</div>
+            </div>
+            <div class="d-flex mb-3">
+                <button (click)="updateFase()" class="btn btn-primary mr-1">Siguiente fase</button>
+                <button (click)="openCartasModal()" *ngIf="fase==0 && turnoJugador==whoami" class="btn btn-primary mr-1">Mis cartas</button>
+            </div>
+            <div class="mb-3">{{ text }}</div>
+            <div *ngIf="(fase == 1 || fase == 2) && turnoJugador == whoami" class="mb-3" style="font-size: 1.5em; border: 1px solid black; padding: 10px;">
+                <div class="flex-container">
+                    <button (click)="cancelarManiobra()" class="btn btn-warning btn-sm ml-2">Cancelar Maniobra</button>
+                    <h5>Tropas seleccionadas: {{ ataqueTropas }}</h5>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div class="card mt-4" style="width: 90%;">
+                <div class="card-header">
+                    <h2 class="card-title text-center">Chat de la partida</h2>
+                </div>
+                <div class="card-body" style="height: 300px; overflow-y: auto;" #chatContainer>
+                    <div class="message" *ngFor="let mensaje of partida.chat.mensajes">
+                        <div class="chat-bubble" [ngClass]="{'my-message': mensaje.idUsuario == whoami}">
+                            <p><strong>{{mensaje.idUsuario}}:</strong></p>
+                            <p>{{mensaje.texto}}</p>
+                            <p class="timestamp">{{mensaje.timestamp | date:'short'}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <form (submit)="sendMessage(enviarMensaje.value); enviarMensaje.value=''; $event.preventDefault()">
+                        <input #enviarMensaje type="text" class="form-control" placeholder="Escribe un mensaje...">
+                        <button class="btn btn-primary mt-2" type="submit">Enviar</button>
+                    </form>
+                </div>
+                <button class="btn btn-danger" (click)="abandonarPartida()">Abandonar Partida</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="winner-overlay" *ngIf="ganador">
+    <div id="winner-modal">
+        <h2>¡{{ ganador }} ha ganado la partida!</h2>
+        <img [src]="avatarAMostrar" alt="Winner" />
+        <p> Tu Elo ganado: {{ eloGanado}} </p>
+        <p> Tus monedas ganadas: {{ puntosGanados }} </p>
+        <button (click)="closeWinnerModal()">Cerrar</button>
+    </div>
+</div>
+
+<!-- this.ataqueRecibido = { userOrigen, userDestino, dadosAtacante, dadosDefensor, 
+                              tropasPerdidasAtacante, tropasPerdidasDefensor, conquistado,
+                              territorioOrigen, territorioDestino } -->
+<div id="attack-overlay" *ngIf="ataqueRecibido">
+    <div id="attack-modal">
+        <h3>¡{{ ataqueRecibido.userOrigen }} te está atacando!</h3>
+        <h4> Territorio en disputa: {{ ataqueRecibido.territorioDestino }} </h4>
+        <h4> Resultado de la batalla </h4>
+        <p> Dados atacante: {{ ataqueRecibido.dadosAtacante[0] }}  {{ ataqueRecibido.dadosAtacante[1]}} {{ataqueRecibido.dadosAtacante[2]}} </p>
+        <p> Dados defensor: {{ ataqueRecibido.dadosDefensor[0] }}  {{ ataqueRecibido.dadosDefensor[1]}} </p>
+        <p> Tropas perdidas atacante: {{ ataqueRecibido.tropasPerdidasAtacante }} </p>
+        <p> Tropas perdidas defensor: {{ ataqueRecibido.tropasPerdidasDefensor }} </p>
+        <p> Elo: {{ ataqueRecibido.eloDefensor }} </p>
+        <p> Monedas: {{ ataqueRecibido.dineroDefensor }} </p>
+        <h4>
+            {{ ataqueRecibido.conquistado ? 'Has perdido el territorio' : 'No has perdido el territorio' }}
+        </h4>
+        <button (click)="closeAttackModal()">Cerrar</button>
+    </div>
+</div>
+
+<div id="hasPerdido-overlay" *ngIf="eliminado">
+    <div id="hasPerdido-modal">
+        <h3> Has sido eliminado! </h3>
+        <p> Tu Elo ganado: {{ eloGanado}} </p>
+        <p> Tus monedas ganadas: {{ puntosGanados }} </p>
+        <button (click)="closeWinnerModal()">Cerrar</button>
+    </div>
+</div>
+
+<div id="attack-overlay" *ngIf="ataquePerpetrado">
+    <div id="attack-modal">
+        <h3>¡Estás atacando a {{ ataquePerpetrado.userDestino }}!</h3>
+        <h4> Territorio en disputa: {{ ataquePerpetrado.territorioDestino }} </h4>
+        <h4> Resultado de la batalla </h4>
+        <p> Dados atacante: {{ ataquePerpetrado.dadosAtacante[0] }} , {{ ataquePerpetrado.dadosAtacante[1]}}, {{ataquePerpetrado.dadosAtacante[2]}} </p>
+        <p> Dados defensor: {{ ataquePerpetrado.dadosDefensor[0] }} , {{ ataquePerpetrado.dadosDefensor[1]}} </p>
+        <p> Tropas perdidas atacante: {{ ataquePerpetrado.tropasPerdidasAtacante }} </p>
+        <p> Tropas perdidas defensor: {{ ataquePerpetrado.tropasPerdidasDefensor }} </p>
+        <p> Elo: {{ ataquePerpetrado.eloAtacante }} </p>
+        <p> Monedas: {{ ataquePerpetrado.dineroAtacante }} </p>
+        <h4>
+            {{ ataquePerpetrado.conquistado ? 'Has conquistado el territorio' : 'No has conquistado el territorio' }}
+        </h4>
+        <button (click)="closeAttackModal()">Cerrar</button>
+    </div>
+</div>
+
+<div id="cartas-overlay" *ngIf="usoCartas">
+    <div id="cartas-modal">
+        <li *ngFor="let spot of jugadores[0].cartas">
+            <div>
+                <span class="cl">{{spot.estrellas+" "+spot.territorio }}</span>
+                <button class="delete-button" (click)="usarCarta(spot)">Usar Carta</button>
+            </div>
+        </li>
+
+        <button (click)="closeCartasModal()">Cerrar</button>
+    </div>
+</div>
+
+</body>
+</html>

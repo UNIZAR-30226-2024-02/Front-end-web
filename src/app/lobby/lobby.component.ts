@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, HostListener } from '@angular/core';
 import { LobbyService } from './lobby.service'; 
 import {Partida} from '../partidas/partidas.component';
 import { Router } from '@angular/router';
@@ -8,20 +8,7 @@ import { UsersService } from '../users/users.service';
 import { map, switchMap } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
-
-
-export interface Chat {
-  nombreChat : string;
-  usuarios: string[];
-  _id : string;
-  mensajes : Mensaje[];
-}
-
-export interface Mensaje{
-  texto: string;
-  idUsuario: string;
-  timestamp: string;
-}
+import { Chat, Mensaje } from '../chat/chat.component';
 
 @Component({
   selector: 'app-lobby',
@@ -36,7 +23,19 @@ export class LobbyComponent implements OnInit {
   myUser = this.userService.getUsername();
   users: { [key: string]: any } = {};
   nombreJugador : string = '';
-
+  @ViewChild('chatContainer', { static: false }) private chatContainer!: ElementRef;
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event: Event) {
+    this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
+      this.router.navigate(['/menu']);
+    });
+    this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
+    this.socket.off('chatMessage');
+    this.socket.off('userJoined');
+    this.socket.off('userDisconnected');
+    this.socket.off('gameStarted');
+    //this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
+  }
   constructor(private router: Router, private lobbyService: LobbyService, private toastr: ToastrService, 
       private chatService: ChatService, private userService: UsersService, private socket: Socket)
     {
@@ -47,6 +46,7 @@ export class LobbyComponent implements OnInit {
       } else {
         this.partida = state.partida;
         this.chat = state.partida.chat;
+        this.partidaId = this.partida._id;
         this.socket.emit('joinChat', this.chat._id);
         this.socket.emit('joinGame', { gameId: this.partida._id, user: this.userService.getUsername() });
         const userRequests = this.partida.jugadores.map((jugador: any) => 
@@ -65,11 +65,9 @@ export class LobbyComponent implements OnInit {
     }
 
   ngOnInit(): void {
+
     this.socket.on('chatMessage', (mensaje: string, user: string, timestamp: string, chatId: string) => {
-      // this.toastr.info(mensaje + user + timestamp + chatId, 'Nuevo mensaje en chat');  NO BORRAR, ES ÚTIL SI QUEREMOS MOSTRAR LAS NOTIFICACIONES ALLÁ EN CUALQUIER LUGAR
-      console.log("recibido")
       if (this.chat) {
-        console.log('hola!')
          if (!this.chat.mensajes) {
            this.chat.mensajes = [];
          }
@@ -82,6 +80,7 @@ export class LobbyComponent implements OnInit {
       this.toastr.info(user + ' se ha unido a la partida', 'Nuevo jugador');
       this.userService.getUserSkin(user).subscribe(response => {
         this.users[user] = response.path;
+        this.partida.jugadores.push({ usuario: user, territorios: [], cartas: [], abandonado: false, _id: '', skinFichas: '', color: ''});
       });
       console.log(this.users);
       });
@@ -91,25 +90,45 @@ export class LobbyComponent implements OnInit {
         delete this.users[user];
         console.log(this.users);
       });
-  }
-  //TODO HACERLA FUNCIONAL
-  salirPartida() {
-    this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
-      this.router.navigate(['/menu']);
-      this.toastr.success('Has salido de la partida');
-    });
-    this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
-    this.router.navigate(['/menu']);
-    this.toastr.success('Has salido de la partida');
+      this.socket.on('gameStarted', (gameId: string) => {
+        console.log('gameStarted', gameId);
+        this.router.navigate(['/partida'], { state: { partida: this.partida } });
+      });
   }
 
-  //TODO HACERLA FUNCIONAL
-  empezarPartida() {
-    this.lobbyService.empezarPartida(this.partidaId).subscribe(() => {
-      //this.router.navigate(['/partida']);
-      this.toastr.success('Imagina que la partida ha comenzado');
+  ngAfterViewChecked() {
+    this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+  }
+
+  confirmSalirPartida() {
+    if (window.confirm('¿Estás seguro de que deseas abandonar la partida?')) {
+      this.salirPartida();
+    }
+  }
+
+  salirPartida() {
+    this.lobbyService.salirPartida(this.partidaId).subscribe(() => {
+      this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
+      this.socket.off('chatMessage');
+      this.socket.off('userJoined');
+      this.socket.off('userDisconnected');
+      this.socket.off('gameStarted');
+      this.router.navigate(['/menu']);
     });
-    this.toastr.success('Imagina que la partida ha comenzado');
+  }
+
+  empezarPartida() {
+    console.log(this.partidaId)
+    this.lobbyService.empezarPartida(this.partidaId).subscribe(
+      () => {
+        this.socket.emit('gameStarted', this.partida._id);
+        console.log(this.partidaId)
+        this.router.navigate(['/partida'], { state: { partida: this.partida } });
+      },
+      error => {
+        this.toastr.error(error.error.error);
+      }
+    );
   }
 
   sendMessage(texto : string){
@@ -131,5 +150,8 @@ export class LobbyComponent implements OnInit {
       }
     );
   }
+
+
+  
 
 }

@@ -1,0 +1,207 @@
+@keyframes war {
+    0% { background-color: red; }
+    50% { background-color: yellow; }
+    100% { background-color: red; }
+}
+
+
+
+.war {
+    animation: war 1s infinite;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    z-index: 1000;
+}
+
+.image-box {
+    width: 100px; /* adjust as needed */
+    height: 100px; /* adjust as needed */
+    overflow: hidden;
+}
+
+.user-img {
+    width: 100%;
+    height: auto;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.chat-bubble {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.chat-bubble::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 10px;
+    border-width: 10px 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #f0f0f0;
+}
+
+.my-message {
+    background-color: #a8e6cf;
+}
+
+.my-message::after {
+    left: auto;
+    right: -10px;
+    border-width: 10px 0 10px 10px;
+    border-color: transparent transparent transparent #a8e6cf;
+}
+
+.other-content {
+    margin-top: 75px; /* Adjust to desired margin */
+    height: calc(100vh - 50px); /* Adjust to desired height */
+}
+
+#winner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que el overlay se superponga a todo lo demás */
+}
+
+#winner-modal {
+    background-color: white;
+    overflow: auto;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 50%; /* Adjust this value to change the width */
+    height: 50%; /* Adjust this value to change the height */
+    box-sizing: border-box; /* This makes sure padding is included in the width/height */
+}
+
+#winner-modal img {
+    max-width: 50%;
+    max-height: 50%;
+}
+
+/* attack modal */
+#attack-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que el overlay se superponga a todo lo demás */
+}
+
+#attack-modal {
+    background-color: white;
+    overflow: auto;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 25%; /* Adjust this value to change the width */
+    height: 50%; /* Adjust this value to change the height */
+    box-sizing: border-box; /* This makes sure padding is included in the width/height */
+}
+
+/* when I am the attacker */
+#atacking-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que el overlay se superponga a todo lo demás */
+}
+
+#atacking-modal {
+    overflow: auto;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 25%; /* Adjust this value to change the width */
+    height: 50%; /* Adjust this value to change the height */
+    box-sizing: border-box; /* This makes sure padding is included in the width/height */
+}
+
+/*cuando me eliminan*/
+
+#hasPerdido-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que el overlay se superponga a todo lo demás */
+}
+
+#hasPerdido-modal {
+    background-color: white;
+    overflow: auto;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 25%; /* Adjust this value to change the width */
+    height: 50%; /* Adjust this value to change the height */
+    box-sizing: border-box; /* This makes sure padding is included in the width/height */
+}
+
+/** uso de cartas **/
+#cartas-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que el overlay se superponga a todo lo demás */
+}
+
+#cartas-modal {
+    background-color: white;
+    overflow: auto;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    width: 25%; /* Adjust this value to change the width */
+    height: 50%; /* Adjust this value to change the height */
+    box-sizing: border-box; /* This makes sure padding is included in the width/height */
+}
+
+/*******/
+.troop-icon {
+    width: 50px;
+    height: auto;
+}
+
+/******/
+.flex-container {
+    display: flex;
+}

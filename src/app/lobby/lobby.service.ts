@@ -5,12 +5,13 @@ import { UsersService } from "../users/users.service";
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LobbyService {
-  private apiUrl = 'http://localhost:4000/'; 
+  private apiUrl = 'http://' +environment.backendUrl + ':4000/'; 
 
   constructor(private http: HttpClient, private usersService: UsersService, public router: Router) { }
 
@@ -30,13 +31,14 @@ export class LobbyService {
     return headers;
   }
 
-  empezarPartida(partidaId: string): Observable<any> {
+
+  empezarPartida(id: string): Observable<any> {
     const headers = this.getHeaders();
     if (!headers) {
         return of([]);
     }
 
-    return this.http.post<any>(`${this.apiUrl}partidas/empezarPartida`, { partidaId }, { headers });
+    return this.http.put<any>(`${this.apiUrl}partida/iniciarPartida`, {idPartida: id}, { headers });
   }
 
   salirPartida(partidaId: string): Observable<any> {
@@ -45,7 +47,7 @@ export class LobbyService {
         return of([]);
     }
 
-    return this.http.post<any>(`${this.apiUrl}partidas/salirPartida`, { partidaId }, { headers });
+    return this.http.put<any>(`${this.apiUrl}partida/salirPartida`, { idPartida: partidaId }, { headers });
   }
 
   invitar(user : string, partida_id : string) : Observable<any> {
@@ -56,5 +58,6 @@ export class LobbyService {
 
     return this.http.put<any>(`${this.apiUrl}nuevaPartida/invite`, {user, idPartida : partida_id}, { headers });
   }
+  
   
 }

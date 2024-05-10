@@ -41,3 +41,36 @@
   background-color: #218838; /* Un tono de verde más oscuro para el estado hover */
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Sombra aumentada */
 }
+
+.notif-button {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+}
+
+.notif-box {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  overflow: auto;
+  background-color: #f8f9fa;
+  border-left: 1px solid #dee2e6;
+  padding: 1rem;
+}
+
+.close-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.notif-box p {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
