@@ -9,6 +9,7 @@ import { environment } from '../../environment/environment';
 @Injectable({
   providedIn: 'root'
 })
+
 export class PartidaService {
 
   constructor(private http: HttpClient, private router: Router, private usersService: UsersService) { }
@@ -112,5 +113,13 @@ export class PartidaService {
     return this.http.put("http://"+environment.backendUrl+":4000/partida/pausarPartida", {idPartida}, { headers });
   }
   
+  UsarCartas(idPartida: string, carta1: any, carta2: any, carta3: any){
+    const headers = this.getHeaders();
+    if (!headers) {
+        return of(null);
+    }
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/utilizarCartas", {idPartida, carta1, carta2, carta3}, { headers })
+  }
+
 
 }

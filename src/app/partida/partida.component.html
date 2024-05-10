@@ -184,5 +184,18 @@
     </div>
 </div>
 
+<div id="cartas-overlay" *ngIf="usoCartas">
+    <div id="cartas-modal">
+        <li *ngFor="let spot of jugadores[0].cartas">
+            <div>
+                <span class="cl">{{spot.estrellas+" "+spot.territorio }}</span>
+                <button class="delete-button" (click)="usarCarta(spot)">Usar Carta</button>
+            </div>
+        </li>
+
+        <button (click)="closeCartasModal()">Cerrar</button>
+    </div>
+</div>
+
 </body>
 </html>
