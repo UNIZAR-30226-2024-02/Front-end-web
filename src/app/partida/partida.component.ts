@@ -1294,13 +1294,16 @@ usoCartas: boolean = false;
   usarCarta(cartaUsada: Carta): number{
     // Esto no está funcionando, creo que hay q comprobar que usocartas !== null
     // y ahí ir llamando al back end
+    var aumento = cartaUsada.estrellas;
     if (this.usoCartas) {
       this.partidaService.UsarCartas(this.partida._id, cartaUsada.territorio).subscribe(
         (data) => {
-          this.numTropas += cartaUsada.estrellas;
+          if (this.partida.auxColocar) {
+            this.partida.auxColocar = this.partida.auxColocar + aumento; 
+          }
+          this.partida.jugadores[(this.turno) % this.numJugadores].cartas = this.partida.jugadores[(this.turno) % this.numJugadores].cartas.filter(elem => elem !== cartaUsada);
         },
         (error) => {
-          this.numTropas += cartaUsada.estrellas;
           this.toastr.error("No se ha podido usar la carta");
         }
       );
@@ -1326,3 +1329,5 @@ usoCartas: boolean = false;
     }
   }
 }
+
+

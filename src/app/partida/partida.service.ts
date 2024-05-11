@@ -118,7 +118,7 @@ export class PartidaService {
     if (!headers) {
         return of(null);
     }
-    return this.http.put("http://"+environment.backendUrl+":4000/partida/utilizarCartas", {idPartida, carta1: carta}, { headers })
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/utilizarCartas", {idPartida, carta1: carta, carta2: null}, { headers })
   }
 
 

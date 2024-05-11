@@ -257,3 +257,15 @@
     position: relative;
 }
 
+.cerrar-button {
+    position: relative;
+    z-index: 1;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+}
