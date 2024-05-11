@@ -189,8 +189,8 @@
     overflow: auto;
     padding: 15px;
     border-radius: 10px;
-    text-align: center;
-    width: 25%; /* Adjust this value to change the width */
+    text-align: left;
+    width: 50%; /* Adjust this value to change the width */
     height: 50%; /* Adjust this value to change the height */
     box-sizing: border-box; /* This makes sure padding is included in the width/height */
 }
@@ -204,4 +204,68 @@
 /******/
 .flex-container {
     display: flex;
+}
+
+.list-unstyled {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-container {
+    background-color: rgba(248, 249, 250, 0.9);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.user-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.use-button {
+    position: absolute;
+    z-index: 1;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0; /* Ajusta el botón al borde derecho */
+    margin-right: 10px; /* Agrega un pequeño margen a la derecha del contenedor */
+}
+
+.cartas-info span {
+    display: inline-block;
+    margin-right: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+}
+
+.cartas-info span:last-child {
+    float: right;
+    position: relative;
+}
+
+.cerrar-button {
+    position: relative;
+    z-index: 1;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
 }
