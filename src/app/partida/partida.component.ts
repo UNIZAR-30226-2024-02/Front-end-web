@@ -124,10 +124,7 @@ ataquePerpetrado: {
 
 eliminado : boolean | null = null;
 
-usoCartas: {
-  cartasUsadas: Carta[];
-  numCartas: number;
-} | null = null;
+usoCartas: boolean = false;
 
   constructor(private toastr: ToastrService, private router: Router, private userService: UsersService, private socket: Socket,
               private cdr: ChangeDetectorRef, private chatService : ChatService, private partidaService: PartidaService, 
@@ -1294,34 +1291,38 @@ usoCartas: {
     });
   }
 
-  usarCarta(cartaUsada: Carta){
+  usarCarta(cartaUsada: Carta): number{
     // Esto no está funcionando, creo que hay q comprobar que usocartas !== null
     // y ahí ir llamando al back end
-    if (this.usoCartas?.numCartas) {
-      if (this.usoCartas?.numCartas < 3) {
-        this.usoCartas?.cartasUsadas.push(cartaUsada);
-        // Eliminar del vector de cartas del jugador
-        this.usoCartas.numCartas += 1;
-      }
-      else {
-        this.toastr.error('Solo se puede usar 3 cartas')
-      }
+    if (this.usoCartas) {
+      this.partidaService.UsarCartas(this.partida._id, cartaUsada.territorio).subscribe(
+        (data) => {
+          this.numTropas += cartaUsada.estrellas;
+        },
+        (error) => {
+          this.numTropas += cartaUsada.estrellas;
+          this.toastr.error("No se ha podido usar la carta");
+        }
+      );
+      console.log("Carta jugada" + cartaUsada.estrellas +". Tropas:" + this.numTropas)
+      return this.numTropas+cartaUsada.estrellas;
     }
     else {
       console.log(this.usoCartas)
-      this.toastr.error('No se puede usar cartas en este momento')
+      this.toastr.error('Usocartas no inicializado')
+      return 0;
     }
   }
   
   openCartasModal(){
     console.log('Popup Cartas')
-    this.usoCartas = {numCartas: 0, cartasUsadas: []}
+    this.usoCartas = true
   }
 
   closeCartasModal(){
     if (this.usoCartas) {
       // this.partidaService.UsarCartas(this.partida._id, this.usoCartas.cartasUsadas[0], this.usoCartas.cartasUsadas[1], this.usoCartas.cartasUsadas[2])
-      this.usoCartas = null;
+      this.usoCartas = false;
     }
   }
 }

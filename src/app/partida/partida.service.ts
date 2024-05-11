@@ -113,12 +113,12 @@ export class PartidaService {
     return this.http.put("http://"+environment.backendUrl+":4000/partida/pausarPartida", {idPartida}, { headers });
   }
   
-  UsarCartas(idPartida: string, carta1: any, carta2: any, carta3: any){
+  UsarCartas(idPartida: string, carta: string): Observable<any>{
     const headers = this.getHeaders();
     if (!headers) {
         return of(null);
     }
-    return this.http.put("http://"+environment.backendUrl+":4000/partida/utilizarCartas", {idPartida, carta1, carta2, carta3}, { headers })
+    return this.http.put("http://"+environment.backendUrl+":4000/partida/utilizarCartas", {idPartida, carta1: carta}, { headers })
   }
 
 
