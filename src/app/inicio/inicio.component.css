@@ -26,25 +26,31 @@
     gap: 250px; /* Aumenta el espacio entre los botones */
 }
 
-
 .btn {
-    margin: 0 50px; /* Ajusta el espacio entre los botones */
-    background-color: #28a745; /* Green background */
-    border: none; /* Remove borders */
+    background-color: #DB4437; /* Red background */
+    padding: 15px 40px; /* Ajustar el relleno */
+    border-radius: 25px; /* Ajustar los bordes redondeados */
+    width: 200px; /* Ajustar el ancho */
+    justify-content: center; /* Alinear el contenido horizontalmente */
+    align-items: center; /* Alinear el contenido verticalmente */
+    overflow: hidden; /* Ocultar el desbordamiento */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Agregar sombra */
+    /* Adding larger darker bottom part */
+    border-bottom: 5px solid rgba(0,0,0,0.3); /* Agregar borde inferior */
+    margin-right: 10px; /* Agregar margen a la derecha */
     color: white; /* White text */
-    padding: 12px 30px; /* Some padding */
-    text-align: center; /* Center the text */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Font weight */
+    text-transform: uppercase; /* Convertir texto a mayúsculas */
     text-decoration: none; /* Remove underline from links */
-    display: inline-block; /* Used to be able to set a width */
-    font-size: 18px; /* Set a font-size */
+    text-align: center; /* Center the text */
     cursor: pointer; /* Mouse pointer on hover */
-    border-radius: 25px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Adds a subtle shadow */
     transition: all 0.2s; /* Smooth transition for hover effects */
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    background-color: #218838; /* Darker shade of green */
-    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
+    background-color: #C13523; /* Red background on hover */
+    transform: translateY(-2px); /* Levantar un poco en hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Aumentar la sombra en hover */
 }
+

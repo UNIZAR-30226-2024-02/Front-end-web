@@ -71,29 +71,26 @@
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0,123,255,.25);
   }
-  
   .btn-primary {
     width: 100%;
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #ccc; /* Color inicial gris cuando está deshabilitado */
+    background-color: #DB4437; /* Color de fondo rojo */
     color: white;
     font-size: 18px;
-    cursor: not-allowed; /* Cursor que indica que no está permitido */
-    margin-top: 10px;
-}
-
-.btn-primary:enabled {
-    background-color: #28a745; /* Verde cuando está habilitado */
     cursor: pointer; /* Cursor de puntero para indicar que es clickeable */
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Agregar sombra */
+    border-bottom: 5px solid rgba(0,0,0,0.3); /* Agregar borde inferior */
 }
 
-.btn-primary:hover:enabled {
-    background-color: #218838; /* Verde más oscuro en hover cuando está habilitado */
+.btn-primary:hover {
+  transform: translateY(-2px); /* Mover hacia arriba en hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
 }
 
-.form-control:focus {
-    border-color: #28a745; /* Cambio de azul a verde */
-    box-shadow: 0 0 0 2px rgba(40, 167, 69, .25); /* Sombra verde alrededor del input en foco */
+.btn-primary:active {
+  transform: translateY(1px); /* Mover hacia abajo cuando se presiona */
+  box-shadow: none; /* Eliminar la sombra cuando se presiona */
 }

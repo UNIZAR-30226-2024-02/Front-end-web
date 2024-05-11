@@ -75,29 +75,35 @@ body {
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0,123,255,.25);
 }
-
-.btn-primary {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #ccc; /* Color gris cuando está deshabilitado */
-    color: white;
-    font-size: 18px;
-    cursor: not-allowed; /* Indica que no se puede hacer clic */
-    margin-top: 10px;
+.btn {
+    background-color: #DB4437; /* Color de fondo */
+    padding: 15px 40px; /* Relleno */
+    border-radius: 25px; /* Bordes redondeados */
+    width: 200px; /* Ancho */
+    justify-content: center; /* Alineación horizontal */
+    align-items: center; /* Alineación vertical */
+    overflow: hidden; /* Ocultar desbordamiento */
+    /* Agregar efecto 3D */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra */
+    /* Agregar parte inferior más oscura y grande */
+    border-bottom: 5px solid rgba(0, 0, 0, 0.3); /* Borde inferior */
+    margin-right: 10px; /* Margen a la derecha */
+    color: white; /* Color del texto */
+    font-size: 18px; /* Tamaño de fuente */
+    font-weight: bold; /* Peso de la fuente */
+    text-transform: uppercase; /* Transformar texto a mayúsculas */
+    text-shadow: 2px 1px black; /* Sombra del texto */
+    cursor: pointer; /* Cursor de ratón */
+    transition: all 0.2s; /* Transición suave para efectos de hover */
 }
 
-.btn-primary:enabled {
-    background-color: #28a745; /* Verde cuando está habilitado */
-    cursor: pointer; /* Indica que se puede hacer clic */
+.btn:hover {
+    transform: translateY(-2px); /* Mover hacia arriba en hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Aumentar la sombra en hover */
 }
 
-.btn-primary:hover:enabled {
-    background-color: #218838; /* Verde más oscuro para el estado hover */
+.btn:active {
+    transform: translateY(1px); /* Mover hacia abajo cuando se presiona */
+    box-shadow: none; /* Eliminar la sombra cuando se presiona */
 }
 
-.form-control:focus {
-    border-color: #28a745; /* Cambio de azul a verde */
-    box-shadow: 0 0 0 2px rgba(40, 167, 69, .25); /* Sombra verde alrededor del input en foco */
-}
