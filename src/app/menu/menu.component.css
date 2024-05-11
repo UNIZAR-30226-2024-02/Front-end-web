@@ -34,6 +34,7 @@
   border-radius: 25px; /* Esquinas redondeadas */
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra sutil */
   transition: all 0.2s; /* Transición suave para efectos de hover */
+  margin: 0 20px;
 }
 
 .button:hover {
@@ -46,6 +47,7 @@
   position: fixed;
   right: 0;
   bottom: 0;
+  bottom: 30px;
 }
 
 .notif-box {
