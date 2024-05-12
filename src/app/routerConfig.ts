@@ -8,7 +8,6 @@ import { RegisterComponent } from './register/register.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { SkinsperfilComponent } from './skinsperfil/skinsperfil.component';
-import { SocketTestComponent } from './socket-test/socket-test.component';
 import { PartidaComponent } from './partida/partida.component';
 import { AmigosComponent } from './amigos/amigos.component';
 import { ChatComponent } from './chat/chat.component';
@@ -43,10 +42,6 @@ const appRoutes: Routes = [
   {
     path: 'skinsperfil',
     component: SkinsperfilComponent
-  },
-  {
-    path: 'socket-test',
-    component: SocketTestComponent
   },
   {
     path: 'partida',

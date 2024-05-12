@@ -19,7 +19,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { SocketTestComponent } from './socket-test/socket-test.component';
 import { FilterByTypePipe } from './pipes/filter-by-type.pipe';
 import { environment } from '../environment/environment';
 
@@ -45,7 +44,6 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     RankingComponent,
     PerfilComponent,
     SkinsperfilComponent,
-    SocketTestComponent,
     FilterByTypePipe,
     PartidaComponent,
     ChatComponent,
