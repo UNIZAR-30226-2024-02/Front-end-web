@@ -76,34 +76,31 @@ body {
     box-shadow: 0 0 0 2px rgba(0,123,255,.25);
 }
 .btn {
-    background-color: #DB4437; /* Color de fondo */
-    padding: 15px 40px; /* Relleno */
-    border-radius: 25px; /* Bordes redondeados */
-    width: 200px; /* Ancho */
-    justify-content: center; /* Alineación horizontal */
-    align-items: center; /* Alineación vertical */
-    overflow: hidden; /* Ocultar desbordamiento */
-    /* Agregar efecto 3D */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra */
-    /* Agregar parte inferior más oscura y grande */
-    border-bottom: 5px solid rgba(0, 0, 0, 0.3); /* Borde inferior */
-    margin-right: 10px; /* Margen a la derecha */
-    color: white; /* Color del texto */
-    font-size: 18px; /* Tamaño de fuente */
-    font-weight: bold; /* Peso de la fuente */
-    text-transform: uppercase; /* Transformar texto a mayúsculas */
-    text-shadow: 2px 1px black; /* Sombra del texto */
-    cursor: pointer; /* Cursor de ratón */
-    transition: all 0.2s; /* Transición suave para efectos de hover */
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 30px; /* Ajustar el valor del border-radius para hacer esquinas más redondeadas */
+    background-color: #556b2f; /* Color de fondo verde */
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0,0,0,0.3);
 }
 
 .btn:hover {
-    transform: translateY(-2px); /* Mover hacia arriba en hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Aumentar la sombra en hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
 }
 
 .btn:active {
-    transform: translateY(1px); /* Mover hacia abajo cuando se presiona */
-    box-shadow: none; /* Eliminar la sombra cuando se presiona */
+    transform: translateY(1px);
+    box-shadow: none;
 }
 
+
+
+
+
+  

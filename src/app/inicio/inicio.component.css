@@ -12,22 +12,21 @@
     background-repeat: no-repeat;
 }
 
-
 .container h1 {
     margin-bottom: 30px;
     color: #fff; /* Cambia el color a blanco */
     font-size: 2.5rem;
 }
 
-
 .button-container {
     display: flex;
     justify-content: center;
-    gap: 250px; /* Aumenta el espacio entre los botones */
+    gap: 20px; /* Aumenta el espacio entre los botones */
 }
 
 .btn {
-    background-color: #DB4437; /* Red background */
+    white-space: nowrap;
+    background-color: #556b2f; /* Green background */
     padding: 15px 40px; /* Ajustar el relleno */
     border-radius: 25px; /* Ajustar los bordes redondeados */
     width: 200px; /* Ajustar el ancho */
@@ -49,7 +48,7 @@
 }
 
 .btn:hover {
-    background-color: #C13523; /* Red background on hover */
+    background-color: #556b2f; /* Green background on hover */
     transform: translateY(-2px); /* Levantar un poco en hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Aumentar la sombra en hover */
 }
