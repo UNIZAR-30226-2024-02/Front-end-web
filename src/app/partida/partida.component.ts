@@ -332,9 +332,10 @@ usoCartas: boolean = false;
       this.distribuirPiezas();
     });
     this.socket.on('partidaPausada', async () => {
-      let aux = this.paused;
+      let aux = this.paused; let txt = '';
       this.paused = !aux;
-      this.toastr.info('La partida ha sido pausada');
+      if(aux) txt = 'reanudada'; else txt = 'pausada';
+      this.toastr.info('La partida ha sido ' + txt);
     })
 
     //when a user attacks me, I get warned and notifyied with the result of the attack
@@ -1210,6 +1211,7 @@ usoCartas: boolean = false;
       this.socket.off('gameOver');
       this.socket.off('cambioEstado');
       this.socket.off('ataqueRecibido');
+      this.socket.off('partidaPausada');
       this.partidaService.AbandonarPartida(this.partida._id).subscribe(() => {
         this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
@@ -1229,6 +1231,7 @@ usoCartas: boolean = false;
     this.socket.off('gameOver');
     this.socket.off('cambioEstado');
     this.socket.off('ataqueRecibido');
+    this.socket.off('partidaPausada');
     this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
     this.router.navigate(['/menu']);
   }

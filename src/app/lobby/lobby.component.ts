@@ -78,7 +78,9 @@ export class LobbyComponent implements OnInit {
      this.socket.on('userJoined', (user: string) => {
       console.log('userJoined', user);
       this.toastr.info(user + ' se ha unido a la partida', 'Nuevo jugador');
+      console.log(user); console.log(this.users)
       this.userService.getUserSkin(user).subscribe(response => {
+        console.log("respuesta", response);
         this.users[user] = response.path;
         this.partida.jugadores.push({ usuario: user, territorios: [], cartas: [], abandonado: false, _id: '', skinFichas: '', color: ''});
       });
