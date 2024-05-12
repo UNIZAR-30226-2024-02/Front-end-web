@@ -32,7 +32,7 @@ export class HistorialComponent {
     for (let i = 0; i < p.jugadores.length; i++) {
       retVal += p.jugadores[i].usuario;
       if (this.esGanador(p.jugadores[i].usuario,p._id)) {
-        retVal+="&#11088;";
+        retVal+="⭐";
       }
       if (i<p.jugadores.length-1) {
         retVal+=",";
