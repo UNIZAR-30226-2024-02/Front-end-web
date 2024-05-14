@@ -26,30 +26,39 @@
 
 .btn {
     white-space: nowrap;
-    background-color: #556b2f; /* Green background */
-    padding: 15px 40px; /* Ajustar el relleno */
+    background-color: #28a745; /* Verde como color de fondo */
+    padding: 12px 30px; /* Ajustar el relleno */
     border-radius: 25px; /* Ajustar los bordes redondeados */
     width: 200px; /* Ajustar el ancho */
     justify-content: center; /* Alinear el contenido horizontalmente */
     align-items: center; /* Alinear el contenido verticalmente */
     overflow: hidden; /* Ocultar el desbordamiento */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Agregar sombra */
-    /* Adding larger darker bottom part */
-    border-bottom: 5px solid rgba(0,0,0,0.3); /* Agregar borde inferior */
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Agregar sombra */
     margin-right: 10px; /* Agregar margen a la derecha */
-    color: white; /* White text */
-    font-size: 16px; /* Font size */
-    font-weight: bold; /* Font weight */
+    color: white; /* Texto en blanco */
+    font-size: 18px; /* Tamaño de fuente */
+    font-weight: bold; /* Peso de la fuente */
     text-transform: uppercase; /* Convertir texto a mayúsculas */
-    text-decoration: none; /* Remove underline from links */
-    text-align: center; /* Center the text */
-    cursor: pointer; /* Mouse pointer on hover */
-    transition: all 0.2s; /* Smooth transition for hover effects */
+    text-decoration: none; /* Eliminar subrayado de los enlaces */
+    text-align: center; /* Centrar el texto */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    transition: all 0.2s; /* Transición suave para efectos de hover */
 }
 
 .btn:hover {
-    background-color: #556b2f; /* Green background on hover */
     transform: translateY(-2px); /* Levantar un poco en hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Aumentar la sombra en hover */
+    background-color: #218838; /* Un tono de verde más oscuro para el estado hover */
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Aumentar la sombra en hover */
 }
 
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
