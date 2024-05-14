@@ -2,7 +2,7 @@
     <div class="scrollable-container">
         <h1>Amigos</h1>
         <div class="tabs">
-            <button (click)="switchTab('Amigos')" [class.active]="currentTab === 'Amigos'">En propiedad</button>
+            <button (click)="switchTab('Amigos')" [class.active]="currentTab === 'Amigos'">Amigos</button>
             <button (click)="switchTab('Solicitudes')" [class.active]="currentTab === 'equipped'">Solicitudes de Amistad</button>
         </div>
         <div *ngIf="currentTab === 'Amigos'">
