@@ -32,6 +32,8 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { HistorialComponent } from './historial/historial.component';
 
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { MonitorInterceptor } from './monitor.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,8 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
   providers: [
     provideClientHydration(),
     CookieService,
-    {provide: LocationStrategy, useClass: HashLocationStrategy}
+    {provide: LocationStrategy, useClass: HashLocationStrategy},
+    {provide: HTTP_INTERCEPTORS, useClass: MonitorInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

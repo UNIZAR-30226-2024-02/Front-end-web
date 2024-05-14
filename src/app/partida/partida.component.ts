@@ -461,6 +461,7 @@ usoCartas: boolean = false;
               },
               error => {
                 this.toastr.error('¡ERROR FATAL!');
+                this.inicializacionPartida(this.partida);
                 this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, this.tropasPuestas);
                 this.ocupado = false
                 this.numTropas += this.tropasPuestas;
