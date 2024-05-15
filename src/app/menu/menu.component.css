@@ -1,10 +1,16 @@
-.background-image {
-  background-image: url('/assets/menu.jpg'); /* Asegúrate de que la ruta de la imagen es correcta */
-  height: 100vh; /* Ajusta la altura al 100% de la pantalla */
-  background-position: center;
-  background-repeat: no-repeat;
+.full-screen-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/assets/menu.jpg');
   background-size: cover;
-  position: relative; /* Esto asegura que .buttons-container se posicione correctamente */
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
 }
 
 .buttons-container {
@@ -75,4 +81,27 @@
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 4px;
+}
+
+.button-jugar {
+  margin: 0 50px; /* Ajusta el espacio entre los botones */
+  background-color: #007bff; /* Verde como color de fondo */
+  border: none; /* Sin bordes */
+  color: white; /* Texto en blanco */
+  padding: 18px 45px; /* Relleno alrededor del texto */
+  text-align: center; /* Centra el texto */
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
+  display: inline-block; /* Permite establecer un ancho */
+  font-size: 25px; /* Tamaño de fuente */
+  cursor: pointer; /* Cursor de puntero al pasar el ratón */
+  border-radius: 25px; /* Esquinas redondeadas */
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra sutil */
+  transition: all 0.2s; /* Transición suave para efectos de hover */
+  margin: 0 20px;
+}
+
+.button-jugar:hover {
+  transform: translateY(-2px); /* Ligeramente hacia arriba al pasar el ratón */
+  background-color: #0069d9; /* Un tono de verde más oscuro para el estado hover */
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Sombra aumentada */
 }
