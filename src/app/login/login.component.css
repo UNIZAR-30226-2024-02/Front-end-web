@@ -37,6 +37,7 @@ body {
 .form-group {
   margin-bottom: 20px;
   position: relative;
+  text-align: left;
 }
 
 .form-group label {
@@ -92,4 +93,25 @@ body {
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+.back-button {
+    
+  position: absolute;  /* Posicionamiento absoluto dentro del contenedor de fondo */
+  bottom: 10px;  /* Abajo del todo, con un pequeño margen */
+  left: 10px;  /* A la izquierda del todo, con un pequeño margen */
+  z-index: 1;  /* Menor z-index para no interferir con el scrollable container */
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #888888;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button:hover{
+  transform: translateY(-2px);
+  background-color: #4a4a4a; /* Darker shade of blue */
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); /* Increased shadow */
 }

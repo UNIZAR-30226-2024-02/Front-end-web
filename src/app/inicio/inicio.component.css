@@ -4,12 +4,22 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #f0f0f0; /* Color de fondo de reserva */
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-image: url('/assets/call-duty-wwii.jpg'); /* Actualiza con la ruta correcta */
+}
+
+.full-screen-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/assets/call-duty-wwii.jpg');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
 }
 
 .container h1 {
@@ -43,6 +53,10 @@
     text-align: center; /* Centrar el texto */
     cursor: pointer; /* Cursor de puntero al pasar el ratón */
     transition: all 0.2s; /* Transición suave para efectos de hover */
+}
+
+.logotipo {
+    width: 50%;
 }
 
 .btn:hover {

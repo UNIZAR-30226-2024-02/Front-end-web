@@ -39,7 +39,7 @@ export class RegisterComponent {
       }
       else{
         console.error('Contraseña no válida');
-        this.toastr.error("La contraseña debe contener:</br>- 8 o más caracteres</br>- Al menos una letra minúscula</br>- Al menos una letra mayúscula</br>- Al menos un número", '', { closeButton: true, timeOut: 4000, progressBar: true, enableHtml: true });
+        this.toastr.error("La contraseña debe contener:</br>- 8 o más caracteres</br>- Al menos una letra minúscula</br>- Al menos una letra mayúscula</br>- Al menos un número</br>- Al menos un carácter especial", '', { closeButton: true, timeOut: 4000, progressBar: true, enableHtml: true });
       }
     }
     else{
@@ -49,7 +49,7 @@ export class RegisterComponent {
   }
 
   esSegura():boolean{
-    var regExpPasswd = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/);
+    var regExpPasswd = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
     return regExpPasswd.test(this.password);
   }
 

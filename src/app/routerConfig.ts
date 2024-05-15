@@ -68,6 +68,10 @@ const appRoutes: Routes = [
     component: HistorialComponent
   },
   {
+    path: 'inicio',
+    component: InicioComponent
+  },
+  {
     path: '',
     component: InicioComponent
   },

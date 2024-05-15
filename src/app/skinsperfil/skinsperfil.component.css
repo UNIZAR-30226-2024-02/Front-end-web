@@ -1,3 +1,17 @@
+.full-screen-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/assets/login_regis.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+}
 
 button {
     padding: 8px 16px;
@@ -15,14 +29,6 @@ button:hover {
 
 button:active {
     background-color: #4d4d4d;
-}
-
-body {
-    background-image: url('/assets/img-2d3IDaHACsstyAx6hCGZP.jpeg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
 }
 
 .container {
