@@ -89,7 +89,7 @@ export class PartidasComponent {
         this.getInfo(nombre);
       },
       error => {
-        this.toastr.error('Error al crear la partida');
+        this.toastr.error('Debes especificar un nombre de partida, y un número de jugadores entre 2 y 6', 'Error al crear la partida');
       }
     );
   }

@@ -21,12 +21,11 @@
     border-color: #1e7e34;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
+/* Resto de los estilos */
+.background-image {
+    background-image: url('/assets/img-0vyoZ2EwbuNtpdymzDNJY.jpeg');
     height: 100%;
     width: 100%;
-    background-image: url('/assets/img-0vyoZ2EwbuNtpdymzDNJY.jpeg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
