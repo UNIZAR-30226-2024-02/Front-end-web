@@ -462,7 +462,7 @@ usoCartas: boolean = false;
               error => {
                 this.toastr.error('¡ERROR FATAL!');
                 this.inicializacionPartida(this.partida);
-                this.colocarTropas(e, svgDoc, 50, 50, this.whoami, false, true, this.tropasPuestas);
+                this.limpiarTropas(); this.distribuirPiezas();
                 this.ocupado = false
                 this.numTropas += this.tropasPuestas;
                 this.tropasPuestas = 0;
@@ -527,7 +527,7 @@ usoCartas: boolean = false;
                 this.toastr.error('¡No has conquistado el territorio!')
               }
               this.inicializacionPartida(this.partida) // actualizo el estado de la partida
-              await new Promise(resolve => setTimeout(resolve, 1000)) // espero un rato
+              await new Promise(resolve => setTimeout(resolve, 500)) // espero un rato
 
               this.limpiarTropas()
 
