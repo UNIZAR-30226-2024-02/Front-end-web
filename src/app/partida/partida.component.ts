@@ -354,6 +354,21 @@ usoCartas: boolean = false;
                               dineroAtacante, dineroDefensor};                                    
     });
 
+    this.socket.on('ataqueRecibidoGrupal', async (userOrigen: string, userDestino: string, dadosAtacante: number[], dadosDefensor: number[], 
+                                                  tropasPerdidasAtacante: number, tropasPerdidasDefensor: number, conquistado: boolean,
+                                                  territorioOrigen: string, territorioDestino: string, eloAtacante : number, 
+                                                  eloDefensor: number, dineroAtacante: number, dineroDefensor: number) => {
+
+        if(userDestino === this.whoami){
+          console.log("Me atacan")
+          this.ataqueRecibido = { userOrigen, userDestino, dadosAtacante, dadosDefensor, 
+          tropasPerdidasAtacante, tropasPerdidasDefensor, conquistado,
+          territorioOrigen, territorioDestino, eloAtacante, eloDefensor,
+          dineroAtacante, dineroDefensor};            
+          }                        
+      });
+
+
     this.intervalId = setInterval(() => {
       if (this.fase === 0 && this.jugadores[this.turno % this.numJugadores].usuario === this.whoami && this.partida.auxColocar) {
         this.numTropas = this.partida.auxColocar;
@@ -551,6 +566,13 @@ usoCartas: boolean = false;
                                territorioDestino: enemyTerritoryId, eloAtacante: response.eloAtacante,
                                eloDefensor: response.eloDefensor, dineroAtacante: response.dineroAtacante,
                                dineroDefensor: response.dineroDefensor});
+              this.socket.emit('atacoGrupal', {gameId: this.partida._id, userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
+              dadosAtacante: response.dadosAtacante, dadosDefensor: response.dadosDefensor, 
+              tropasPerdidasAtacante: response.resultadoBatalla.tropasPerdidasAtacante,
+              tropasPerdidasDefensor: response.resultadoBatalla.tropasPerdidasDefensor, 
+              conquistado: response.conquistado, eloAtacante: response.eloAtacante, territorioOrigen: this.ataqueOrigen, 
+              territorioDestino: enemyTerritoryId, eloDefensor: response.eloDefensor, dineroAtacante: response.dineroAtacante,
+              dineroDefensor: response.dineroDefensor});
               this.ataquePerpetrado = {userOrigen: this.whoami, userDestino: usuarioObjetivo?.usuario ?? '', 
                                       dadosAtacante: response.dadosAtacante, dadosDefensor: response.dadosDefensor, 
                                       tropasPerdidasAtacante: response.resultadoBatalla.tropasPerdidasAtacante,
