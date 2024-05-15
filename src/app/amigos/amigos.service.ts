@@ -41,7 +41,7 @@ export class AmigosService {
     if (!headers) {
       return of([]);
     }
-    return this.http.post("http://localhost:4000/amistad", user, { headers });
+    return this.http.post("http://"+environment.backendUrl+":4000/amistad", user, { headers });
   }
   delAmigos(user: string): Observable<any>{
     const headers = this.getHeaders();
@@ -54,7 +54,7 @@ export class AmigosService {
         idDestino: user
       }
     }
-    return this.http.delete("http://localhost:4000/amistad/"+user, {
+    return this.http.delete("http://"+environment.backendUrl+":4000/amistad/"+user, {
       headers: headers,
       body:{idDestino: this.usersService.getUsername()}
     });
@@ -65,7 +65,7 @@ export class AmigosService {
       return of([]);
     }
 
-    return this.http.get<{ message: string, solicitudes: string[] }>("http://localhost:4000/amistad/listarSolicitudes", { headers })
+    return this.http.get<{ message: string, solicitudes: string[] }>("http://"+environment.backendUrl+":4000/amistad/listarSolicitudes", { headers })
       .pipe(map(response => response.solicitudes));
   }
 }
