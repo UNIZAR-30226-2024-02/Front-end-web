@@ -45,6 +45,6 @@ export class UsersService {
   getProfile(): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `${this.getToken()}`);
     console.log(headers);
-    return this.http.get(`http://localhost:4000/perfil`, { headers });
+    return this.http.get(`http://${environment.backendUrl}:4000/perfil`, { headers });
   }
 }
