@@ -308,8 +308,10 @@ usoCartas: boolean = false;
        }
      }); 
     this.socket.on('userDisconnected', (user: string) => {
-      console.log('userDisconnected', user);
       this.toastr.info(user + ' ha abandonado la partida', 'Jugador desconectado');
+      if(this.turnoJugador === user){ // si era su turno, recargo (solo habrá cambiado el turno)
+        this.inicializacionPartida(this.partida);
+      }
     });
     this.socket.on('gameOver',(posibleGanador : string) => {
         if(posibleGanador === this.whoami){
@@ -460,7 +462,7 @@ usoCartas: boolean = false;
                 this.socket.emit('actualizarEstado', this.partida._id);
               },
               error => {
-                this.toastr.error('¡ERROR FATAL!');
+                //this.toastr.error('¡ERROR FATAL!');
                 this.inicializacionPartida(this.partida);
                 this.limpiarTropas(); this.distribuirPiezas();
                 this.ocupado = false
@@ -1214,6 +1216,7 @@ usoCartas: boolean = false;
       this.socket.off('ataqueRecibido');
       this.socket.off('partidaPausada');
       this.partidaService.AbandonarPartida(this.partida._id).subscribe(() => {
+       //this.socket.emit('actualizarEstado', this.partida._id)
         this.socket.emit('disconnectGame', { gameId: this.partida._id, user: this.userService.getUsername() });
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigate(['/menu']);
